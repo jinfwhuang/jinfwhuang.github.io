@@ -19,18 +19,18 @@
 
 <meta name="keywords" content=", unsorted, " />
 
-<meta property="og:title" content="Notes Decentralized Storage Networks "/>
+<meta property="og:title" content="Notes on Decentralized Storage Networks "/>
 <meta property="og:url" content="/2021-09-06-dsn" />
 <meta property="og:description" content="" />
 <meta property="og:site_name" content="Jin&#39;s Notes" />
 <meta property="og:article:author" content="jin" />
 <meta property="og:article:published_time" content="2021-09-06T00:00:00-07:00" />
-<meta name="twitter:title" content="Notes Decentralized Storage Networks ">
+<meta name="twitter:title" content="Notes on Decentralized Storage Networks ">
 <meta name="twitter:description" content="">
 <meta property="og:image" content="/images/android-chrome-192x192.png" />
 <meta name="twitter:image" content="/images/android-chrome-192x192.png" >
 
-        <title>Notes Decentralized Storage Networks  · Jin&#39;s Notes
+        <title>Notes on Decentralized Storage Networks  · Jin&#39;s Notes
 </title>
         <link rel="shortcut icon" href="/theme/images/favicon.ico" type="image/x-icon" />
         <link rel="icon" href="/theme/images/apple-touch-icon-152x152.png" type="image/png" />
@@ -90,7 +90,7 @@
     <header class="page-header span10 offset2">
         <h1>
             <a href="/2021-09-06-dsn">
-                Notes Decentralized Storage Networks <br/>
+                Notes on Decentralized Storage Networks <br/>
             </a>
         </h1>
     </header>
@@ -120,7 +120,7 @@
 <p>Traditional blockchain networks could act as storage networks. Public ledger usually impose additional structures on how bytes are structured in the forms of blocks and transactions. Transactions are the basic unit that have to satisfy the blockchain unique transition function from one transaction to the next. Most blockchains allow users to put in arbitrary bytes as a special data field in transactions. However, these blockchains should not be considered storage networks because of limited data throughput. I had previously written about <a href="2021-07-23-blockchain_throughput">blockchain throughput</a>. Without compromising the risk of centralization, a reasonable throughput of blockchain is about <strong>10 <span class="caps">KB</span>/s</strong> per shard. This space is very limited and expensive. It would require millions, if not billions, of dollars to store a movie on one of these blockchains, even if the chain is sharded.</p>
 <p>The fundamental reason that a public ledgers should not evolve to become a storage network is because the security level required by a public ledger is far more expensive than what is necessary for storage. The data within a public ledger has to be validated by a securing resource. That securing resource could be proof of work, proof of stake, proof of authority, or any other scarce resource. In some ways, the validity of the data has to be voted on by some limited resources; otherwise, if an arbitrary amount of voting power is manufactured out of the thin air, the public ledger is not secured. (I will write a post on theoretical fundamentals blockchain security.) Furthermore, the ledger’s data has to be also massively available. Data availability is inherently expensive. Replicating data requires physical resources in the form of hardwares, bandwidth, real estate, and electricity. If a piece of data is replicated 5 times, it costs roughly 5x in physical resources. Public ledgers requires data to extremely resilient to failures. Bitcoin and Ethereum chain states are replicated tens of thousands times, if not hundreds of thousands or even millions times. Even for a sharded chain, it will have 100s of replication at a minimum. This replication level would be impossibly expensive for petabytes of data, let alone exabytes or more. It is worth noting that <span class="caps">AWS</span> S3 charges $500,00 - $2,000,000 a year for 10 petabyte of data. It is safe to assume that data there has 3-10 replicas. <span class="caps">AWS</span> could be operating with a great margin, but it is hard to see that <span class="caps">AWS</span> could run a profit if it is replicating data 100s over. Decentralized storage network should allow users to choose their own replication level.</p>
 <p>Database networks could be loosely categorized into three typologies. In roundabout ways, I have already discussed two of those. The first topology type is single machine <span class="caps">DB</span>, where the <span class="caps">DB</span> is replicated in every full node of the network. The current version of Bitcoin and Ethereum is of this variety. The second type is a sharded db, with each shard replicated by a group of nodes. Polkadot and Eth2 are examples of this type. The third network type expect heterogeneous storage nodes. Each node store a unique set of data segments. One would find this network typology for almost all large scaled database deployment. S3, Hadoop file system, Cassandra, HBase, Druid <span class="caps">DB</span>, Elasticsearch, etc. A decentralized storage network will likely take this form, where there are a large number of storage nodes storing unique set of data segments.</p>
-<p>A decentralized storage network needs to have a mechanism to coordinate incentives and strorage proofs. Storage providers have to be incentivized to participate in the network. Storage clients or the network have to be able ask for storage proofs from storage providers. This boils down to the need to coordinate storage proofs and payments. A blockchain, either native or external, is a natural choice to coordinate these interactions if decentralization is required.</p>
+<p>A decentralized storage network needs to have a mechanism to coordinate incentives and storage proofs. Storage providers have to be incentivized to participate in the network. Storage clients or the network have to be able ask for storage proofs from storage providers. This boils down to the need to coordinate storage proofs and payments. A blockchain, either native or external, is a natural choice to coordinate these interactions if decentralization is required.</p>
 <p>In the next sections, I will review some popular DSNs. I am not aiming to have a full description of these networks. My goal is to provide a succinct overview of the key features so I could discuss what I like and don’t like about the different networks.</p>
 <h5 id="ipfs"><span class="caps">IPFS</span></h5>
 <p><span class="caps">IPFS</span> is often mentioned as the leading solution for decentralized storage. <span class="caps">IPFS</span> could be used to storing and accessing data. However, it does not have an incentive mechanism. 
