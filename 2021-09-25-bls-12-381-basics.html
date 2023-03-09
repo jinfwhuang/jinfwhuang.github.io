@@ -124,7 +124,6 @@
 <div class="highlight"><pre><span></span><code>k = 12
 r = 0x73eda753299d7d483339d80809a1d80553bda402fffe5bfeffffffff00000001
 q = 0x1a0111ea397fe69a4b1ba7b6434bacd764774b84f38512bf6730d2a0f6b0f6241eabfffeb153ffffb9feffffffffaaab
-q = 0x1a0111ea397fe69a4b1ba7b6434bacd764774b84f38512bf6730d2a0f6b0f6241eabfffeb153ffffb9feffffffffaaab
 u = -0xd201000000010000
 </code></pre></div>
 <p>Note that <span class="math">\(r = u^4 - u^2 + 1\)</span> is a 255 bit prime, and <span class="math">\(q = \frac{1}{3} (u-1)^2(u^4-u^2+1) + u\)</span> is a 381 bit prime. We also define field extensions. See the <a href="https://eprint.iacr.org/2012/232.pdf">Implementing Pairing</a> paper for more details.</p>
@@ -209,7 +208,7 @@ e(\rho_A g_1, H(m)) = e(g_1, s_A)
 <h4 id="notes">Notes</h4>
 <ul>
 <li>Using the <span class="caps">BLS</span>-12-381 curve is straight forward once all parameters are well setup.</li>
-<li>The name of <span class="caps">BLS</span>-12-381 comes from <span class="math">\(k=12\)</span>, which is the embedded degree. One way to interpret it is that <span class="math">\(12\)</span> is chosen so that <span class="math">\(\mathcal{F}_{q^{k}}\)</span> contains all the <span class="math">\(r-th\)</span> root of unity. <span class="math">\(381\)</span> is the bit length of of the prime number <span class="math">\(q\)</span> used to define the finite field, <span class="math">\(\mathcal{F}_q\)</span>.</li>
+<li>The name of <span class="caps">BLS</span>-12-381 comes from <span class="math">\(k=12\)</span>, which is the embedded degree. One way to interpret it is that <span class="math">\(12\)</span> is chosen so that <span class="math">\(\mathcal{F}_{q^{k}}\)</span> contains all the <span class="math">\(r\)</span>-th root of unity. <span class="math">\(381\)</span> is the bit length of of the prime number <span class="math">\(q\)</span> used to define the finite field, <span class="math">\(\mathcal{F}_q\)</span>.</li>
 <li>The role of <span class="math">\(\mathbb{G}_1\)</span> and <span class="math">\(\mathbb{G}_2\)</span> could be swapped.</li>
 <li>One signing party could tamper with the aggregate public key. It is sufficient to ask each public key holder to shows that they also has possession of the corresponding private key.</li>
 <li>For the sake of simplicity, I ignore most of the discussions about security. I will add those discussion in a later post if there are interests.</li>
@@ -340,7 +339,7 @@ e(\rho_A g_1, H(m)) = e(g_1, s_A)
             <a class="category-link" href="/categories#unsorted-ref">unsorted</a>
 <h4>Contact</h4>
 <div id="sidebar-social-link">
-    <a href="https://twitter.com/jin_huang" title="Twiiter" target="_blank" rel="nofollow noopener noreferrer">
+    <a href="https://twitter.com/jinfwhuang" title="Twiiter" target="_blank" rel="nofollow noopener noreferrer">
         <svg xmlns="http://www.w3.org/2000/svg" aria-label="Twitter" role="img" viewBox="0 0 512 512"><rect width="512" height="512" rx="15%" fill="#1da1f3"/><path fill="#fff" d="M437 152a72 72 0 0 1-40 12 72 72 0 0 0 32-40 72 72 0 0 1-45 17 72 72 0 0 0-122 65 200 200 0 0 1-145-74 72 72 0 0 0 22 94 72 72 0 0 1-32-7 72 72 0 0 0 56 69 72 72 0 0 1-32 1 72 72 0 0 0 67 50 200 200 0 0 1-105 29 200 200 0 0 0 309-179 200 200 0 0 0 35-37"/></svg>
     </a>
     <a href="https://www.linkedin.com/in/jinfhuang/" title="LinkedIn" target="_blank" rel="nofollow noopener noreferrer">
