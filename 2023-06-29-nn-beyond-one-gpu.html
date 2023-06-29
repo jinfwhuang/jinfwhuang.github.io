@@ -125,7 +125,18 @@ Fig. from <a href='#huang2019gpipe' id='ref-huang2019gpipe-1'>
 </a> for a technical description. Pytorch supports tensor computation across GPUs through its <span class="caps">RPC</span> and distributed tensor <a href="https://pytorch.org/docs/stable/rpc.html">framework</a>. This strategy is hard to adapt because it does not generalize well to models written with a high level <span class="caps">API</span>. Each model has to be explicitly configured to split up small computation unit. It also does not describe how the computation should be pipelined and ordered, likely leading to efficiency&nbsp;issue.</p>
 <p><a href="https://www.microsoft.com/en-us/research/project/deepspeed/">Deepspeed</a> pioneered the ZeRO (Zero Redudancy Optimizer) distributed training paradigm that combines data and model parallelism. The model is sharded and distributed to GPUs. Each <span class="caps">GPU</span> device processes a different data batch. Each device acquires a model shard as necessary to perform a forward and backward pass. The updates are broadcast to the appropriate shard owners once the update computations are completed. Each device only retains its own shard after an update. Deepspeed releases this <a href="https://github.com/microsoft/DeepSpeed">optimization library</a>. Pytorch&#8217;s <a href="https://engineering.fb.com/2021/07/15/open-source/fsdp/"><span class="caps">FSDP</span></a> is another framework that follows this optimization strategy. See <a href='#zhao2023pytorch' id='ref-zhao2023pytorch-1'>
     ZGV+23
-</a> for more detail. This paradigm is the most promising if one has to perform domain adaption with a large private corpus on the latest state-of-art large models (e.g. falcon, LLaMA, and&nbsp;PaLM).</p>
+</a> for more detail. This paradigm is the most promising if one has to perform domain adaption with large private text corpus on the latest state-of-art large models (e.g. falcon, LLaMA, and&nbsp;PaLM).</p>
+<figure>
+<img
+  src="images/2023-06-zero-model-shard.png"
+  align="middle"
+  width="50%"
+/>
+<figcaption align = "center">
+Fig. from Deepspeed
+</figcaption>
+</figure>
+
 <hr />
 <h4 id="references">References</h4>
 <ul>
@@ -133,7 +144,7 @@ Fig. from <a href='#huang2019gpipe' id='ref-huang2019gpipe-1'>
 <p>OpenAI&#8217;s blog post on <a href="https://openai.com/research/techniques-for-training-large-neural-networks">training large neural&nbsp;networks</a></p>
 </li>
 <li>
-<p>The &#8220;Switch Transformers&#8221; paper discusses data, m,odel, and expert parallelism extensively&nbsp;(<a href='#fedus2022switch' id='ref-fedus2022switch-1'>
+<p>The &#8220;Switch Transformers&#8221; paper discusses data, model, and expert parallelism extensively&nbsp;(<a href='#fedus2022switch' id='ref-fedus2022switch-1'>
     FZS22
 </a>).</p>
 </li>
