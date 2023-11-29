@@ -330,14 +330,14 @@ https://blog.trailofbits.com/2020/06/11/ecdsa-handle-with-care/ -->
     var mathjaxscript = document.createElement('script');
     mathjaxscript.id = 'mathjaxscript_pelican_#%&#64;#$&#64;#';
     mathjaxscript.type = 'text/javascript';
-    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.3/latest.js?config=TeX-AMS-MML_HTMLorMML';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=default';
 
     var configscript = document.createElement('script');
     configscript.type = 'text/x-mathjax-config';
     configscript[(window.opera ? "innerHTML" : "text")] =
         "MathJax.Hub.Config({" +
-        "    config: ['MMLorHTML.js']," +
-        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
+        // "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'auto' } }," +
         "    jax: ['input/TeX','input/MathML','output/SVG']," +
         "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
         "    displayAlign: '"+ align +"'," +
@@ -351,7 +351,7 @@ https://blog.trailofbits.com/2020/06/11/ecdsa-handle-with-care/ -->
         "        preview: 'TeX'," +
         "    }, " +
         "    'HTML-CSS': { " +
-        "        availableFonts: ['STIX', 'TeX']," +
+        "        availableFonts: ['TeX', 'STIX']," +
         "        preferredFont: 'STIX'," +
         "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
         "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
@@ -588,6 +588,9 @@ Oxford University Press, 2007.</span>
             }
         </script>
 
+
+
+
     <script>
     (function () {
         if (window.location.hash.match(/^#comment-\d+$/)) {
@@ -615,4 +618,5 @@ Oxford University Press, 2007.</span>
     </body>
     <!-- Theme: Elegant built for Pelican
         License : MIT -->
+
 </html>
