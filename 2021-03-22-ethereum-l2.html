@@ -241,7 +241,7 @@ Note that some categories have specific category names, e.g zk rollup, validium,
         "MathJax.Hub.Config({" +
         "    config: ['MMLorHTML.js']," +
         "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'none' } }," +
-        "    jax: ['input/TeX','input/MathML','output/HTML-CSS']," +
+        "    jax: ['input/TeX','input/MathML','output/SVG']," +
         "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
         "    displayAlign: '"+ align +"'," +
         "    displayIndent: '"+ indent +"'," +
@@ -280,6 +280,7 @@ Note that some categories have specific category names, e.g zk rollup, validium,
     (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
     (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
 }
+
 </script><ol class="simple-footnotes"><li id="sf-2021-03-22-ethereum-l2-1">One example is a Merkle Hash. But it could be a generic polynomial or even inner product commitment as well. See <a href="2021-10-11-basic-polynomial-commitment">polynomial commitment</a>. <a href="#sf-2021-03-22-ethereum-l2-1-back" class="simple-footnote-back">↩</a></li><li id="sf-2021-03-22-ethereum-l2-2"> There is one key difference between the zk and fraud proof approach. If there are verification only information contained in the original transaction, e.g. signatures, those information could be ignored. A <span class="caps">ZK</span> proof on state transitions already retains the cryptographic evidences that all the state transitions are valid. The only data needed to be made available is the data that allow for reconstruction of state transitions from S0 to S1000. If verification is through fraud proof, all the original transaction data have to be available. <a href="#sf-2021-03-22-ethereum-l2-2-back" class="simple-footnote-back">↩</a></li><li id="sf-2021-03-22-ethereum-l2-3">Note that calldata is not stored in <span class="caps">EVM</span> memory. This data is not accessible by smart contracts. It is already much cheaper than bytes stored in <span class="caps">EVM</span> memory. <a href="#sf-2021-03-22-ethereum-l2-3-back" class="simple-footnote-back">↩</a></li><li id="sf-2021-03-22-ethereum-l2-4">See <a href="https://cointelegraph.com/news/did-ethereum-silently-give-up-on-plasma">post1</a> and <a href="https://medium.com/dragonfly-research/the-life-and-death-of-plasma-b72c6a59c5ad">post2</a> for more details <a href="#sf-2021-03-22-ethereum-l2-4-back" class="simple-footnote-back">↩</a></li></ol>
 
 

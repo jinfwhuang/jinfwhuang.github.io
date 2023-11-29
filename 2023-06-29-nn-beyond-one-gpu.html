@@ -106,7 +106,7 @@
 <p>Each <span class="caps">GPU</span> has limited memory. While it is possible to offload the model to <span class="caps">CPU</span>&#8217;s main memory or even disk, it slows down the training and has limited scalability. The next obvious solution is to use multiple GPUs. That is limited to at most 1 order of magnitude scaling. The only viable solution is partitioning a model to a cluster of <span class="caps">GPU</span> machines, where data and model update communications go through the&nbsp;network. </p>
 <p>Note that distributed data parallelism only speeds up training. It splits up each batch into different batches. Batches are processed by different GPUs concurrently. An all-reduce operation of the scattered optimizer states allowes each <span class="caps">GPU</span> device to calculate one round of parameter update as if each <span class="caps">GPU</span> has processed all the data. This approach speeds up training, but it does not allow the model to scale beyond a single <span class="caps">GPU</span>.</p>
 <p>As model size grows, the only solution is to split up the model. The model includes model parameters, gradients, gradient variances, momentums, activations, and other residual memory requirements. The simplest solution is to naively partition the model layer by layer. The model is expressed as a sequence of layers, where layers could be distributed to GPUs. The model is computed layer by layer sequentially. It is not hard to see that GPUs idling is a critical efficiency&nbsp;issue.</p>
-<p>Pipelining aims to mitigate the <span class="caps">GPU</span> idling problem. The strategy is to concurrently process multiple smaller batches to enable all GPUs to have some work to do. It does not fully optimize <span class="caps">GPU</span>&nbsp;utilization.</p>
+<p>Pipelining aims to mitigate the <span class="caps">GPU</span> idling problem. The strategy is to concurrently process multiple smaller batches to enable all GPUs to have some work to do. It does not fully optimize <span class="caps">GPU</span> utilization.
 <figure>
 <img
   src="images/2023-06-28-pipelining.png"
@@ -118,8 +118,7 @@ Fig. from <a href='#huang2019gpipe' id='ref-huang2019gpipe-1'>
     HCB+19
 </a>
 </figcaption>
-</figure>
-
+</figure></p>
 <p>The partitioning could be more fine-grained. The tensor computation could be split into GPUs. See <a href='#narayanan2021efficient' id='ref-narayanan2021efficient-1'>
     NSC+21
 </a> for a technical description. Pytorch supports tensor computation across GPUs through its <span class="caps">RPC</span> and distributed tensor <a href="https://pytorch.org/docs/stable/rpc.html">framework</a>. This strategy is hard to adapt because it does not generalize well to models written with a high level <span class="caps">API</span>. Each model has to be explicitly configured to split up small computation unit. It also does not describe how the computation should be pipelined and ordered, likely leading to efficiency&nbsp;issue.</p>
@@ -152,7 +151,7 @@ Fig. from Deepspeed
 <!&#8212; &#8212;&#8212;&#8212;&#8212;
 #### Footnotes &#8212;>
 
-<!&#8212; 
+<!&#8212;
 
 
 

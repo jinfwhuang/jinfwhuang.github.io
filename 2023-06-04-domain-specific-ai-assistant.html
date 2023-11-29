@@ -125,7 +125,7 @@
 </a> quantifies the some lower bound to be <code>1%</code>. It is impossible to exactly quantify this retention rate. The memorization mechanism is hard to know for sure. We only know that a large neural model could learn from simple pretraining objectives. <a href='#porada2021does' id='ref-porada2021does-1'>
     PSC21
 </a> discusses the limit of knowledge acquisition through masked language pretraining objectives. We are still early in our understanding of how LLMs work and how to properly perform precise memory infusion, extraction, or modification.</p>
-<p>There are many unsupervised training techniques to infuse knowledge and capabilities to LLMs. The most common is the various forms of masking spans. For example, next token prediction, next sentence, and random masked spans are the most popular and common pretraining objectives. </p>
+<p>There are many unsupervised training techniques to infuse knowledge and capabilities to LLMs. The most common is the various forms of masking spans. For example, next token prediction, next sentence, and random masked spans are the most popular and common pretraining objectives. 
 <figure>
 <img src="images/2023-06-training-span-corruption.png"/>
 <figcaption align="center">
@@ -133,21 +133,21 @@ Pretraining objectives: different span corruption strategies (<a href='#tay2023u
     TDT+23
 </a>)
 </figcaption>
-</figure>
+</figure></p>
 <p>If the private domain contains structured knowledge, e.g. knowledge triplets, one could devise a masking strategy that focuses on key concepts and relationships (<a href='#sun2021ernie' id='ref-sun2021ernie-1'>
     SWF+21
-</a> and <a href='#moiseev2022skill' id='ref-moiseev2022skill-1'>
+</a> and <a href='#moiseev2022skill' id='ref-moiseev2022skill-1'>
     MDAJ22
-</a>). </p>
+</a>). 
 <figure>
 <img src="images/2023-06-training-knowledge-triplet-objective.png" width="80%"/>
 <img src="images/2023-06-training-word-aware-task.png" width="90%"/>
 <figcaption align="center">
  Pretraining objectives: structured knowledge infusion and universal knowledge-text prediction
 </figcaption>
-</figure>
+</figure></p>
 <p>Other objectives could be predicting sentence ordering. The model is asked to recover the correct ordering from a randomly permuted sentence order. Another objective could be sentence distance. A model takes two sentences as input and predict the category in the set of adjacent, nonadjacent but same document, and not in the same document.</p>
-<p>Other than using unsupervised training objectives, it is also possible to update the model parameters through the use of synthetic data with a task-specific fine-tuning objective. Some LLMs, either the one undertraining or an external <span class="caps">LLM</span>, could be used to generate input and target pairs from raw texts. The input and target pairs could be in the form of question and answers, question and supporting passages, queries and topic classifications, etc. The model is then trained on these labeled data.</p>
+<p>Other than using unsupervised training objectives, it is also possible to update the model parameters through the use of synthetic data with a task-specific fine-tuning objective. Some LLMs, either the one undertraining or an external <span class="caps">LLM</span>, could be used to generate input and target pairs from raw texts. The input and target pairs could be in the form of question and answers, question and supporting passages, queries and topic classifications, etc. The model is then trained on these labeled data.
 <figure>
 <img align="middle" src="images/2023-06-training-synthetic-fine-tune-data.png" width="50%"/>
 <figcaption align="center">
@@ -155,7 +155,7 @@ Pretraining objectives: different span corruption strategies (<a href='#tay2023u
     SFKS+23
 </a>)
 </figcaption>
-</figure>
+</figure></p>
 <h4 id="llm-information-extraction-techniques"><span class="caps">LLM</span> Information Extraction Techniques</h4>
 <p>There are different techniques to extract information from model parameters. The most obvious approach is through prompt engineering. The most well-known prompt techniques are few-shot learning and chain-of-throught prompting. </p>
 <figure>
@@ -169,18 +169,18 @@ Pretraining objectives: different span corruption strategies (<a href='#tay2023u
 </a>)
 </figcaption>
 </figure>
-<p>There are additional variations. For example, the few-shot could be combined with synthetic example generation. The few examples could be modified to be a recitation-augmented prompt, as proposed by <a href='#sun2023recitationaugmented' id='ref-sun2023recitationaugmented-1'>
+<p>There are additional variations. For example, the few-shot could be combined with synthetic example generation. The few examples could be modified to be a recitation-augmented prompt, as proposed by <a href='#sun2023recitationaugmented' id='ref-sun2023recitationaugmented-1'>
     SWT+23
-</a>.</p>
+</a>.
 <figure>
 <img src="images/2023-06-prompt-recitation.png" width="50%"/>
 <figcaption align="center">
  Prompting: few-shot with recitations
 </figcaption>
-</figure>
+</figure></p>
 <p>Other than better prompts, there are other ways to improve information extraction from model parameters. <a href='#wang2023selfconsistency' id='ref-wang2023selfconsistency-1'>
     WWS+23a
-</a> proposes sampling multiple outputs and choosing the most consistent answer from the set. One could also ask the <span class="caps">LLM</span> to produce multiple relevant recitations about the queries and use those recitations as context for the <span class="caps">LLM</span> to make a final output.</p>
+</a> proposes sampling multiple outputs and choosing the most consistent answer from the set. One could also ask the <span class="caps">LLM</span> to produce multiple relevant recitations about the queries and use those recitations as context for the <span class="caps">LLM</span> to make a final output.
 <figure>
 <img src="images/2023-06-prompt-sampling.png" width="80%"/>
 <figcaption align="center">
@@ -188,7 +188,7 @@ Pretraining objectives: different span corruption strategies (<a href='#tay2023u
     WWS+23a
 </a>
 </figcaption>
-</figure>
+</figure></p>
 <p>The sampling and prompting techniques could be combined in any permuted order. For example, one could prompt the <span class="caps">LLM</span> to sample multiple recitations and keywords that describe the input query. The recitation passages could be deduplicated by or combined keywords before being used as examples in the final prompt fed to the <span class="caps">LLM</span>. In many ways, once an <span class="caps">LLM</span> completes learning what it could through its training stages. We can use prompt engineering techniques or modify the last layers to direct the <span class="caps">LLM</span> to squeeze information from its parameters and explore different outputs.</p>
 <h4 id="retrieval-augmentation">Retrieval-Augmentation</h4>
 <p>The easiest way to create a domain specific <span class="caps">AI</span> assistant is using a retrieval step to add a context to the prompt. This approach is commonly described as retriever-reader in the open book question-answering literature. This framework works well for <span class="caps">AI</span> assistants as well. The foundational model provides general reasoning and comprehension capabilities, and the information required to answer user queries is provided in the context. The key advantage of this approach is the retrieval step is very predictable and explicit. It is a much more efficient and reliable information retrieval procedure than prompting an <span class="caps">LLM</span> to find information stored in its parameters. However, the context window could become a limiting factor. The responses is likely to be superficial and read like a summary of the provided context. The <span class="caps">LLM</span> could not draw patterns, nor could it synthesize data from the entire corpus relevant to the query. The enterprise knowledge chatbot created by <a href="https://www.glean.com/blog/glean-chat-launch-announcement">Glean</a> follows this pattern.</p>
