@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="/theme/css/elegant.prod.9e9d5ce754.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="/theme/css/custom.css" media="screen">
+
+        <link rel="dns-prefetch" href="//fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+
+        <meta name="author" content="jin" />
+
+        <meta name="description" content="I discuss three categories of L2 solutions: state channel, sidechain, and transaction aggregation. State channel is simple but limited. I do not think sidechain should be considered a L2 solution because it has to manage a security model of its own that is comparable in scope to running yet another …
+" />
+        <meta name="twitter:creator" content="@jinfwhuang">
+        <meta property="og:type" content="article" />
+        <meta name="twitter:card" content="summary">
+
+<meta name="keywords" content="web3, misc, " />
+
+<meta property="og:title" content="Notes on Ethereum L2 Solutions "/>
+<meta property="og:url" content="/2021-03-22-ethereum-l2" />
+<meta property="og:description" content="I discuss three categories of L2 solutions: state channel, sidechain, and transaction aggregation. State channel is simple but limited. I do not think sidechain should be considered a L2 solution because it has to manage a security model of its own that is comparable in scope to running yet another …" />
+<meta property="og:site_name" content="Jin&#39;s Notes" />
+<meta property="og:article:author" content="jin" />
+<meta property="og:article:published_time" content="2022-03-22T00:00:00-07:00" />
+<meta name="twitter:title" content="Notes on Ethereum L2 Solutions ">
+<meta name="twitter:description" content="I discuss three categories of L2 solutions: state channel, sidechain, and transaction aggregation. State channel is simple but limited. I do not think sidechain should be considered a L2 solution because it has to manage a security model of its own that is comparable in scope to running yet another …">
+<meta property="og:image" content="/images/android-chrome-192x192.png" />
+<meta name="twitter:image" content="/images/android-chrome-192x192.png" >
+
+        <title>Notes on Ethereum L2 Solutions  · Jin&#39;s Notes
+</title>
+        <link rel="shortcut icon" href="/theme/images/favicon.ico" type="image/x-icon" />
+        <link rel="icon" href="/theme/images/apple-touch-icon-152x152.png" type="image/png" />
+        <link rel="apple-touch-icon" href="/theme/images/apple-touch-icon.png"  type="image/png" />
+        <link rel="apple-touch-icon" sizes="57x57" href="/theme/images/apple-touch-icon-57x57.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="/theme/images/apple-touch-icon-72x72.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="76x76" href="/theme/images/apple-touch-icon-76x76.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="/theme/images/apple-touch-icon-114x114.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="120x120" href="/theme/images/apple-touch-icon-120x120.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="144x144" href="/theme/images/apple-touch-icon-144x144.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="152x152" href="/theme/images/apple-touch-icon-152x152.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="152x152" href="/theme/images/apple-touch-icon-180x180.png" type="image/png" />
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+     m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+     })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-207279664-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+
+    </head>
+    <body>
+        <div id="content">
+            <div class="navbar navbar-static-top">
+                <div class="navbar-inner">
+                    <div class="container-fluid">
+                        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </a>
+                        <a class="brand" href="/"><span class=site-name><span style="color:black;">Jin's Notes</span></span></a>
+                        <div class="nav-collapse collapse">
+                            <ul class="nav pull-right top-menu">
+                                <li >
+                                    <a href=
+                                       "/"
+                                    >Home</a>
+                                </li>
+<!--                                <li ><a href="/categories">Categories</a></li>-->
+                                <li ><a href="/tags">Tags</a></li>
+                                <li ><a href="/archives">Archives</a></li>
+                                <li><form class="navbar-search" action="/search" onsubmit="return validateForm(this.elements['q'].value);"> <input type="text" class="search-query" placeholder="Search" name="q" id="tipue_search_input"></form></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid">
+                <div class="row-fluid">
+                    <div class="span1"></div>
+                    <div class="span10">
+<article itemscope>
+<div class="row-fluid">
+    <header class="page-header span10 offset2">
+        <h1>
+            <a href="/2021-03-22-ethereum-l2">
+                Notes on Ethereum L2 Solutions <br/>
+            </a>
+        </h1>
+    </header>
+</div>
+
+<div class="row-fluid">
+    <div class="span2 table-of-content">
+        <nav>
+        <h4>Contents</h4>
+        <div class="toc">
+<ul>
+<li><a href="#state-channel">State Channel</a></li>
+<li><a href="#sidechain">Sidechain</a><ul>
+<li><a href="#polygon-pos">Polygon PoS</a></li>
+</ul>
+</li>
+<li><a href="#transaction-aggregation">Transaction Aggregation</a><ul>
+<li><a href="#optimistic-rollup-optimism-arbitrum">Optimistic Rollup (Optimism, Arbitrum)</a></li>
+<li><a href="#zk-rollup-starknet-zksync-aztec">Zk Rollup (StarkNet, Zksync, Aztec)</a></li>
+<li><a href="#plasma">Plasma</a></li>
+<li><a href="#data-availability-l1-chains">Data Availability L1 Chains</a></li>
+<li><a href="#volition">Volition</a></li>
+<li><a href="#immutablex">ImmutableX</a></li>
+</ul>
+</li>
+<li><a href="#references">References</a></li>
+<li><a href="#footnotes">Footnotes</a></li>
+</ul>
+</div>
+        </nav>
+    </div>
+    <div class="span8 article-content">
+            
+            <p>I discuss three categories of L2 solutions: state channel, sidechain, and transaction aggregation. State channel is simple but limited. I do not think sidechain should be considered a L2 solution because it has to manage a security model of its own that is comparable in scope to running yet another L1 chain. Transaction aggregation has the most variety and is getting the most attention in research and development.</p>
+<hr>
+<h4 id="state-channel">State Channel</h4>
+<p>State channel is the first L2 technique that is used to conduct secure peer to peer interaction. <a href="https://en.bitcoin.it/wiki/Payment_channels">Payment channel</a> is the easiest to understand. For example, two parties A and B setup a channel when both parties commit 100 dollars each. The setup is on chain. If A sends money to B, A signs off on an updated state <span class="math">\((A=90, B=100, nonce=1)\)</span>. As long as B receives this state with signature, B would be sure that payment is finalized. Any payment could take this form. After the 1000th payment, the state could look like <span class="math">\((A=20, B=180, nonce=1000)\)</span>. As long as both of them signed this state, and either party is sure that she had not signed anything with nonce greater or equal to 1000. They could cryptographically trust all the previous payments are correct. Whenever either party wants to close the channel, they would have to submit an onchain transaction. The idea of payment channel could be easily extended to state channel to allow arbitrary state transitions.</p>
+<p>The key advantage of state channel is instantaneous p2p interaction without any onchain execution. There are some limitations as well. First, state channel has a setup cost. Transactions could only happen for those who have already setup the channel. Second, state channel locks up fund. This locked funding also represents the transaction limit between the two parties. Third, participants have to keep track of the channel states. If they lose the latest and the counter-party refuses to provide a copy, the counter-party could use a previous state to close the chanel. Fourth, state channel is only limited to two parties.</p>
+<p>State channel could be extended to use a hub model. In the hub model, each user sets up a state channel with the same central X. Any transaction between A and B could conducted through X. This enables any pairwise transaction between participants that have a channel open with central operator X. This introduces a different issue, a centralization risk. If X goes offline, the entire system is down. X could censor certain transactions. <a href="https://github.com/connext/vector">Connext vector</a> implements such a protocol. This technique is used as <a href="https://thegraph.com/blog/scalar">micropayment</a> for the TheGraph.</p>
+<p>The hub model could be extended further still to a network model. Instead of one hub, there are many interconnected hubs. With the help of the network, a user could use the hubs to find a path to any other counter-party. This is the basic idea behind <a href="https://lightning.network/">lighting network</a>.</p>
+<hr>
+<h4 id="sidechain">Sidechain</h4>
+<p>A sidechain functions effectively as an independent L1 chain. A sidechain runs in parallel of the mainchain. A sidechain has to operate its own consensus mechanism. If the sidechain’s security is compromised, the mainchain is not impacted but also, the mainchain does not provide any guarantee to the users of the sidechain. The activities in the sidechain are independent of those happening on the mainchain until those activities are bridged back into the sidechain. For almost all intents and purposes, a sidechain behaves like an independent L1 chain with bridges.</p>
+<p>In general, I would not consider sidechains a layer 2 solution. However, Polygon’s proof of state (PoS) chain is often mentioned as a layer 2 solution. In fact, many people consider Polygon to be one of the most successful L2 solutions. I disagree with that categorization. I put Polygon PoS in the category of a sidechain.</p>
+<h6 id="polygon-pos">Polygon PoS</h6>
+<p>Polygon PoS is a blockchain built on top of the Tendermint consensus engine. Validators stake their <span class="caps">MATIC</span> tokens on Ethereum. The validators on the Polygon PoS Chain must stake their <span class="caps">MATIC</span> tokens and run a full node. The validator set is maintained in Ethereum smart contracts. A Merkle hash of polygon sidechain state is posted to Ethereum as a checkpoint. Assets are connected between Ethereum and Polygon through two way bridges. Polygon offers two bridges. The PoS bridge takes advantage of the validator set to confirm the transfers. The Plasma bridge uses a fraud proof mechanism to secure the transfers. It is important to note that the use of Plasms here only refers to the bridge. The <span class="caps">EVM</span> activities inside Polygon are not aggregated as Plasma checkpoint. The <span class="caps">EVM</span> activities are aggregated into a state hash checkpoint. If the PoS validators go rogue, users cannot challenge the Polygon transactions in L1.</p>
+<p>This PoS chain differentiates from other L1 chains, e.g. <span class="caps">NEAR</span> protocol or Avalanche, by maintaining its validator state and checkpointing its L2 state on Ethereum. These differentiations alow Polygon to call itself a committed sidechain instead of just another <span class="caps">EVM</span> compatible blockchain. Polygon maintains its validator set and their state on a smart contract. The Polygon validators periodically checkpoint the Merkle hash of the chain’s state onto Ethereum. Instead of having these two system level state information on Ethereum, Polygon could just maintain them as part its L2 state by the validator set. Using smart contract to store these information has some values. First, the fork choice and rule of finality are backed by Ethereum. It eliminates the need to design and implement those mechanisms. L2 transactions are final as soon as those checkpoints are accepted by in L1. Second, there is data availability guarantee on its validator set and state checkpoints. However, these are only marginal benefits. The key security guarantee is the proof of state algorithm, the key data availability guarantee is on the set of validators keeping a copy of the all the historical transactions.</p>
+<p>Polygon as a <a href="https://docs.polygon.technology/docs/home/blockchain-basics/sidechain/">committed sidechain</a> is only marginally more secure than a hypothetical Polygon PoS that is set up as a completely independent L1 chain.</p>
+<hr>
+<h4 id="transaction-aggregation">Transaction Aggregation</h4>
+<p>I use the phrase <strong>transaction aggregation</strong> as the category for many of the L2 solutions that are differentiated by their choices in two dimensions: the choice of verification mechanism and the choice of data availability (<span class="caps">DA</span>) solutions. The table below illustrates how to further categorize these different approaches. I won’t be surprise if this table will get additional columns or rows in the near future.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>zk</th>
+<th>fraud proof</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>onchain tx data</td>
+<td>zk rollup (Aztec, zksync, StarkNet)</td>
+<td>optimistic rollup (Optimism, Arbitrum)</td>
+</tr>
+<tr>
+<td>offchain tx data</td>
+<td>validium</td>
+<td>plasma (<span class="caps">OMG</span>)</td>
+</tr>
+<tr>
+<td>user choice</td>
+<td>volition (ImmutableX)</td>
+<td>n/a</td>
+</tr>
+<tr>
+<td>data availability committee</td>
+<td>(ImmutableX)</td>
+<td>n/a</td>
+</tr>
+<tr>
+<td>data availability L1 chains</td>
+<td>(Celestia, Polygon Avail)</td>
+<td>n/a</td>
+</tr>
+</tbody>
+</table>
+<p><br>
+Note that some categories have specific category names, e.g zk rollup, validium, and plasma. Some categories only have examples but no category name, e.g Celestia uses zk proof and another L1 blockchain for data availability. And yet, some categories do really have any working examples or category name; no one is working on those solutions.</p>
+<p>All of these L2 solutions process and aggregate individual transactions outside of the mainchain. Aggregation works as follow. Let say the starting L2 state is S0, this L2 state hash<sup id="sf-2021-03-22-ethereum-l2-1-back"><a href="#sf-2021-03-22-ethereum-l2-1" class="simple-footnote" title="One example is a Merkle Hash. But it could be a generic polynomial or even inner product commitment as well. See polynomial commitment.">1</a></sup> is stored onchain in the mainchain. The L2 chain receives 1000 transactions. The L2 engine processes all of them and performs state transitions so the newest L2 state is S1000. The hash of S1000 is posted to the mainchain. There are two questions that the L2 protocol has to make clear: <strong>How do users know that the hash of state S1000 is valid? How do users reconstruct the state S1000 that corresponds to the hash?</strong> A L2 protocol has to provide a verification mechanism of the state transitions. The most popular mechanisms are zero knowledge proof and fraud proof challenge. Second, the L2 protocol has to allow the user to reconstruct state S1000 from state S0. For that to happen, the original transaction data have to be available to everyone<sup id="sf-2021-03-22-ethereum-l2-2-back"><a href="#sf-2021-03-22-ethereum-l2-2" class="simple-footnote" title=" There is one key difference between the zk and fraud proof approach. If there are verification only information contained in the original transaction, e.g. signatures, those information could be ignored. A ZK proof on state transitions already retains the cryptographic evidences that all the state transitions are valid. The only data needed to be made available is the data that allow for reconstruction of state transitions from S0 to S1000. If verification is through fraud proof, all the original transaction data have to be available.">2</a></sup>.</p>
+<p>The choice of verification mechanism is usually between zero knowledge proof and fraud proof challenge. I do not rule out that there are different techniques developed in the future. A zk proof cryptographically ensure state transitions are valid. A fraud proof challenge mechanism incentivizes users or watchers to validate the posted state transitions. There is a waiting period for the newly posted state to become finalized. Anyone could validate the posted state, and if they see something wrong, they post a fraud proof to revert the state and claim a reward. Zk proof has the advantage that posted state is finalized instantaneously. Zk proof could have additional privacy features as well. However, zk proofs requires heavy computations both in generation and verification. Zk proofs constructions are difficult to understand and audit, and the toolings and development experiences of zk framework are still a work in progress. See <a href="#zk-rollup-starknet-zksync-aztec">zk rollup discussion</a> below for more details.</p>
+<p>The spectrum of choices in data availability (<span class="caps">DA</span>) exists because onchain data is expensive. How to make transaction data available is a tradeoff between data availability guarantee and cost. If the transaction data is not available to users, users cannot verify the state transitions and cannot access their accounts. By some estimate, calldata<sup id="sf-2021-03-22-ethereum-l2-3-back"><a href="#sf-2021-03-22-ethereum-l2-3" class="simple-footnote" title="Note that calldata is not stored in EVM memory. This data is not accessible by smart contracts. It is already much cheaper than bytes stored in EVM memory.">3</a></sup> <a href="https://forum.celestia.org/t/ethereum-rollup-call-data-pricing-analysis/141">costs about 16 gas per byte</a> in Etheruem. Assuming a gas cost of 60 gwei and $3000/<span class="caps">ETH</span>, 1kb of data costs close to $3 <span class="caps">USD</span>. At this price, both zk and optimistic rollup will have its limit both on overall throughput as well as high transaction costs. Even with compression, a zk rollup is still going to take up 10-15 bytes of data, so a rollup would cost $0.03 at a minimum. In practice, it is much high than that due to fix gas costs for each aggregation.</p>
+<p>The alternatives to onchain data gives rise to a variety of strategies for data availabilities. It should be noted that offchain storage was widely considered by the community before the recent rise in popularity of rollup, which use onchain solutions. There are also an emerging trend to use a third party and hybrid solutions for data availability.</p>
+<p>It should be noted that both zk and fraud proof are considered just as secure as L1. If data is also onchain, i.e. optimistic and zk rollup, it is generally accepted that they have the same level of security as L1. By offloading data availability away from the L1 chain, security is compromised to an extent. It does not mean it is not secure. One has to evaluate a data availability solution on its own.</p>
+<h6 id="optimistic-rollup-optimism-arbitrum">Optimistic Rollup (Optimism, Arbitrum)</h6>
+<p>Rollup moves computation offchain, but all the original transactions data are kept on chain. For each set of transactions that a rollup protocol aggregates, a single summary transaction is submitted to the L1 chain. In this summary transaction, it contains the most up-to-date state of the rollup chain, and in the calldata field, it contains all the original transactions. They could be greatly compressed if the rollup is a special purpose protocol. If the protocol is general purpose, the compression level is less.</p>
+<p>Both Optimism and Arbitrum implement an <span class="caps">EVM</span> inside their rollup chains. Their rollup chains have a full full feature <span class="caps">EVM</span>.</p>
+<p>Optimism and Arbitrum have different implementation details. They implement a different virtual machine, even though both provide tooling to support solidity smart contracts. Their proof fraud verification mechanisms are different. Optimism is single round and Arbitrum multi-round fraud proof. See more details on other posts that discuss and compare both projects (<a href="https://threadreaderapp.com/thread/1395812308451004419.html">post1</a>, <a href="https://www.makeuseof.com/arbitrum-vs-optimism-whats-the-difference/">post2</a>].</p>
+<h6 id="zk-rollup-starknet-zksync-aztec">Zk Rollup (StarkNet, Zksync, Aztec)</h6>
+<p>The development of zk rollup is behind optimistic rollup. The main reason is that zero knowledge computing platform and tooling are still early. It is still hard to generate zk proof for general purpose computations; hence it is hard to make full feature <span class="caps">EVM</span> zk rollup chain. The hope that is technology will improve overtime, and zero knowledge platform will become sufficient mature and general purpose soon.</p>
+<p>Many people believe that zk rollup would eventually be the better technology of the two flavors of rollups. Zk rollup has some advantages over optimistic flavor. Zk rollup has fast withdrawal period. Zk rollup allow for higher level of data compression because verification data could be collapsed into the zk proof.</p>
+<p>StarkNet is a zk rollup chain deployed on Ethereum. It is the flagship project of the StarkWare, a company that also develops zero knowledge friendly language and platform <a href="https://www.cairo-lang.org/docs/">Cairo</a> that aims to be the tooling for generating validity proofs for general computation. StarkNet does not natively support <span class="caps">EVM</span> yet, but it supports smart contracts that are written in Cairo. It is not hard to see that Solidity could be transpiled into high level Cairo or compiled into Cairo compatible byte code. StarkNet allows L1 and L2 smart contracts to interact. The interaction is a form of message passing. It takes advantage of the fast finality of zk rollup. Unlike optimistic rollup, as soon as the L2 layer posts the aggregated state transition to L1, those state transitions are considered final. The messages calls could be posted in the same L1 transaction as the L2 state hash and zk proof update.</p>
+<p>There are two other zk rollup solutions. <a href="https://docs.zksync.io/userdocs/">Zksync</a> is already on mainnet. <a href="https://aztec.network/">Aztec</a> is only on testnet. Similar to StarkNet, they are not offering a general purpose <span class="caps">EVM</span> yet. Both of them only support <span class="caps">ETH</span> and <span class="caps">ERC20</span> token transfer so far. I have not spent the time to understand them in details.</p>
+<h6 id="plasma">Plasma</h6>
+<p>Plasma was once touted as the most likely candidate to scale Etheruem. Plasma was first proposed in this <a href="http://plasma.io/plasma-deprecated.pdf">paper</a>. There are a few additional iterations: <a href="https://www.learnplasma.org/en/learn/mvp.html">MinimumViable Plasma</a> (<span class="caps">MVP</span>) plasma, <a href="https://ethresear.ch/t/plasma-cash-plasma-with-much-less-per-user-data-checking/1298">Plasma Cash</a>, and then <a href="https://omg.network/more-viable-plasma-vs-minimum-viable-plasma/">MoreViable</a> plasma.</p>
+<p>Plasma never took off for a few reasons<sup id="sf-2021-03-22-ethereum-l2-4-back"><a href="#sf-2021-03-22-ethereum-l2-4" class="simple-footnote" title="See post1 and post2 for more details">4</a></sup>. First, Plasma stores data offchain, it needs a solution for data availability. The proposed solutions could be a centralized operator, PoS, or PoA system. Because the operator(s) have control over data, most proposed implementation also give them sole control to be able to submit aggregation to the chain. The data availability layer and aggregation layer make a Plasma chain to behave effectively as a sidechain. The security of the overall system is as secure as the PoS or the centralized operator layer. Second, Plasma has a rather complex exit game. This problem is compounded because transaction data is only available to the validator set or the centralized operator in most implementations. Lastly, other techniques for data availability become popular. Teams that were working on Plasma solutions have one way or the other pivoted to working on a variant that uses similar fraud proof but a different data availability strategy.</p>
+<p>Plasma is not implemented for good reasons. When it was first proposed, the important of data availability was somewhat obscured. The blockchain community was mostly focused on developing consensus algorithm to ensure correctness of computation. It is much more clear now that we could prove correctness by cryptographic proof or a challenge mechanism. The harder part is to ensure that everyone could have access the data to verify state transition or generate fraud proof. In many ways, the issues encountered in building a plasma system naturally gives rise to the variety of data availability solutions today.</p>
+<h6 id="data-availability-l1-chains">Data Availability L1 Chains</h6>
+<p><a href="https://blog.celestia.org/celestiums/">Celestium</a> is an L2 solution that uses Celestia for data availability. Celetia is an independent data availability blockchain. Celestia itself is a proof of stake chain. It uses data sampling technique to ensure data availability. It has not launched its mainnet yet. Celestium has not publicly stated whether it will use zk or fraud proof as their verification mechanism.</p>
+<p>Polygon is also working on a general purpose data availability layer, known as <a href="https://blog.polygon.technology/introducing-avail-by-polygon-a-robust-general-purpose-scalable-data-availability-layer-98bc9814c048/">Polygon Avail</a>. It is based on Cosmos <span class="caps">SDK</span>, data sampling technique, and <span class="caps">KZG</span> polynomial commitment.</p>
+<p>The development of Celestia and Poly Avail aim to fill a void. Of the two dimensions in the categorization table above, the dimension of verification scheme is somewhat well settled. The community know that fraud proof mechanism is a matter of implementation, and the community is improving on the zero knowledge proof ecosystem. Once the zk proof stack is mature, the community expect zk rollup will become the go-to verification scheme. For the other dimension of data availability, onchain is most the easiest and the easiest solution, but it is also the most expensive. Ethereum is aiming to fix it, thus becoming an effective data availability chain. Polygon Avail and Celestia are attempting to accomplish the same thing.</p>
+<h6 id="volition">Volition</h6>
+<p><a href="https://medium.com/starkware/volition-and-the-emerging-data-availability-spectrum-87e8bfa09bb">Volition</a> follows a simple idea that user could choose where the transaction data go. The user pays for the corresponding level of data availability. Onchain data costs the most, and offchain data costs nothing because there is no guarantee that the transaction data is recoverable. The existence of this category demonstrates that data availability is a tradeoff between cost and availability guarantee.</p>
+<p>ImmutableX allows user to choose whether transaction data to go onchain or to be validated by a data availability committee.</p>
+<h6 id="immutablex">ImmutableX</h6>
+<p>ImmutableX is not a generic <span class="caps">EVM</span> platform. The protocol is designed specifically for NFTs. The protocol makes it easy to transfer, trade, and mint NFTs.</p>
+<p>ImmutableX aggregate ImmutableX protocol (L2) transactions and generate a zk proof. Its proof generation engine is developed in partnership with StarkWare, using StarkEx prover and verifier.</p>
+<p>ImmutableX uses a hybrid <span class="caps">DA</span> solution. It allows users to choose post the transaction data onchain. It also allows user to use a offchain mode. The offchain mode uses the strategy of Data Availability Committee (<span class="caps">DAC</span>). All members of the committee have to sign off that they have received a copy of the data. It is a 1 of n security model, in that only one of the committee members need to be an honest participant for data to stay available.</p>
+<hr>
+<h4 id="references">References</h4>
+<ul>
+<li>A blog post about <a href="https://blog.celestia.org/ethereum-off-chain-data-availability-landscape/">data availability landscape</a></li>
+<li>A reddit thread on <a href="https://old.reddit.com/r/ethereum/comments/sgd3zt/a_quick_reminder_of_what_shared_security_means/">shared security</a></li>
+<li>Vitalik’s writeup on <a href="https://vitalik.ca/general/2021/01/05/rollup.html">rollup</a></li>
+</ul>
+<hr>
+<h4 id="footnotes">Footnotes</h4>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=default';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        // "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'auto' } }," +
+        "    jax: ['input/TeX','input/MathML','output/SVG']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['TeX', 'STIX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+
+</script><ol class="simple-footnotes"><li id="sf-2021-03-22-ethereum-l2-1">One example is a Merkle Hash. But it could be a generic polynomial or even inner product commitment as well. See <a href="2021-10-11-basic-polynomial-commitment">polynomial commitment</a>. <a href="#sf-2021-03-22-ethereum-l2-1-back" class="simple-footnote-back">↩</a></li><li id="sf-2021-03-22-ethereum-l2-2"> There is one key difference between the zk and fraud proof approach. If there are verification only information contained in the original transaction, e.g. signatures, those information could be ignored. A <span class="caps">ZK</span> proof on state transitions already retains the cryptographic evidences that all the state transitions are valid. The only data needed to be made available is the data that allow for reconstruction of state transitions from S0 to S1000. If verification is through fraud proof, all the original transaction data have to be available. <a href="#sf-2021-03-22-ethereum-l2-2-back" class="simple-footnote-back">↩</a></li><li id="sf-2021-03-22-ethereum-l2-3">Note that calldata is not stored in <span class="caps">EVM</span> memory. This data is not accessible by smart contracts. It is already much cheaper than bytes stored in <span class="caps">EVM</span> memory. <a href="#sf-2021-03-22-ethereum-l2-3-back" class="simple-footnote-back">↩</a></li><li id="sf-2021-03-22-ethereum-l2-4">See <a href="https://cointelegraph.com/news/did-ethereum-silently-give-up-on-plasma">post1</a> and <a href="https://medium.com/dragonfly-research/the-life-and-death-of-plasma-b72c6a59c5ad">post2</a> for more details <a href="#sf-2021-03-22-ethereum-l2-4-back" class="simple-footnote-back">↩</a></li></ol>
+
+
+
+             
+ 
+            
+            
+            
+
+
+
+
+
+
+
+
+            <hr/>
+            <script src="https://utteranc.es/client.js"
+                    repo="jinfwhuang/jinfwhuang.github.io"
+                    issue-term="pathname"
+                    label="user-comments"
+                    theme="github-light"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+
+            <hr/>
+<section>
+    <h2>Related Posts</h2>
+<ul class="related-posts-list">
+<li><a href="/2021-07-23-blockchain_throughput" title="Notes on Blockchain Throughput">Notes on Blockchain Throughput</a></li>
+<li><a href="/2021-09-06-dsn" title="Notes on Decentralized Storage Networks">Notes on Decentralized Storage Networks</a></li>
+<li><a href="/2022-03-15-stablecoins" title="Notes on ERC20 Stablecoins">Notes on ERC20 Stablecoins</a></li>
+<li><a href="/2022-09-01-nft-platform" title="Notes on NFT Platforms">Notes on NFT Platforms</a></li>
+<li><a href="/2022-10-01-scaling-nft-metadata" title="Scaling NFT Metadata">Scaling NFT Metadata</a></li>
+</ul>
+<hr />
+</section>
+            <aside>
+            <nav>
+            <ul class="articles-timeline">
+                <li class="previous-article">« <a href="/2021-03-17-quote-of-the-month" title="Previous: Quote of the Month">Quote of the Month</a></li>
+                <li class="next-article"><a href="/2022-09-01-nft-platform" title="Next: Notes on NFT Platforms">Notes on NFT Platforms</a> »</li>
+            </ul>
+            </nav>
+            </aside>
+        </div>
+        <section id="article-sidebar" class="span2">
+            <h4>Published</h4>
+            <time itemprop="dateCreated" datetime="2022-03-22T00:00:00-07:00">Tue 22 March 2022</time>
+            <!--             <h4>Category</h4>
+            <a class="category-link" href="/categories#misc-ref">misc</a>
+ -->
+            <h4>Tags</h4>
+            <ul class="list-of-tags tags-in-article">
+                <li><a href="/tags#web3-ref">web3
+                    <span class="superscript">6</span>
+</a></li>
+            </ul>
+<h4>Contact</h4>
+<div id="sidebar-social-link">
+    <a href="https://twitter.com/jinfwhuang" title="Twiiter" target="_blank" rel="nofollow noopener noreferrer">
+        <svg xmlns="http://www.w3.org/2000/svg" aria-label="Twitter" role="img" viewBox="0 0 512 512"><rect width="512" height="512" rx="15%" fill="#1da1f3"/><path fill="#fff" d="M437 152a72 72 0 0 1-40 12 72 72 0 0 0 32-40 72 72 0 0 1-45 17 72 72 0 0 0-122 65 200 200 0 0 1-145-74 72 72 0 0 0 22 94 72 72 0 0 1-32-7 72 72 0 0 0 56 69 72 72 0 0 1-32 1 72 72 0 0 0 67 50 200 200 0 0 1-105 29 200 200 0 0 0 309-179 200 200 0 0 0 35-37"/></svg>
+    </a>
+    <a href="https://www.linkedin.com/in/jinfwhuang" title="LinkedIn" target="_blank" rel="nofollow noopener noreferrer">
+        <svg xmlns="http://www.w3.org/2000/svg" aria-label="LinkedIn" role="img" viewBox="0 0 512 512" fill="#fff"><rect width="512" height="512" rx="15%" fill="#0077b5"/><circle cx="142" cy="138" r="37"/><path stroke="#fff" stroke-width="66" d="M244 194v198M142 194v198"/><path d="M276 282c0-20 13-40 36-40 24 0 33 18 33 45v105h66V279c0-61-32-89-76-89-34 0-51 19-59 32"/></svg>
+    </a>
+</div>
+            
+
+
+
+
+
+            
+
+
+
+
+
+        </section>
+</div>
+</article>
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe.
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides.
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo https://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>                    </div>
+                    <div class="span1"></div>
+                </div>
+            </div>
+        </div>
+<!--        <footer>
+
+    <div>
+        <span class="site-name"><span style="color:black;">Jin's Notes</span></span> - the hardest part is taking the first step
+    </div>
+
+
+
+    <div id="fpowered">
+        Powered by: <a href="http://getpelican.com/" title="Pelican Home Page" target="_blank" rel="nofollow noopener noreferrer">Pelican</a>
+        Theme: <a href="https://elegant.oncrashreboot.com/" title="Theme Elegant Home Page" target="_blank" rel="nofollow noopener noreferrer">Elegant</a>
+    </div>
+</footer>-->
+            <script src="//code.jquery.com/jquery.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+        <script src="/theme/js/elegant.prod.9e9d5ce754.js"></script>
+        <script>
+            function validateForm(query)
+            {
+                return (query.length > 0);
+            }
+        </script>
+
+
+
+
+    <script>
+    (function () {
+        if (window.location.hash.match(/^#comment-\d+$/)) {
+            $('#comment_thread').collapse('show');
+        }
+    })();
+    window.onhashchange=function(){
+        if (window.location.hash.match(/^#comment-\d+$/))
+            window.location.reload(true);
+    }
+    $('#comment_thread').on('shown', function () {
+        var link = document.getElementById('comment-accordion-toggle');
+        var old_innerHTML = link.innerHTML;
+        $(link).fadeOut(200, function() {
+            $(this).text('Click here to hide comments').fadeIn(200);
+        });
+        $('#comment_thread').on('hidden', function () {
+            $(link).fadeOut(200, function() {
+                $(this).text(old_innerHTML).fadeIn(200);
+            });
+        })
+    })
+</script>
+
+    </body>
+    <!-- Theme: Elegant built for Pelican
+        License : MIT -->
+
+</html>

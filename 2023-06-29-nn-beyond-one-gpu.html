@@ -1,0 +1,480 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="/theme/css/elegant.prod.9e9d5ce754.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="/theme/css/custom.css" media="screen">
+
+        <link rel="dns-prefetch" href="//fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+
+        <meta name="author" content="jin" />
+
+        <meta name="description" content="This short post is about how to train deep neural models that do not fit into a single GPU. Each GPU has limited memory. While it is possible to offload the model to CPU’s main memory or even disk, it slows down the training and has limited scalability. The …
+" />
+        <meta name="twitter:creator" content="@jinfwhuang">
+        <meta property="og:type" content="article" />
+        <meta name="twitter:card" content="summary">
+
+<meta name="keywords" content="ai, misc, " />
+
+<meta property="og:title" content="Neural Net Beyond a Single GPU "/>
+<meta property="og:url" content="/2023-06-29-nn-beyond-one-gpu" />
+<meta property="og:description" content="This short post is about how to train deep neural models that do not fit into a single GPU. Each GPU has limited memory. While it is possible to offload the model to CPU’s main memory or even disk, it slows down the training and has limited scalability. The …" />
+<meta property="og:site_name" content="Jin&#39;s Notes" />
+<meta property="og:article:author" content="jin" />
+<meta property="og:article:published_time" content="2023-06-29T00:00:00-07:00" />
+<meta name="twitter:title" content="Neural Net Beyond a Single GPU ">
+<meta name="twitter:description" content="This short post is about how to train deep neural models that do not fit into a single GPU. Each GPU has limited memory. While it is possible to offload the model to CPU’s main memory or even disk, it slows down the training and has limited scalability. The …">
+<meta property="og:image" content="/images/android-chrome-192x192.png" />
+<meta name="twitter:image" content="/images/android-chrome-192x192.png" >
+
+        <title>Neural Net Beyond a Single GPU  · Jin&#39;s Notes
+</title>
+        <link rel="shortcut icon" href="/theme/images/favicon.ico" type="image/x-icon" />
+        <link rel="icon" href="/theme/images/apple-touch-icon-152x152.png" type="image/png" />
+        <link rel="apple-touch-icon" href="/theme/images/apple-touch-icon.png"  type="image/png" />
+        <link rel="apple-touch-icon" sizes="57x57" href="/theme/images/apple-touch-icon-57x57.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="/theme/images/apple-touch-icon-72x72.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="76x76" href="/theme/images/apple-touch-icon-76x76.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="/theme/images/apple-touch-icon-114x114.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="120x120" href="/theme/images/apple-touch-icon-120x120.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="144x144" href="/theme/images/apple-touch-icon-144x144.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="152x152" href="/theme/images/apple-touch-icon-152x152.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="152x152" href="/theme/images/apple-touch-icon-180x180.png" type="image/png" />
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+     m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+     })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-207279664-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+
+    </head>
+    <body>
+        <div id="content">
+            <div class="navbar navbar-static-top">
+                <div class="navbar-inner">
+                    <div class="container-fluid">
+                        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </a>
+                        <a class="brand" href="/"><span class=site-name><span style="color:black;">Jin's Notes</span></span></a>
+                        <div class="nav-collapse collapse">
+                            <ul class="nav pull-right top-menu">
+                                <li >
+                                    <a href=
+                                       "/"
+                                    >Home</a>
+                                </li>
+<!--                                <li ><a href="/categories">Categories</a></li>-->
+                                <li ><a href="/tags">Tags</a></li>
+                                <li ><a href="/archives">Archives</a></li>
+                                <li><form class="navbar-search" action="/search" onsubmit="return validateForm(this.elements['q'].value);"> <input type="text" class="search-query" placeholder="Search" name="q" id="tipue_search_input"></form></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid">
+                <div class="row-fluid">
+                    <div class="span1"></div>
+                    <div class="span10">
+<article itemscope>
+<div class="row-fluid">
+    <header class="page-header span10 offset2">
+        <h1>
+            <a href="/2023-06-29-nn-beyond-one-gpu">
+                Neural Net Beyond a Single <span class="caps">GPU</span> <br/>
+            </a>
+        </h1>
+    </header>
+</div>
+
+<div class="row-fluid">
+        <div class="span8 offset2 article-content">
+            
+            <!-- [TOC] -->
+
+<p>This short post is about how to train deep neural models that do not fit into a single <span class="caps">GPU</span>. </p>
+<p>Each <span class="caps">GPU</span> has limited memory. While it is possible to offload the model to <span class="caps">CPU</span>&#8217;s main memory or even disk, it slows down the training and has limited scalability. The next obvious solution is to use multiple GPUs. That is limited to at most 1 order of magnitude scaling. The only viable solution is partitioning a model to a cluster of <span class="caps">GPU</span> machines, where data and model update communications go through the&nbsp;network. </p>
+<p>Note that distributed data parallelism only speeds up training. It splits up each batch into different batches. Batches are processed by different GPUs concurrently. An all-reduce operation of the scattered optimizer states allowes each <span class="caps">GPU</span> device to calculate one round of parameter update as if each <span class="caps">GPU</span> has processed all the data. This approach speeds up training, but it does not allow the model to scale beyond a single <span class="caps">GPU</span>.</p>
+<p>As model size grows, the only solution is to split up the model. The model includes model parameters, gradients, gradient variances, momentums, activations, and other residual memory requirements. The simplest solution is to naively partition the model layer by layer. The model is expressed as a sequence of layers, where layers could be distributed to GPUs. The model is computed layer by layer sequentially. It is not hard to see that GPUs idling is a critical efficiency&nbsp;issue.</p>
+<p>Pipelining aims to mitigate the <span class="caps">GPU</span> idling problem. The strategy is to concurrently process multiple smaller batches to enable all GPUs to have some work to do. It does not fully optimize <span class="caps">GPU</span> utilization.
+<figure>
+<img
+  src="images/2023-06-28-pipelining.png"
+  align="middle"
+  width="50%"
+/>
+<figcaption align = "center">
+Fig. from <a href='#huang2019gpipe' id='ref-huang2019gpipe-1'>
+    2
+</a>
+</figcaption>
+</figure></p>
+<p>The partitioning could be more fine-grained. The tensor computation could be split into GPUs. See <a href='#narayanan2021efficient' id='ref-narayanan2021efficient-1'>
+    3
+</a> for a technical description. Pytorch supports tensor computation across GPUs through its <span class="caps">RPC</span> and distributed tensor <a href="https://pytorch.org/docs/stable/rpc.html">framework</a>. This strategy is hard to adapt because it does not generalize well to models written with a high level <span class="caps">API</span>. Each model has to be explicitly configured to split up small computation unit. It also does not describe how the computation should be pipelined and ordered, likely leading to efficiency&nbsp;issue.</p>
+<p><a href="https://www.microsoft.com/en-us/research/project/deepspeed/">Deepspeed</a> pioneered the ZeRO (Zero Redudancy Optimizer) distributed training paradigm that combines data and model parallelism. The model is sharded and distributed to GPUs. Each <span class="caps">GPU</span> device processes a different data batch. Each device acquires a model shard as necessary to perform a forward and backward pass. The updates are broadcast to the appropriate shard owners once the update computations are completed. Each device only retains its own shard after an update. Deepspeed releases this <a href="https://github.com/microsoft/DeepSpeed">optimization library</a>. Pytorch&#8217;s <a href="https://engineering.fb.com/2021/07/15/open-source/fsdp/"><span class="caps">FSDP</span></a> is another framework that follows this optimization strategy. See <a href='#zhao2023pytorch' id='ref-zhao2023pytorch-1'>
+    4
+</a> for more detail. This paradigm is the most promising if one has to perform domain adaption with large private text corpus on the latest state-of-art large models (e.g. falcon, LLaMA, and&nbsp;PaLM).</p>
+<figure>
+<img
+  src="images/2023-06-zero-model-shard.png"
+  align="middle"
+  width="50%"
+/>
+<figcaption align = "center">
+Fig. from Deepspeed
+</figcaption>
+</figure>
+
+<hr />
+<h4 id="references">References</h4>
+<ul>
+<li>
+<p>OpenAI&#8217;s blog post on <a href="https://openai.com/research/techniques-for-training-large-neural-networks">training large neural&nbsp;networks</a></p>
+</li>
+<li>
+<p>The &#8220;Switch Transformers&#8221; paper discusses data, model, and expert parallelism extensively&nbsp;(<a href='#fedus2022switch' id='ref-fedus2022switch-1'>
+    1
+</a>).</p>
+</li>
+</ul>
+<!&#8212; &#8212;&#8212;&#8212;&#8212;
+#### Footnotes &#8212;>
+
+<!&#8212;
+
+
+
+&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;
+# Distributed Model Training
+&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;
+
+# pytorch examples
+
+https://github.com/pytorch/examples/blob/main/distributed/tensor_parallelism/tensor_parallel_example.py
+
+https://pytorch.org/tutorials/intermediate/ddp_tutorial.html
+
+https://github.com/pytorch/examples/blob/main/distributed/rpc/pipeline/main.py#L133
+
+# shen li&#8217;s blog
+
+https://mrshenli.github.io/
+
+
+
+### hgg
+
+- hugging face
+  - https://huggingface.co/docs/transformers/v4.15.0/parallelism
+  - https://huggingface.co/transformers/v4.9.0/parallelism.html
+  - https://github.com/Hannibal046/Awesome-LLM#llm-training-frameworks
+
+
+
+- deepspeed
+  https://www.microsoft.com/en-us/research/blog/zero-deepspeed-new-system-optimizations-enable-training-models-with-over-100-billion-parameters/
+
+
+https://www.microsoft.com/en-us/research/blog/deepspeed-zero-a-leap-in-speed-for-llm-and-chat-model-training-with-4x-less-communication/
+
+- zero paper
+https://www.microsoft.com/en-us/research/publication/zero-extremely-efficient-collective-communication-for-giant-model-training/
+
+
+
+
+- ray + data parallelism (yes)
+- ray + model parallel (no?)
+
+
+
+
+# A Hitchhiker&#8217;s Guide On Distributed Training of Deep Neural Networks
+https://arxiv.org/abs/1810.11787 &#8212;>
+
+
+            <div id="citations">
+    <hr>
+    <h3>Citations</h3>
+    <ol class="references">
+            <li id="huang2019gpipe">
+                <span class="reference-text">Huang, Yanping, Cheng, Youlong, Bapna, Ankur, Firat, Orhan, Chen, Mia&nbsp;Xu, Chen, Dehao, Lee, HyoukJoong, Ngiam, Jiquan, Le, Quoc&nbsp;V., Wu, Yonghui, and Chen, Zhifeng.
+Gpipe: efficient training of giant neural networks using pipeline parallelism.
+2019.
+<a href="https://arxiv.org/abs/1811.06965">arXiv:1811.06965</a>.</span>
+                    <a class="cite-backref" href="#ref-huang2019gpipe-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="narayanan2021efficient">
+                <span class="reference-text">Narayanan, Deepak, Shoeybi, Mohammad, Casper, Jared, LeGresley, Patrick, Patwary, Mostofa, Korthikanti, Vijay&nbsp;Anand, Vainbrand, Dmitri, Kashinkunti, Prethvi, Bernauer, Julie, Catanzaro, Bryan, Phanishayee, Amar, and Zaharia, Matei.
+Efficient large-scale language model training on gpu clusters using megatron-lm.
+2021.
+<a href="https://arxiv.org/abs/2104.04473">arXiv:2104.04473</a>.</span>
+                    <a class="cite-backref" href="#ref-narayanan2021efficient-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="zhao2023pytorch">
+                <span class="reference-text">Zhao, Yanli, Gu, Andrew, Varma, Rohan, Luo, Liang, Huang, Chien-Chin, Xu, Min, Wright, Less, Shojanazeri, Hamid, Ott, Myle, Shleifer, Sam, Desmaison, Alban, Balioglu, Can, Nguyen, Bernard, Chauhan, Geeta, Hao, Yuchen, and Li, Shen.
+Pytorch fsdp: experiences on scaling fully sharded data parallel.
+2023.
+<a href="https://arxiv.org/abs/2304.11277">arXiv:2304.11277</a>.</span>
+                    <a class="cite-backref" href="#ref-zhao2023pytorch-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="fedus2022switch">
+                <span class="reference-text">Fedus, William, Zoph, Barret, and Shazeer, Noam.
+Switch transformers: scaling to trillion parameter models with simple and efficient sparsity.
+2022.
+<a href="https://arxiv.org/abs/2101.03961">arXiv:2101.03961</a>.</span>
+                    <a class="cite-backref" href="#ref-fedus2022switch-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+    </ol>
+</div>
+
+             
+ 
+            
+            
+            
+
+
+
+
+
+
+
+
+            <hr/>
+            <script src="https://utteranc.es/client.js"
+                    repo="jinfwhuang/jinfwhuang.github.io"
+                    issue-term="pathname"
+                    label="user-comments"
+                    theme="github-light"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+
+            <hr/>
+<section>
+    <h2>Related Posts</h2>
+<ul class="related-posts-list">
+<li><a href="/2023-04-04-document-search" title="Pretrained LLMs and Text Search - A practitioner&#39;s perspective">Pretrained LLMs and Text Search <small>A practitioner's perspective</small></a></li>
+<li><a href="/2023-04-27-open-source-llm" title="Open Source LLMs">Open Source LLMs</a></li>
+<li><a href="/2023-06-04-domain-specific-ai-assistant" title="Domain Specific AI Assistants">Domain Specific AI Assistants</a></li>
+</ul>
+<hr />
+</section>
+            <aside>
+            <nav>
+            <ul class="articles-timeline">
+                <li class="previous-article">« <a href="/2023-06-25-wing-foiling-tips" title="Previous: First Notes on Wing Foiling - I am still early in the process">First Notes on Wing Foiling <small class="subtitle">I am still early in the process</small></a></li>
+                <li class="next-article"><a href="/2023-10-17-gen-models" title="Next: Generative Models and Neural Networks">Generative Models and Neural Networks</a> »</li>
+            </ul>
+            </nav>
+            </aside>
+        </div>
+        <section id="article-sidebar" class="span2">
+            <h4>Published</h4>
+            <time itemprop="dateCreated" datetime="2023-06-29T00:00:00-07:00">Thu 29 June 2023</time>
+            <!--             <h4>Category</h4>
+            <a class="category-link" href="/categories#misc-ref">misc</a>
+ -->
+            <h4>Tags</h4>
+            <ul class="list-of-tags tags-in-article">
+                <li><a href="/tags#ai-ref">ai
+                    <span class="superscript">4</span>
+</a></li>
+            </ul>
+<h4>Contact</h4>
+<div id="sidebar-social-link">
+    <a href="https://twitter.com/jinfwhuang" title="Twiiter" target="_blank" rel="nofollow noopener noreferrer">
+        <svg xmlns="http://www.w3.org/2000/svg" aria-label="Twitter" role="img" viewBox="0 0 512 512"><rect width="512" height="512" rx="15%" fill="#1da1f3"/><path fill="#fff" d="M437 152a72 72 0 0 1-40 12 72 72 0 0 0 32-40 72 72 0 0 1-45 17 72 72 0 0 0-122 65 200 200 0 0 1-145-74 72 72 0 0 0 22 94 72 72 0 0 1-32-7 72 72 0 0 0 56 69 72 72 0 0 1-32 1 72 72 0 0 0 67 50 200 200 0 0 1-105 29 200 200 0 0 0 309-179 200 200 0 0 0 35-37"/></svg>
+    </a>
+    <a href="https://www.linkedin.com/in/jinfwhuang" title="LinkedIn" target="_blank" rel="nofollow noopener noreferrer">
+        <svg xmlns="http://www.w3.org/2000/svg" aria-label="LinkedIn" role="img" viewBox="0 0 512 512" fill="#fff"><rect width="512" height="512" rx="15%" fill="#0077b5"/><circle cx="142" cy="138" r="37"/><path stroke="#fff" stroke-width="66" d="M244 194v198M142 194v198"/><path d="M276 282c0-20 13-40 36-40 24 0 33 18 33 45v105h66V279c0-61-32-89-76-89-34 0-51 19-59 32"/></svg>
+    </a>
+</div>
+            
+
+
+
+
+
+            
+
+
+
+
+
+        </section>
+</div>
+</article>
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe.
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides.
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo https://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>                    </div>
+                    <div class="span1"></div>
+                </div>
+            </div>
+        </div>
+<!--        <footer>
+
+    <div>
+        <span class="site-name"><span style="color:black;">Jin's Notes</span></span> - the hardest part is taking the first step
+    </div>
+
+
+
+    <div id="fpowered">
+        Powered by: <a href="http://getpelican.com/" title="Pelican Home Page" target="_blank" rel="nofollow noopener noreferrer">Pelican</a>
+        Theme: <a href="https://elegant.oncrashreboot.com/" title="Theme Elegant Home Page" target="_blank" rel="nofollow noopener noreferrer">Elegant</a>
+    </div>
+</footer>-->
+            <script src="//code.jquery.com/jquery.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+        <script src="/theme/js/elegant.prod.9e9d5ce754.js"></script>
+        <script>
+            function validateForm(query)
+            {
+                return (query.length > 0);
+            }
+        </script>
+
+
+
+
+    <script>
+    (function () {
+        if (window.location.hash.match(/^#comment-\d+$/)) {
+            $('#comment_thread').collapse('show');
+        }
+    })();
+    window.onhashchange=function(){
+        if (window.location.hash.match(/^#comment-\d+$/))
+            window.location.reload(true);
+    }
+    $('#comment_thread').on('shown', function () {
+        var link = document.getElementById('comment-accordion-toggle');
+        var old_innerHTML = link.innerHTML;
+        $(link).fadeOut(200, function() {
+            $(this).text('Click here to hide comments').fadeIn(200);
+        });
+        $('#comment_thread').on('hidden', function () {
+            $(link).fadeOut(200, function() {
+                $(this).text(old_innerHTML).fadeIn(200);
+            });
+        })
+    })
+</script>
+
+    </body>
+    <!-- Theme: Elegant built for Pelican
+        License : MIT -->
+
+</html>

@@ -1,0 +1,648 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="/theme/css/elegant.prod.9e9d5ce754.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="/theme/css/custom.css" media="screen">
+
+        <link rel="dns-prefetch" href="//fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+
+        <meta name="author" content="jin" />
+
+        <meta name="description" content="Pretrained transformer-based large language models (LLM) are upending our perception about what AI is capable in language comprehension. While large, open-domain search engines have been able to process natural language queries, the search box feature in all other applications, such as site search or search in enterprise applications, have been …
+" />
+        <meta name="twitter:creator" content="@jinfwhuang">
+        <meta property="og:type" content="article" />
+        <meta name="twitter:card" content="summary">
+
+<meta name="keywords" content="ai, LLM, search, misc, " />
+
+<meta property="og:title" content="Pretrained LLMs and Text Search  - A practitioner&#39;s perspective "/>
+<meta property="og:url" content="/2023-04-04-document-search" />
+<meta property="og:description" content="Pretrained transformer-based large language models (LLM) are upending our perception about what AI is capable in language comprehension. While large, open-domain search engines have been able to process natural language queries, the search box feature in all other applications, such as site search or search in enterprise applications, have been …" />
+<meta property="og:site_name" content="Jin&#39;s Notes" />
+<meta property="og:article:author" content="jin" />
+<meta property="og:article:published_time" content="2023-04-04T00:00:00-07:00" />
+<meta name="twitter:title" content="Pretrained LLMs and Text Search  - A practitioner&#39;s perspective ">
+<meta name="twitter:description" content="Pretrained transformer-based large language models (LLM) are upending our perception about what AI is capable in language comprehension. While large, open-domain search engines have been able to process natural language queries, the search box feature in all other applications, such as site search or search in enterprise applications, have been …">
+<meta property="og:image" content="/images/android-chrome-192x192.png" />
+<meta name="twitter:image" content="/images/android-chrome-192x192.png" >
+
+        <title>Pretrained LLMs and Text Search  - A practitioner&#39;s perspective  · Jin&#39;s Notes
+</title>
+        <link rel="shortcut icon" href="/theme/images/favicon.ico" type="image/x-icon" />
+        <link rel="icon" href="/theme/images/apple-touch-icon-152x152.png" type="image/png" />
+        <link rel="apple-touch-icon" href="/theme/images/apple-touch-icon.png"  type="image/png" />
+        <link rel="apple-touch-icon" sizes="57x57" href="/theme/images/apple-touch-icon-57x57.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="/theme/images/apple-touch-icon-72x72.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="76x76" href="/theme/images/apple-touch-icon-76x76.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="/theme/images/apple-touch-icon-114x114.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="120x120" href="/theme/images/apple-touch-icon-120x120.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="144x144" href="/theme/images/apple-touch-icon-144x144.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="152x152" href="/theme/images/apple-touch-icon-152x152.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="152x152" href="/theme/images/apple-touch-icon-180x180.png" type="image/png" />
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+     m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+     })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-207279664-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+
+    </head>
+    <body>
+        <div id="content">
+            <div class="navbar navbar-static-top">
+                <div class="navbar-inner">
+                    <div class="container-fluid">
+                        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </a>
+                        <a class="brand" href="/"><span class=site-name><span style="color:black;">Jin's Notes</span></span></a>
+                        <div class="nav-collapse collapse">
+                            <ul class="nav pull-right top-menu">
+                                <li >
+                                    <a href=
+                                       "/"
+                                    >Home</a>
+                                </li>
+<!--                                <li ><a href="/categories">Categories</a></li>-->
+                                <li ><a href="/tags">Tags</a></li>
+                                <li ><a href="/archives">Archives</a></li>
+                                <li><form class="navbar-search" action="/search" onsubmit="return validateForm(this.elements['q'].value);"> <input type="text" class="search-query" placeholder="Search" name="q" id="tipue_search_input"></form></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid">
+                <div class="row-fluid">
+                    <div class="span1"></div>
+                    <div class="span10">
+<article itemscope>
+<div class="row-fluid">
+    <header class="page-header span10 offset2">
+        <h1>
+            <a href="/2023-04-04-document-search">
+                Pretrained LLMs and Text Search<br/>
+                <small class="subtitle">
+                    A practitioner's perspective
+                </small>
+            </a>
+        </h1>
+    </header>
+</div>
+
+<div class="row-fluid">
+    <div class="span2 table-of-content">
+        <nav>
+        <h4>Contents</h4>
+        <div class="toc">
+<ul>
+<li><a href="#text-search-paradigms">Text Search Paradigms</a><ul>
+<li><a href="#lexical-search">Lexical Search</a></li>
+<li><a href="#learned-representation">Learned Representation</a></li>
+<li><a href="#cross-encoding-ranking-model">Cross Encoding Ranking Model</a></li>
+</ul>
+</li>
+<li><a href="#current-state-of-search">Current State of Search</a></li>
+<li><a href="#beyond-lexical">Beyond Lexical</a><ul>
+<li><a href="#what-people-want">What People Want</a></li>
+<li><a href="#implementation-challenges">Implementation Challenges</a></li>
+</ul>
+</li>
+<li><a href="#final-thoughts">Final Thoughts</a></li>
+<li><a href="#footnotes">Footnotes</a></li>
+</ul>
+</div>
+        </nav>
+    </div>
+    <div class="span8 article-content">
+            
+            <p>Pretrained transformer-based large language models (<span class="caps">LLM</span>) are upending our perception about what <span class="caps">AI</span> is capable in language comprehension. While large, open-domain search engines have been able to process natural language queries, the search box feature in all other applications, such as site search or search in enterprise applications, have been limited to keyword based. The emergence of <span class="caps">LLM</span> is changing that. Both consumers and enterprise application users will soon expect all search boxes to understand natural languages.</p>
+<p>In this post, I will outline my thoughts on what is next for text search.</p>
+<h2 id="text-search-paradigms">Text Search Paradigms</h2>
+<p>I am not writing a comprehensive literature review on information retrieval and <span class="caps">LLM</span>. One could refer to <a href='#lin2021pretrained' id='ref-lin2021pretrained-1'>
+    4
+</a> for an overview. I only intend to give a short review of the techniques that are relevant to implementing a search system as technology stands today.</p>
+<h4 id="lexical-search">Lexical Search</h4>
+<p>I use lexical search loosely to refer to a variety of text processing techniques and term-based relevance scoring algorithms. The best known models are <a href="https://en.wikipedia.org/wiki/Okapi_BM25"><span class="caps">BM25</span></a> and <a href="https://en.wikipedia.org/wiki/Tf%E2%80%93idf">tf-idf</a>. These models encode documents as sparse vectors, storing them as inverted indices. The search algorithm converts the query into a vector to calculate a relevance score.</p>
+<h4 id="learned-representation">Learned Representation</h4>
+<p>Instead of relying on lexical structures, learning models are used to discover a latent feature set to represent the documents and queries. The learning models could be linear models, tree-based models, <span class="caps">LSTM</span> (long short-term memory), or transformer-based <span class="caps">LLM</span>.</p>
+<p>The learned representations could be sparse vectors. The search algorithm treats the sparse vectors similar to how lexical search makes use of inverted indices. The model architecture has a hidden layer that corresponds to the latent features representting the input text. The rest of the model could be any learning models. The model is trained to have a sparsity as well as relevance objectives. The trained model could be used to encode documents and queries into a vector space. See <a href='#zamani2018' id='ref-zamani2018-1'>
+    11
+</a> for an example.</p>
+<p>The learned representations could be dense vectors. While sparse vectors could have dimensions in the millions, dense vectors usually have dimensions in the 100s or 1000s. The approach of dense vector representation existed well before <span class="caps">LLM</span>. Vector encoding generated by word2vec (<a href='#mikolov2013efficient' id='ref-mikolov2013efficient-1'>
+    5
+</a> ) and GloVe (<a href='#pennington2014glove' id='ref-pennington2014glove-1'>
+    8
+</a>) were examples of dense embedding. These models encode an input text into a dense vector with length in the 100s. Text search algorithm applies a distance similarity and nearest neighbor search on a vector space.</p>
+<p>Note that dense vector similarity algorithms could be much more efficient than sparse vector search. However, sparse vector algorithms such as <span class="caps">BM25</span> are usually sufficiently efficient that it is not a major concern. See this blog post for an example of <a href="https://erikbern.com/2015/10/01/nearest-neighbors-and-vector-models-part-2-how-to-search-in-high-dimensional-spaces.html">approximate nearing neighbor search</a> for dense vectors.</p>
+<p><span class="caps">LLM</span>-based representations work exactly the same. The only difference is that <span class="caps">LLM</span> is used to encode the documents and queries. <span class="caps">LLM</span> dramatically improves search results if the <span class="caps">LLM</span> is trained on a corpus similar to the later queries. See <a href='#karpukhin-etal-2020-dense' id='ref-karpukhin-etal-2020-dense-1'>
+    2
+</a> and <a href='#xiong2020approximate' id='ref-xiong2020approximate-1'>
+    10
+</a> for detailed descriptions on how to build these models from <span class="caps">BERT</span>(<a href='#devlin-etal-2019-bert' id='ref-devlin-etal-2019-bert-1'>
+    1
+</a>). <span class="caps">LLM</span>-based embeddings, e.g. <a href="https://platform.openai.com/docs/api-reference/embeddings">OpenAI embedding</a>, have lengths in the 1000s.</p>
+<h4 id="cross-encoding-ranking-model">Cross Encoding Ranking Model</h4>
+<p>Both sparse and dense vector models are representation-based. They separate the computations between indexing and query. Cross-encoding requires both the query and the document to be provided as input to calculate a relevance score. They are also called interaction-based models. It is possible to use <span class="caps">LSTM</span> or Conv-net to encode the query-document pair. The biggest gain has been using pre-trained <span class="caps">LLM</span> as the starting point for model training. The query and document are concatenated as the input. An <span class="caps">LLM</span> encodes the input and is trained as a binary classification model. Once trained on a labelled dataest, the model could be used to give a relevance score to any query-document pair. See <a href='#nogueira2020passage' id='ref-nogueira2020passage-1'>
+    6
+</a> and <a href='#nogueira2019multistage' id='ref-nogueira2019multistage-1'>
+    7
+</a> for examples.</p>
+<p>Transformer-based <span class="caps">LLM</span> is <code>O(n^2)</code> with respect to the input sequence length. Cross-encoding has to process every query-document pair as input. That is hugely inefficient. One way to get around this is late interaction (see <a href='#khattab2020colbert' id='ref-khattab2020colbert-1'>
+    3
+</a>). This technique uses two separate LLMs for query and document, thus mitigating the <code>n^2</code> issue with the concatenated input. It also allows for an opportunity to cache the learned embeddings. The interaction could be calculated at query time. </p>
+<h2 id="current-state-of-search">Current State of Search</h2>
+<p>Performance is a tricky topic. The <span class="caps">LLM</span> hype makes it seem as if <span class="caps">LLM</span> techniques vastly outperform traditional methods such as <span class="caps">BM25</span>. The problem is that all evaluation methods are imperfect. Each model could do well in some evaluation methods but perform purely in others. A detailed discussion of performance requires the introduction of benchmarking datasets and methodologies. I will not go into those details in this post. See <a href='#thakur2021beir' id='ref-thakur2021beir-1'>
+    9
+</a> for an example. This <a href="https://pretalx.com/bbuzz22/talk/7TYXQN/">video</a> offers a good introduction. I would offer the following key takeaways:</p>
+<ul>
+<li><span class="caps">BM25</span> is a robust baseline. It generalizes well to out-of-domain data.</li>
+<li><span class="caps">LLM</span>-powered dense vector model has superior in-domain performance. However, it does not generalize well.</li>
+<li>Cross-encoding ranking models are computationally expensive, but they perform the best. </li>
+</ul>
+<p>The tried and true lexical <span class="caps">BM25</span> is the workhorse of the majority of search applications. Aside from massively well-funded solutions like Google and Bing search, the majority of applications implement lexical search. Lexical search is easy to understand, has a robust baseline, and generalizes well to out of domain datasets. It is already supported by mature technologies such as Solr and Elasticsearch. There is a large base of developers who have the expertise to build sophisticated search systems. There are also well-established hosted solutions such as Algolia and Elastic.</p>
+<p><span class="caps">LLM</span>-powered embedding is getting all the hype. There are a few reasons for that. First, it enables semantic search, which is something that users intuitively understand. Everyone wants a search capability that could retrieve relevant documents that do not necessarily contain the exact keywords. <span class="caps">LLM</span> dense vector provides that feature easily. Second, there is a perceived performance boost. While this is not always the case, the hype is already here and everyone wants to at least says that they support semantic search. Third, vector databases are becoming a hot trend. There are new vector databases such as Weaviate and Pinecone. Traditional databases are starting to support vector similarity, e.g. Solr, Elasticsearch, Redis, and Postgres. Fourth, <span class="caps">AI</span> companies provide hosted LLMs via https APIs to convert documents to dense vectors. Examples are <a href="https://platform.openai.com/docs/api-reference">OpenAI</a> and <a href="https://docs.cohere.com/reference/about">Cohere</a>. They allow developers to apply dense embedding techniques without needing to even understand <span class="caps">LLM</span>.</p>
+<p>Cross encoding models are not popular because they are not only computationally expensive, but require custom implementations. Unlike lexical search and dense vector methods, there are no established services or open-sourced libraries to support cross encoding algorithms. Only the best funded enterprise applications have the resources to integrate those techniques in their search features. Applications would definitely want access to state-of-the-art search capabilities. The development cost is too high.</p>
+<h2 id="beyond-lexical">Beyond Lexical</h2>
+<p>It is inevitable that search applications will move beyond lexical search due to the emergence of <span class="caps">LLM</span>-based techniques. Pretrained LLMs have demonstrated enormous capabilities in understanding languages. Search techniques will evolve to harness its power soon.</p>
+<h4 id="what-people-want">What People Want</h4>
+<p>Most application developers blindly apply the dense vector similarity technique as if it universally delivers state-of-the-art results. Embeddings only work well if the application domain is similar to the pretraining and training training data passed to the <span class="caps">LLM</span>. </p>
+<p>I would want a search system that is more than lexical but also more than just embedding similarities. The search system must allow for domain-specific fine-tuning and pre-training of the <span class="caps">LLM</span>. The system has a two-stage ranking pipeline. In stage one, it uses a combination of lexical and dense vector representations to efficiently retrieve candidate documents. In stage two, it uses a cross encoding model and other heuristics to rerank candidate documents.</p>
+<h4 id="implementation-challenges">Implementation Challenges</h4>
+<p>A system such as described above is not easy to build. A lexical search system could be as simple as entirely relying on an Elasticsearch deployment. There is no out-of-the-box solution for implementing the hybrid system. Below I list out some of the key challenges. The challenges are not insurmountable, nor do they require theoretical breakthroughs. They merely require engineering resources.</p>
+<p>Using hosted <span class="caps">LLM</span> <span class="caps">API</span> works well for small datasets. <span class="caps">GPT4</span> costs $0.12 per 1000 tokens<sup id="sf-2023-04-04-document-search-1-back"><a href="#sf-2023-04-04-document-search-1" class="simple-footnote" title="As of April 2023.">1</a></sup>. Assuming an average of 4 bytes per token, <span class="caps">1MB</span> of data would take $30 dollars to process. That is impossibly expensive! Most search applications will not be built on top of costly <span class="caps">LLM</span> APIs. Costs aside, indexing tasks are usually the key bottleneck of a search system. Relying on third-party LLMs as a key step for the indexing stage would require piping the entirety of the raw data outside of the system. It raises issues with regard to performance and data privacy.</p>
+<p>The two-stage pipeline has to be custom-built. Reranking algorithms must be custom software. Lexical search and dense vector nearest neighbor algorithms and toolings are widespread, but cross encoding models do not have plug-and-play implementations. The search system also needs to link together different ranking stages.</p>
+<p>There needs to be a robust data pipeline for indexing, storage, and retrieval. For lexical search, tools such as Elasticsearch handles all of these tasks as a single piece of software. Developers only need to interact with its APIs to index and search. A hybrid search system needs to integrate multiple pieces of database technologies to store indices and documents, and implement the search algorithms with respect to the databases of choice.</p>
+<h2 id="final-thoughts">Final Thoughts</h2>
+<p><span class="caps">LLM</span> marks a watershed moment in computer programs’ ability to understand natural language. For the majority of applications, search has been stuck in keyword matching. That is going to change in the near future. Users will expect search boxes to understand natural language. Product thinkers will want to design search and Q&amp;A boxes that match those expectations. However, semantic search is harder than just relying on OpenAI APIs and a vector database. Application developers are still waiting for toolings and hosted solutions to build high-quality, next-generation search experiences.</p>
+<hr>
+<h2 id="footnotes">Footnotes</h2>
+<!--
+
+# references
+
+https://engineering.atspotify.com/2022/03/introducing-natural-language-search-for-podcast-episodes/
+
+
+https://blog.vespa.ai/pretrained-transformer-language-models-for-search-part-1/
+
+
+
+Here are top resources to understand more about search
+
+1. He did a good overview about the hype about semantic search: https://www.youtube.com/watch?v=7ozfzKLTFV4
+2. This paper gives a good overview of the most common approaches: https://arxiv.org/abs/2004.12832
+
+
+ -->
+<!-- # random notes
+
+
+
+- MS-MARCO result is 
+
+state of art is 0.45, BM25 0.19
+
+
+- key word search, term-base (sparse) retrieval
+
+td-idf, bm25
+
+https://www.infoq.com/articles/similarity-scoring-elasticsearch/
+
+
+https://blog.vespa.ai/vespa-at-berlin-buzzwords/
+
+
+
+Key words:
+- learned dense representation
+
+
+
+
+
+
+- representation similarity, embedding-base (dense) retrieval
+
+facebook: https://github.com/facebookresearch/DPR
+
+
+- query + document interaction (re-ranking)
+
+
+IR
+
+title: beyond keyword search
+
+
+I am writing Practical guide over search semantic full-text search 
+
+
+
+claim: dense representation on out-of-domain search do not usually do better than bm25 ? reference??
+
+approximate nearest neighbor: https://erikbern.com/2015/10/01/nearest-neighbors-and-vector-models-part-2-how-to-search-in-high-dimensional-spaces.html --><ol class="simple-footnotes"><li id="sf-2023-04-04-document-search-1">As of April 2023. <a href="#sf-2023-04-04-document-search-1-back" class="simple-footnote-back">↩</a></li></ol>
+
+
+            <div id="citations">
+    <hr>
+    <h3>Citations</h3>
+    <ol class="references">
+            <li id="lin2021pretrained">
+                <span class="reference-text">Lin, Jimmy, Nogueira, Rodrigo, and Yates, Andrew.
+Pretrained transformers for text ranking: bert and beyond.
+2021.
+<a href="https://arxiv.org/abs/2010.06467">arXiv:2010.06467</a>.</span>
+                    <a class="cite-backref" href="#ref-lin2021pretrained-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="zamani2018">
+                <span class="reference-text">Zamani, Hamed, Dehghani, Mostafa, Croft, W&nbsp;Bruce, Learned-Miller, Erik, and Kamps, Jaap.
+From neural re-ranking to neural ranking: learning a sparse representation for inverted indexing.
+In <em>Proceedings of the 27th ACM International Conference on Information and Knowledge Management</em>, 49&ndash;506. ACM, 2018.</span>
+                    <a class="cite-backref" href="#ref-zamani2018-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="mikolov2013efficient">
+                <span class="reference-text">Mikolov, Tomas, Chen, Kai, Corrado, Greg, and Dean, Jeffrey.
+Efficient estimation of word representations in vector space.
+2013.
+<a href="https://arxiv.org/abs/1301.3781">arXiv:1301.3781</a>.</span>
+                    <a class="cite-backref" href="#ref-mikolov2013efficient-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="pennington2014glove">
+                <span class="reference-text">Pennington, Jeffrey, Socher, Richard, and Manning, Christopher&nbsp;D.
+Glove: global vectors for word representation.
+In <em>Empirical Methods in Natural Language Processing (EMNLP)</em>, 1532–1543. 2014.
+URL: <a href="http://www.aclweb.org/anthology/D14-1162">http://www.aclweb.org/anthology/D14-1162</a>.</span>
+                    <a class="cite-backref" href="#ref-pennington2014glove-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="karpukhin-etal-2020-dense">
+                <span class="reference-text">Karpukhin, Vladimir, Oguz, Barlas, Min, Sewon, Lewis, Patrick, Wu, Ledell, Edunov, Sergey, Chen, Danqi, and Yih, Wen-tau.
+Dense passage retrieval for open-domain question answering.
+In <em>Proceedings of the 2020 Conference on Empirical Methods in Natural Language Processing (EMNLP)</em>, 6769–6781. Online, November 2020. Association for Computational Linguistics.
+URL: <a href="https://aclanthology.org/2020.emnlp-main.550">https://aclanthology.org/2020.emnlp-main.550</a>, <a href="https://doi.org/10.18653/v1/2020.emnlp-main.550">doi:10.18653/v1/2020.emnlp-main.550</a>.</span>
+                    <a class="cite-backref" href="#ref-karpukhin-etal-2020-dense-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="xiong2020approximate">
+                <span class="reference-text">Xiong, Lee, Xiong, Chenyan, Li, Ye, Tang, Kwok-Fung, Liu, Jialin, Bennett, Paul, Ahmed, Junaid, and Overwijk, Arnold.
+Approximate nearest neighbor negative contrastive learning for dense text retrieval.
+2020.
+<a href="https://arxiv.org/abs/2007.00808">arXiv:2007.00808</a>.</span>
+                    <a class="cite-backref" href="#ref-xiong2020approximate-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="devlin-etal-2019-bert">
+                <span class="reference-text">Devlin, Jacob, Chang, Ming-Wei, Lee, Kenton, and Toutanova, Kristina.
+<span class="bibtex-protected">BERT</span>: pre-training of deep bidirectional transformers for language understanding.
+In <em>Proceedings of the 2019 Conference of the North <span class="bibtex-protected">A</span>merican Chapter of the Association for Computational Linguistics: Human Language Technologies, Volume 1 (Long and Short Papers)</em>, 4171–4186. Minneapolis, Minnesota, June 2019. Association for Computational Linguistics.
+URL: <a href="https://aclanthology.org/N19-1423">https://aclanthology.org/N19-1423</a>, <a href="https://doi.org/10.18653/v1/N19-1423">doi:10.18653/v1/N19-1423</a>.</span>
+                    <a class="cite-backref" href="#ref-devlin-etal-2019-bert-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="nogueira2020passage">
+                <span class="reference-text">Nogueira, Rodrigo and Cho, Kyunghyun.
+Passage re-ranking with bert.
+2020.
+<a href="https://arxiv.org/abs/1901.04085">arXiv:1901.04085</a>.</span>
+                    <a class="cite-backref" href="#ref-nogueira2020passage-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="nogueira2019multistage">
+                <span class="reference-text">Nogueira, Rodrigo, Yang, Wei, Cho, Kyunghyun, and Lin, Jimmy.
+Multi-stage document ranking with bert.
+2019.
+<a href="https://arxiv.org/abs/1910.14424">arXiv:1910.14424</a>.</span>
+                    <a class="cite-backref" href="#ref-nogueira2019multistage-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="khattab2020colbert">
+                <span class="reference-text">Khattab, Omar and Zaharia, Matei.
+Colbert: efficient and effective passage search via contextualized late interaction over bert.
+2020.
+<a href="https://arxiv.org/abs/2004.12832">arXiv:2004.12832</a>.</span>
+                    <a class="cite-backref" href="#ref-khattab2020colbert-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="thakur2021beir">
+                <span class="reference-text">Thakur, Nandan, Reimers, Nils, Rücklé, Andreas, Srivastava, Abhishek, and Gurevych, Iryna.
+Beir: a heterogenous benchmark for zero-shot evaluation of information retrieval models.
+2021.
+<a href="https://arxiv.org/abs/2104.08663">arXiv:2104.08663</a>.</span>
+                    <a class="cite-backref" href="#ref-thakur2021beir-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+    </ol>
+</div>
+
+             
+ 
+            
+            
+            
+
+
+
+
+
+
+
+
+            <hr/>
+            <script src="https://utteranc.es/client.js"
+                    repo="jinfwhuang/jinfwhuang.github.io"
+                    issue-term="pathname"
+                    label="user-comments"
+                    theme="github-light"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+
+            <hr/>
+<section>
+    <h2>Related Posts</h2>
+<ul class="related-posts-list">
+<li><a href="/2023-04-27-open-source-llm" title="Open Source LLMs">Open Source LLMs</a></li>
+<li><a href="/2023-06-04-domain-specific-ai-assistant" title="Domain Specific AI Assistants">Domain Specific AI Assistants</a></li>
+<li><a href="/2023-06-29-nn-beyond-one-gpu" title="Neural Net Beyond a Single GPU">Neural Net Beyond a Single GPU</a></li>
+</ul>
+<hr />
+</section>
+            <aside>
+            <nav>
+            <ul class="articles-timeline">
+                <li class="previous-article">« <a href="/2022-10-01-scaling-nft-metadata" title="Previous: Scaling NFT Metadata">Scaling NFT Metadata</a></li>
+                <li class="next-article"><a href="/2023-04-27-open-source-llm" title="Next: Open Source LLMs">Open Source LLMs</a> »</li>
+            </ul>
+            </nav>
+            </aside>
+        </div>
+        <section id="article-sidebar" class="span2">
+            <h4>Published</h4>
+            <time itemprop="dateCreated" datetime="2023-04-04T00:00:00-07:00">Tue 04 April 2023</time>
+            <!--             <h4>Category</h4>
+            <a class="category-link" href="/categories#misc-ref">misc</a>
+ -->
+            <h4>Tags</h4>
+            <ul class="list-of-tags tags-in-article">
+                <li><a href="/tags#ai-ref">ai
+                    <span class="superscript">4</span>
+</a></li>
+                <li><a href="/tags#llm-ref">LLM
+                    <span class="superscript">3</span>
+</a></li>
+                <li><a href="/tags#search-ref">search
+                    <span class="superscript">1</span>
+</a></li>
+            </ul>
+<h4>Contact</h4>
+<div id="sidebar-social-link">
+    <a href="https://twitter.com/jinfwhuang" title="Twiiter" target="_blank" rel="nofollow noopener noreferrer">
+        <svg xmlns="http://www.w3.org/2000/svg" aria-label="Twitter" role="img" viewBox="0 0 512 512"><rect width="512" height="512" rx="15%" fill="#1da1f3"/><path fill="#fff" d="M437 152a72 72 0 0 1-40 12 72 72 0 0 0 32-40 72 72 0 0 1-45 17 72 72 0 0 0-122 65 200 200 0 0 1-145-74 72 72 0 0 0 22 94 72 72 0 0 1-32-7 72 72 0 0 0 56 69 72 72 0 0 1-32 1 72 72 0 0 0 67 50 200 200 0 0 1-105 29 200 200 0 0 0 309-179 200 200 0 0 0 35-37"/></svg>
+    </a>
+    <a href="https://www.linkedin.com/in/jinfwhuang" title="LinkedIn" target="_blank" rel="nofollow noopener noreferrer">
+        <svg xmlns="http://www.w3.org/2000/svg" aria-label="LinkedIn" role="img" viewBox="0 0 512 512" fill="#fff"><rect width="512" height="512" rx="15%" fill="#0077b5"/><circle cx="142" cy="138" r="37"/><path stroke="#fff" stroke-width="66" d="M244 194v198M142 194v198"/><path d="M276 282c0-20 13-40 36-40 24 0 33 18 33 45v105h66V279c0-61-32-89-76-89-34 0-51 19-59 32"/></svg>
+    </a>
+</div>
+            
+
+
+
+
+
+            
+
+
+
+
+
+        </section>
+</div>
+</article>
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe.
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides.
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo https://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>                    </div>
+                    <div class="span1"></div>
+                </div>
+            </div>
+        </div>
+<!--        <footer>
+
+    <div>
+        <span class="site-name"><span style="color:black;">Jin's Notes</span></span> - the hardest part is taking the first step
+    </div>
+
+
+
+    <div id="fpowered">
+        Powered by: <a href="http://getpelican.com/" title="Pelican Home Page" target="_blank" rel="nofollow noopener noreferrer">Pelican</a>
+        Theme: <a href="https://elegant.oncrashreboot.com/" title="Theme Elegant Home Page" target="_blank" rel="nofollow noopener noreferrer">Elegant</a>
+    </div>
+</footer>-->
+            <script src="//code.jquery.com/jquery.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+        <script src="/theme/js/elegant.prod.9e9d5ce754.js"></script>
+        <script>
+            function validateForm(query)
+            {
+                return (query.length > 0);
+            }
+        </script>
+
+
+
+
+    <script>
+    (function () {
+        if (window.location.hash.match(/^#comment-\d+$/)) {
+            $('#comment_thread').collapse('show');
+        }
+    })();
+    window.onhashchange=function(){
+        if (window.location.hash.match(/^#comment-\d+$/))
+            window.location.reload(true);
+    }
+    $('#comment_thread').on('shown', function () {
+        var link = document.getElementById('comment-accordion-toggle');
+        var old_innerHTML = link.innerHTML;
+        $(link).fadeOut(200, function() {
+            $(this).text('Click here to hide comments').fadeIn(200);
+        });
+        $('#comment_thread').on('hidden', function () {
+            $(link).fadeOut(200, function() {
+                $(this).text(old_innerHTML).fadeIn(200);
+            });
+        })
+    })
+</script>
+
+    </body>
+    <!-- Theme: Elegant built for Pelican
+        License : MIT -->
+
+</html>

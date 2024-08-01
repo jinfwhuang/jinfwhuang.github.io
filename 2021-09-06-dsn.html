@@ -1,0 +1,367 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="/theme/css/elegant.prod.9e9d5ce754.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="/theme/css/custom.css" media="screen">
+
+        <link rel="dns-prefetch" href="//fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+
+        <meta name="author" content="jin" />
+
+        <meta name="description" content="I am posting some notes overviewing decentralized storage networks (DSN). Before I go into the details of specific networks, let’s explore some general features of DSN. Traditional blockchain networks could act as storage networks. Public ledger usually impose additional structures on how bytes are structured in the forms of …
+" />
+        <meta name="twitter:creator" content="@jinfwhuang">
+        <meta property="og:type" content="article" />
+        <meta name="twitter:card" content="summary">
+
+<meta name="keywords" content="web3, misc, " />
+
+<meta property="og:title" content="Notes on Decentralized Storage Networks "/>
+<meta property="og:url" content="/2021-09-06-dsn" />
+<meta property="og:description" content="I am posting some notes overviewing decentralized storage networks (DSN). Before I go into the details of specific networks, let’s explore some general features of DSN. Traditional blockchain networks could act as storage networks. Public ledger usually impose additional structures on how bytes are structured in the forms of …" />
+<meta property="og:site_name" content="Jin&#39;s Notes" />
+<meta property="og:article:author" content="jin" />
+<meta property="og:article:published_time" content="2021-09-06T00:00:00-07:00" />
+<meta name="twitter:title" content="Notes on Decentralized Storage Networks ">
+<meta name="twitter:description" content="I am posting some notes overviewing decentralized storage networks (DSN). Before I go into the details of specific networks, let’s explore some general features of DSN. Traditional blockchain networks could act as storage networks. Public ledger usually impose additional structures on how bytes are structured in the forms of …">
+<meta property="og:image" content="/images/android-chrome-192x192.png" />
+<meta name="twitter:image" content="/images/android-chrome-192x192.png" >
+
+        <title>Notes on Decentralized Storage Networks  · Jin&#39;s Notes
+</title>
+        <link rel="shortcut icon" href="/theme/images/favicon.ico" type="image/x-icon" />
+        <link rel="icon" href="/theme/images/apple-touch-icon-152x152.png" type="image/png" />
+        <link rel="apple-touch-icon" href="/theme/images/apple-touch-icon.png"  type="image/png" />
+        <link rel="apple-touch-icon" sizes="57x57" href="/theme/images/apple-touch-icon-57x57.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="/theme/images/apple-touch-icon-72x72.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="76x76" href="/theme/images/apple-touch-icon-76x76.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="/theme/images/apple-touch-icon-114x114.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="120x120" href="/theme/images/apple-touch-icon-120x120.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="144x144" href="/theme/images/apple-touch-icon-144x144.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="152x152" href="/theme/images/apple-touch-icon-152x152.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="152x152" href="/theme/images/apple-touch-icon-180x180.png" type="image/png" />
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+     m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+     })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-207279664-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+
+    </head>
+    <body>
+        <div id="content">
+            <div class="navbar navbar-static-top">
+                <div class="navbar-inner">
+                    <div class="container-fluid">
+                        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </a>
+                        <a class="brand" href="/"><span class=site-name><span style="color:black;">Jin's Notes</span></span></a>
+                        <div class="nav-collapse collapse">
+                            <ul class="nav pull-right top-menu">
+                                <li >
+                                    <a href=
+                                       "/"
+                                    >Home</a>
+                                </li>
+<!--                                <li ><a href="/categories">Categories</a></li>-->
+                                <li ><a href="/tags">Tags</a></li>
+                                <li ><a href="/archives">Archives</a></li>
+                                <li><form class="navbar-search" action="/search" onsubmit="return validateForm(this.elements['q'].value);"> <input type="text" class="search-query" placeholder="Search" name="q" id="tipue_search_input"></form></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid">
+                <div class="row-fluid">
+                    <div class="span1"></div>
+                    <div class="span10">
+<article itemscope>
+<div class="row-fluid">
+    <header class="page-header span10 offset2">
+        <h1>
+            <a href="/2021-09-06-dsn">
+                Notes on Decentralized Storage Networks <br/>
+            </a>
+        </h1>
+    </header>
+</div>
+
+<div class="row-fluid">
+    <div class="span2 table-of-content">
+        <nav>
+        <h4>Contents</h4>
+        <div class="toc">
+<ul>
+<li><a href="#ipfs"><span class="caps">IPFS</span></a></li>
+<li><a href="#filecoin">Filecoin</a></li>
+<li><a href="#arweave">Arweave</a></li>
+<li><a href="#sia">Sia</a></li>
+<li><a href="#safe-network">Safe Network</a></li>
+<li><a href="#storj">Storj</a></li>
+<li><a href="#discussions">Discussions</a></li>
+</ul>
+</div>
+        </nav>
+    </div>
+    <div class="span8 article-content">
+            
+            
+<p>I am posting some notes overviewing decentralized storage networks (<span class="caps">DSN</span>). Before I go into the details of specific networks, let’s explore some general features of <span class="caps">DSN</span>.</p>
+<p>Traditional blockchain networks could act as storage networks. Public ledger usually impose additional structures on how bytes are structured in the forms of blocks and transactions. Transactions are the basic unit that have to satisfy the blockchain unique transition function from one transaction to the next. Most blockchains allow users to put in arbitrary bytes as a special data field in transactions. However, these blockchains should not be considered storage networks because of limited data throughput. I had previously written about <a href="2021-07-23-blockchain_throughput">blockchain throughput</a>. Without compromising the risk of centralization, a reasonable throughput of blockchain is about <strong>10 <span class="caps">KB</span>/s</strong> per shard. This space is very limited and expensive. It would require millions, if not billions, of dollars to store a movie on one of these blockchains, even if the chain is sharded.</p>
+<p>The fundamental reason that a public ledgers should not evolve to become a storage network is because the security level required by a public ledger is far more expensive than what is necessary for storage. The data within a public ledger has to be validated by a securing resource. That securing resource could be proof of work, proof of stake, proof of authority, or any other scarce resource. In some ways, the validity of the data has to be voted on by some limited resources; otherwise, if an arbitrary amount of voting power is manufactured out of the thin air, the public ledger is not secured. (I will write a post on theoretical fundamentals blockchain security.) Furthermore, the ledger’s data has to be also massively available. Data availability is inherently expensive. Replicating data requires physical resources in the form of hardwares, bandwidth, real estate, and electricity. If a piece of data is replicated 5 times, it costs roughly 5x in physical resources. Public ledgers requires data to extremely resilient to failures. Bitcoin and Ethereum chain states are replicated tens of thousands times, if not hundreds of thousands or even millions times. Even for a sharded chain, it will have 100s of replication at a minimum. This replication level would be impossibly expensive for petabytes of data, let alone exabytes or more. It is worth noting that <span class="caps">AWS</span> S3 charges $500,00 - $2,000,000 a year for 10 petabyte of data. It is safe to assume that data there has 3-10 replicas. <span class="caps">AWS</span> could be operating with a great margin, but it is hard to see that <span class="caps">AWS</span> could run a profit if it is replicating data 100s over. Decentralized storage network should allow users to choose their own replication level.</p>
+<p>Database networks could be loosely categorized into three typologies. In roundabout ways, I have already discussed two of those. The first topology type is single machine <span class="caps">DB</span>, where the <span class="caps">DB</span> is replicated in every full node of the network. The current version of Bitcoin and Ethereum is of this variety. The second type is a sharded db, with each shard replicated by a group of nodes. Polkadot and Eth2 are examples of this type. The third network type expect heterogeneous storage nodes. Each node store a unique set of data segments. One would find this network typology for almost all large scaled database deployment. S3, Hadoop file system, Cassandra, HBase, Druid <span class="caps">DB</span>, Elasticsearch, etc. A decentralized storage network will likely take this form, where there are a large number of storage nodes storing unique set of data segments.</p>
+<p>A decentralized storage network needs to have a mechanism to coordinate incentives and storage proofs. Storage providers have to be incentivized to participate in the network. Storage clients or the network have to be able ask for storage proofs from storage providers. This boils down to the need to coordinate storage proofs and payments. A blockchain, either native or external, is a natural choice to coordinate these interactions if decentralization is required.</p>
+<p>In the next sections, I will review some popular DSNs. I am not aiming to have a full description of these networks. My goal is to provide a succinct overview of the key features so I could discuss what I like and don’t like about the different networks.</p>
+<h5 id="ipfs"><span class="caps">IPFS</span></h5>
+<p><span class="caps">IPFS</span> is often mentioned as the leading solution for decentralized storage. <span class="caps">IPFS</span> could be used to storing and accessing data. However, it does not have an incentive mechanism. 
+There is no guarantee that the <span class="caps">IPFS</span> nodes would continue to keep the data or provide access. <span class="caps">IPFS</span> is a network of nodes that are joined together to form a distributed hash table (<span class="caps">DHT</span>). <span class="caps">IPFS</span> has additional structure such as InterPlanetary Linked Data (<span class="caps">IPLD</span>) and Merkle direct acyclic graphs (<span class="caps">DAG</span>) that enable a variety of use cases to be built on top of its network. <span class="caps">IPFS</span> alone cannot act as a data storage solution.</p>
+<h5 id="filecoin">Filecoin</h5>
+<p>The Filecoin network uses a native blockchain to enforce storage deals. The blockchain is similar to the Bitcoin or Ethereum chain. Each block is composed of messages. Message is analogous to transactions. A blocks is produced by a miner selected by the storage power consensus mechanism. <a href="https://spec.filecoin.io/systems/filecoin_blockchain/#section-systems.filecoin_blockchain.storage_power_consensus">Storage power consensus</a> is similar to proof of stake, but instead of using stake to gain a higher probability of becoming a block producer, the mechanism favors storage providers with more proven storage capacity and storing more validated data. The contents of messages record storage deals, which are negotiated between storage clients and providers. The negotiation could be done in any communication channels. The completed deal is published on-chain. </p>
+<p>Storage miners are incentivized to submit storage proofs because doing so increases their probability of earning block rewards. The submitted proofs are included in the blocks. Miners encode the data in a process known as sealing. The slow encoding ensures that the miners could not re-compute the encoding on demand when an audit is requested. A <span class="caps">SNARK</span> on the encoded data is used as the replication proof to reduce the proof size. This is known as <a href="https://spec.filecoin.io/algorithms/pos/porep/">proof of replication</a>. The miner is expected to submit additional proofs for the possession of this encoded data on a regular interval. It is incentive compatible for the miners to keep the encoded data on local drives because otherwise it would not be able to regenerate the data or fetch the data from remote storages. This is known as <a href="https://spec.filecoin.io/algorithms/pos/post/">proof of spacetime</a>. </p>
+<p>It is worth pointing out that the Filecoin blockchain is essentially a single shard blockchain. The stored data is not on-chain, but the administrative messages are on-chain. A blockchain has limited throughput. See <a href="2021-07-23-blockchain_throughput">blockchain throughput</a> for more details. The <a href="https://network.filecoin.io/#mainnet">chain snapshot</a> as of 2021/09/05 was already at 600 <span class="caps">GB</span>. It is not hard to see that the chain’s daily throughput will reach saturation quickly if usage increases. Regardless of how much storage the total miners pool could support, the bottleneck would be on how much throughput the blockchain could support storage deals. This is not all that different from the total transaction throughput of a general purpose blockchain such as Ethereum. I will discuss this more toward the end of the post.</p>
+<h5 id="arweave">Arweave</h5>
+<p>Arweave is designed to offer permanent storage. One of key features of Arweave is that it does not chain the blocks together as a singly linked list. Instead, it introduces the concept of recall blocks to form what a <em>blockweave</em>. Each block contains a reference to a random previous block. Having access to those recall blocks is what the mining nodes are competing on. The mining nodes could only produce a new block if they store the specific recall blocks, depending on the randomness as denoted by the new block’s hash. The more recall blocks the mining nodes store, the more probable they could produce new blocks. The network also provides access to metadata in the from of block hash list and wallet list. These summarizing data allow transactions to be verified without reprocessing historical blocks.</p>
+<p>The blockweave acts as both the incentive layer and the data storage layer. The blocks in the weave records information about the account state and rewards, and also crucially, the blocks also store arbitrary data. The permanence of the blockweave equates to data permanence.</p>
+<p>Arweave’s alternative approach to block linkage offers some unique advantages. First, it allows for heterogenous storage nodes, which is a requirement for a storage network. This allows the network to scale linearly because nodes are not required to replicate the exact same data. Second, it combines the storage and incentive layer into a single data structure. Third, the use of block hash list and wallet list allow a new node to join the network quickly. This eliminates the need for a light client implementation.</p>
+<p>Arweave incentives nodes to provide access to historical blocks through a reputation system known as Wildfire. It ranks nodes based on how frequently and how quickly they respond to data requests. Nodes that do not regularly participate could get blacklisted.</p>
+<p>Blockweave’s claim of permanent storage might not be guaranteed if the size of the blockweave gets large and sufficiently decentralized. There is no formal guarantee that all blocks will be available. Nodes are incentivized to store as many blocks as possible, but equally, they want to make their blocks as rare as possible. This could lead into suboptimal social behavior. First, it is possible that some rare blocks got lost if there are not sufficient replicas in the network. This could be mitigated by adjusting the token economics such that we can probabilistically guarantee that there are certain number of copies under optimal conditions. Even with that, if the replica number is in the single digit, it is not hard to see some data segment get lost from time to time. Second, miners are incentivized to hold on to rare private blocks so that they would become the only one who could mine some blocks. While this is mitigated by the reputation system, but some miners with a short horizon would risk their reputation to maximum short term profit and exit the market. The centralization of these blocks would increase the probability that these blocks could be lost permanently. </p>
+<p>The availability of the metadata could be a weak point in the system. The network makes an implicit assumption that block hash list and wallet list are valid and accessible. These metadata have to be keep up-to-date by all the nodes in the network. These metadata acts similarly to the blockchain as global state. This leads to two problems. First is that if the wallet list increases, say 10 billions, the metadata would be hard to propagate within the network. It would become increasingly hard to gossip the updated state across the network. It could take days to download a copy of that data for nodes that just joined the network. Second, it is not fully specified how the network could guarantee the integrity of these metadata. In theory, The metadata could be recalculated from all the previous blocks. But as the weave’s total size increase to exabyte level, it would be prohibitively expensive to recompute all the blocks by any one party. An attacker could concentrate its resources on gossiping malicious blockhashes to corrupt the weave, or gossipping wallet lists for monetary gains directly.</p>
+<h5 id="sia">Sia</h5>
+<p>Sia uses a blockchain to manage file storage contracts, storage proofs, and payments. The contract negotiation is off-chain, but the completed contracts are recorded as on-chain transactions. Transactions are similar to Bitcoin transactions but with some extensions, allowing contract creation, storage proof, and contract update messages. Similar to how Filecoin uses the blockchain as the coordinating device to maintain a contract’s storage proofs and payment, the blockchain’s throughput is limited.</p>
+<p>Once a storage contract is published, the network requests the storage proofs on regular interval. Storage proof is a randomly requested segment of the original file and the appropriate Merkle branch.  Because the proof requires the provider submitting an actual data segment that walks up the Merkle tree, the data segment has to be at least as large as the smallest Merkle leaf. This leads to a tradeoff. If the leaves of the Merkle tree are small data segments, the tree is large; otherwise, the data segments are large. Either way, it is easy to see that for a 10 <span class="caps">GB</span> storage, the proof could easily take more than <span class="caps">10KB</span>. The chain has to put these bytes into the blocks, further reducing the space available for contracts.</p>
+<p>Payments are through payment channels and therefore, primarily off-chain. Payment channel eliminates a lot of on-chain transactions, but it also creates a dependencies that storage clients have to be connected to the network. It discourages individual users from directly storing the data on the network. Instead, users would most likely go through a service provider because users do not want to perform the work of regular audit and payments. This flaw is not critical because even an one-person application development shop could maintain a long running service to keep payment channels up-to-date. The frequency of interacting with the network is small, the same frequency as the data possession proof is accepted on chain. As long as the software is sufficiently open sourced, and it is easy for third-party vendors to setup to provide this service according to an open protocol, it is an acceptable requirement for a <span class="caps">DSN</span>.</p>
+<h5 id="safe-network">Safe Network</h5>
+<p>The network maintains local state by segmenting the network into group by <span class="caps">XOR</span> closeness. Instead of using a blockchain to maintain state, the network segments the network into local group by <span class="caps">XOR</span> distances, the same metric used in Kademlia. The group manages its own state. The key managing nodes within each group would assign and re-assign data based on the group’s membership. This technical <a href="https://medium.com/safenetwork/introduction-technical-overview-of-safe-consensus-c8ea257e3ff8">overview</a> describes the network to be built on top of a Kademlia-like <span class="caps">DHT</span>. The key feature that the Safe Network innovates on seems to be its ability to guarantee data availability as nodes join and exit the network. But it is not exactly clear how the network could self health.</p>
+<p>The network explicitly excludes the usage of blockchain to maintain a global state. This begs the question of how the network provides incentives to the network participants. As best I could understand from the available documentations, Safe Network uses a MaidSafeCoin that exist still as a coin on Bitcoin’s omnilayer. I could not understand how the coin would be part of the incentive mechanism of the storage network other than the coin is used as direct payment to node or group of nodes. This payment channel would happen outside of the Safe Network.</p>
+<p>The Safe Network’s proposal looks a lot like an improved version BitTorrent or <span class="caps">IPFS</span>. While it offers some level of data persistence guarantee that <span class="caps">IPFS</span> does not, the Safe Network does not fully incentive storage provider to participate. The idea of not requiring a global state is appealing, but the use of local state must extends beyond data management and incorporate incentives. A BitTorrent-like storage network could only autonomous and self-healing if each participating nodes are paid to stay online. Data storage requires physical resources, and someone has to pay for those physical resources.</p>
+<h5 id="storj">Storj</h5>
+<p>Storj does not use a blockchain to maintain state. Published storage contracts are maintained by the private databases in satellites, which are centrally operated services. A satellite manages accounts, <span class="caps">API</span> credentials, billings, payments, audits, repairs, and various administrative tasks. Both storage clients and providers make <span class="caps">API</span> requests to a satellite to publish and maintain storage contracts. Accounts from different satellites do not interact with each other.</p>
+<p>Clients and providers could negotiate storage contracts through any communication channels. The negotiations are not recorded, but they publish the contracts to a satellite. The satellite accepts the contract and subsequently service the contract by requesting storage proofs and handling payments. The storage proof is in the form of a challenge mechanism. The data owner built a Merkle hash with secret salts at the leaves. Storage provider has to calculate a Merkle branch based when a secret salt is reviewed to them. The provider could only successfully answer the challenge if it has the data to combine with salt to produce the correct hash that corresponds to the Merkle branch.</p>
+<p>The client library has built-in toolings to encrypt data and segment the data by way of erasure encoding. Both encryption and erasure encoding are enforced by the network.</p>
+<p>Storj only accepts Storj coin as a payment mechanism. It is a coin on the Ethereum network. Ethereum is only used to facilitate payment. The <span class="caps">EVM</span> is not used to store state or coordinate contracts.</p>
+<p>Storj uses the concept of satellite to maintain state instead of the approach of a public ledger. A satellite has full control over the accounts that it manages. If a satellite experiences a technical failure, the associated accounts would cease to function. In most cases, the storage clients would not be able to recover the data because they would not be able to find the corresponding storage providers. A satellite is a trusted entity. For example, this is a list of <a href="https://www.storj.io/dcs-satellites">trusted satellites</a> in operations today. While storage nodes are decentralized, the network relies on centrally operated satellites to coordinate the clients and providers. Other than centralization risk, the scalability of the network also hinges on the satellites’ abilities to scale their services. The Storj network’s overall capacity largely depends on the satellites’ capacity to handle accounts and storage contracts.</p>
+<h5 id="discussions">Discussions</h5>
+<p>The promise of decentralization could easily be eroded in storage networks. While some storage solutions use decentralized networks as storage backends, their services depend on centrally operative services. The first example is that Storj’s use of satellites to manage accounts, storage proofs, and payments. The second example is <span class="caps">IPFS</span> and pinning services, e.g. Pinata. The service provider stores data on <span class="caps">IPFS</span>. It guarantees data persistence by running <span class="caps">IPFS</span> nodes and pinning user data on those private servers. The availability of users’ data is only guaranteed if Pinata could successfully maintain uptime of their <span class="caps">IPFS</span> nodes. The third example is Filecoin and easy-to-use storage gateways, e.g. <a href="https://docs.textile.io/hub/">Textile Hub</a> and <a href="https://web3.storage">Web3.storage</a>. The stored data is ultimately routed to the Filecoin network, but these services manage accounts, packaging the data, and negotiate with storage miners. The fourth example is Sia Skynet. It is a portal built on top of the Sia network. Skynet give users and application developers a superior user experience, but it also means that data go through an intermediary before landing on the decentralized network.</p>
+<p>The promise of permanent storage might not be desirable. Arweave and Safe Network proclaim that data will be kept forever on their networks. Despite the many claims that storage has been getting cheaper, storage is expensive. An averaged American household cannot afford storing petabytes of data. An averaged company cannot afford petabytes without at least extracting tens of thousands of dollars annually from those data. One might point to Bitcoin and Ethereum network as example of permanent storage. The amount of storage is extremely limited. <span class="caps">1GB</span> of storage in those network will cost tens of million of dollars or 100s of millions depending on market conditions. A network could keep its permanence guarantee if the value of the token economics always outpaces the actual cost of physical resources. That is not a stable equilibrium, nor is it desirable. With a sufficient large stable storage network, the marginal benefit a node gains should be the marginal value that it provides in storage. The overall market design should account for the costs of continuing to pay the storage providers to keep the exabytes of data around month after month, and year after year. When large amount of data becomes useless and no one is willing to pay for it, the world should not be wasting resources to keep them around.</p>
+<p>Storage contracts require a consensus mechanism. A blockchain is the most obvious solution. However, none of these networks has thought through how to scale the blockchain part of the network. It is fortunate that blockchain scalability has been gotten a lot of attention due to the rapid development of general purpose blockchains, such as Ethereum, Polkadot, Near, and Solana. There have been major advances in recent years. The most mature solution is to shard a blockchain. One of the key limits of sharded blockchains is the amount of cross-shard communications allowed. Storage contracts do not need to communicate across shards. This would make a sharded solution especially well suited as the coordinating layer of a <span class="caps">DSN</span>. Furthermore, the security of the additional shards do not require recruiting additional validators if we adopt storage capacity as the securing instrument.</p>
+<p>Storage network requires a mechanism for validating storage proofs to maintain data availability. Storage providers submit proof on a regular interval. However, the requests could come from storage clients or the network. For example, Sia uses off-chain storage proofs and payment channels to maintain record of data possession. There are obvious advantages of not requiring  storage clients to perform any ongoing maintenance work. The network could require the clients to lock up sufficient fund to pay for the cost of the storage duration, and pay the providers proportionate to the number of storage proofs provided.</p>
+<p>There are some <span class="caps">DSN</span> features that could be implemented by client libraries. For example, Sia and Storj enforce data replication and encryption. Filecoin enforce replication. I tend to believe that the storage network should leave those features as client options. A decentralized network is already complex. Storage clients could choose how their data would be encrypted, stored using erasure coding technique, or replicated. There are applications that want to store unencrypted data. There are applications that do not want to pay the extra costs of replication. Furthermore, these features could be built as client libraries to be compatible on multiple networks. Keeping these feature out of the core network simplifies the design of a storage network.</p>
+
+
+
+             
+ 
+            
+            
+            
+
+
+
+
+
+
+
+
+            <hr/>
+            <script src="https://utteranc.es/client.js"
+                    repo="jinfwhuang/jinfwhuang.github.io"
+                    issue-term="pathname"
+                    label="user-comments"
+                    theme="github-light"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+
+            <hr/>
+<section>
+    <h2>Related Posts</h2>
+<ul class="related-posts-list">
+<li><a href="/2021-07-23-blockchain_throughput" title="Notes on Blockchain Throughput">Notes on Blockchain Throughput</a></li>
+<li><a href="/2022-03-15-stablecoins" title="Notes on ERC20 Stablecoins">Notes on ERC20 Stablecoins</a></li>
+<li><a href="/2021-03-22-ethereum-l2" title="Notes on Ethereum L2 Solutions">Notes on Ethereum L2 Solutions</a></li>
+<li><a href="/2022-09-01-nft-platform" title="Notes on NFT Platforms">Notes on NFT Platforms</a></li>
+<li><a href="/2022-10-01-scaling-nft-metadata" title="Scaling NFT Metadata">Scaling NFT Metadata</a></li>
+</ul>
+<hr />
+</section>
+            <aside>
+            <nav>
+            <ul class="articles-timeline">
+                <li class="previous-article">« <a href="/2021-07-23-blockchain_throughput" title="Previous: Notes on Blockchain Throughput">Notes on Blockchain Throughput</a></li>
+                <li class="next-article"><a href="/2021-09-25-bls-12-381-basics" title="Next: BLS-12-381 Basics">BLS-12-381 Basics</a> »</li>
+            </ul>
+            </nav>
+            </aside>
+        </div>
+        <section id="article-sidebar" class="span2">
+            <h4>Published</h4>
+            <time itemprop="dateCreated" datetime="2021-09-06T00:00:00-07:00">Mon 06 September 2021</time>
+            <!--             <h4>Category</h4>
+            <a class="category-link" href="/categories#misc-ref">misc</a>
+ -->
+            <h4>Tags</h4>
+            <ul class="list-of-tags tags-in-article">
+                <li><a href="/tags#web3-ref">web3
+                    <span class="superscript">6</span>
+</a></li>
+            </ul>
+<h4>Contact</h4>
+<div id="sidebar-social-link">
+    <a href="https://twitter.com/jinfwhuang" title="Twiiter" target="_blank" rel="nofollow noopener noreferrer">
+        <svg xmlns="http://www.w3.org/2000/svg" aria-label="Twitter" role="img" viewBox="0 0 512 512"><rect width="512" height="512" rx="15%" fill="#1da1f3"/><path fill="#fff" d="M437 152a72 72 0 0 1-40 12 72 72 0 0 0 32-40 72 72 0 0 1-45 17 72 72 0 0 0-122 65 200 200 0 0 1-145-74 72 72 0 0 0 22 94 72 72 0 0 1-32-7 72 72 0 0 0 56 69 72 72 0 0 1-32 1 72 72 0 0 0 67 50 200 200 0 0 1-105 29 200 200 0 0 0 309-179 200 200 0 0 0 35-37"/></svg>
+    </a>
+    <a href="https://www.linkedin.com/in/jinfwhuang" title="LinkedIn" target="_blank" rel="nofollow noopener noreferrer">
+        <svg xmlns="http://www.w3.org/2000/svg" aria-label="LinkedIn" role="img" viewBox="0 0 512 512" fill="#fff"><rect width="512" height="512" rx="15%" fill="#0077b5"/><circle cx="142" cy="138" r="37"/><path stroke="#fff" stroke-width="66" d="M244 194v198M142 194v198"/><path d="M276 282c0-20 13-40 36-40 24 0 33 18 33 45v105h66V279c0-61-32-89-76-89-34 0-51 19-59 32"/></svg>
+    </a>
+</div>
+            
+
+
+
+
+
+            
+
+
+
+
+
+        </section>
+</div>
+</article>
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe.
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides.
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo https://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>                    </div>
+                    <div class="span1"></div>
+                </div>
+            </div>
+        </div>
+<!--        <footer>
+
+    <div>
+        <span class="site-name"><span style="color:black;">Jin's Notes</span></span> - the hardest part is taking the first step
+    </div>
+
+
+
+    <div id="fpowered">
+        Powered by: <a href="http://getpelican.com/" title="Pelican Home Page" target="_blank" rel="nofollow noopener noreferrer">Pelican</a>
+        Theme: <a href="https://elegant.oncrashreboot.com/" title="Theme Elegant Home Page" target="_blank" rel="nofollow noopener noreferrer">Elegant</a>
+    </div>
+</footer>-->
+            <script src="//code.jquery.com/jquery.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+        <script src="/theme/js/elegant.prod.9e9d5ce754.js"></script>
+        <script>
+            function validateForm(query)
+            {
+                return (query.length > 0);
+            }
+        </script>
+
+
+
+
+    <script>
+    (function () {
+        if (window.location.hash.match(/^#comment-\d+$/)) {
+            $('#comment_thread').collapse('show');
+        }
+    })();
+    window.onhashchange=function(){
+        if (window.location.hash.match(/^#comment-\d+$/))
+            window.location.reload(true);
+    }
+    $('#comment_thread').on('shown', function () {
+        var link = document.getElementById('comment-accordion-toggle');
+        var old_innerHTML = link.innerHTML;
+        $(link).fadeOut(200, function() {
+            $(this).text('Click here to hide comments').fadeIn(200);
+        });
+        $('#comment_thread').on('hidden', function () {
+            $(link).fadeOut(200, function() {
+                $(this).text(old_innerHTML).fadeIn(200);
+            });
+        })
+    })
+</script>
+
+    </body>
+    <!-- Theme: Elegant built for Pelican
+        License : MIT -->
+
+</html>

@@ -1,0 +1,382 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="/theme/css/elegant.prod.9e9d5ce754.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="/theme/css/custom.css" media="screen">
+
+        <link rel="dns-prefetch" href="//fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+
+        <meta name="author" content="jin" />
+
+        <meta name="description" content="A non-fungible token (NFT) represents ownership of a non-interchangeable unit of data. NFT is a powerful primitive because it enables natively digital ownership. Existing use cases of NFTs are still at the beginning of this evolution. The ERC721 standard has only a few functions that are programmed primarily on the …
+" />
+        <meta name="twitter:creator" content="@jinfwhuang">
+        <meta property="og:type" content="article" />
+        <meta name="twitter:card" content="summary">
+
+<meta name="keywords" content="web3, misc, " />
+
+<meta property="og:title" content="Notes on NFT Platforms "/>
+<meta property="og:url" content="/2022-09-01-nft-platform" />
+<meta property="og:description" content="A non-fungible token (NFT) represents ownership of a non-interchangeable unit of data. NFT is a powerful primitive because it enables natively digital ownership. Existing use cases of NFTs are still at the beginning of this evolution. The ERC721 standard has only a few functions that are programmed primarily on the …" />
+<meta property="og:site_name" content="Jin&#39;s Notes" />
+<meta property="og:article:author" content="jin" />
+<meta property="og:article:published_time" content="2022-09-01T00:00:00-07:00" />
+<meta name="twitter:title" content="Notes on NFT Platforms ">
+<meta name="twitter:description" content="A non-fungible token (NFT) represents ownership of a non-interchangeable unit of data. NFT is a powerful primitive because it enables natively digital ownership. Existing use cases of NFTs are still at the beginning of this evolution. The ERC721 standard has only a few functions that are programmed primarily on the …">
+<meta property="og:image" content="/images/android-chrome-192x192.png" />
+<meta name="twitter:image" content="/images/android-chrome-192x192.png" >
+
+        <title>Notes on NFT Platforms  · Jin&#39;s Notes
+</title>
+        <link rel="shortcut icon" href="/theme/images/favicon.ico" type="image/x-icon" />
+        <link rel="icon" href="/theme/images/apple-touch-icon-152x152.png" type="image/png" />
+        <link rel="apple-touch-icon" href="/theme/images/apple-touch-icon.png"  type="image/png" />
+        <link rel="apple-touch-icon" sizes="57x57" href="/theme/images/apple-touch-icon-57x57.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="/theme/images/apple-touch-icon-72x72.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="76x76" href="/theme/images/apple-touch-icon-76x76.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="/theme/images/apple-touch-icon-114x114.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="120x120" href="/theme/images/apple-touch-icon-120x120.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="144x144" href="/theme/images/apple-touch-icon-144x144.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="152x152" href="/theme/images/apple-touch-icon-152x152.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="152x152" href="/theme/images/apple-touch-icon-180x180.png" type="image/png" />
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+     m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+     })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-207279664-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+
+    </head>
+    <body>
+        <div id="content">
+            <div class="navbar navbar-static-top">
+                <div class="navbar-inner">
+                    <div class="container-fluid">
+                        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </a>
+                        <a class="brand" href="/"><span class=site-name><span style="color:black;">Jin's Notes</span></span></a>
+                        <div class="nav-collapse collapse">
+                            <ul class="nav pull-right top-menu">
+                                <li >
+                                    <a href=
+                                       "/"
+                                    >Home</a>
+                                </li>
+<!--                                <li ><a href="/categories">Categories</a></li>-->
+                                <li ><a href="/tags">Tags</a></li>
+                                <li ><a href="/archives">Archives</a></li>
+                                <li><form class="navbar-search" action="/search" onsubmit="return validateForm(this.elements['q'].value);"> <input type="text" class="search-query" placeholder="Search" name="q" id="tipue_search_input"></form></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid">
+                <div class="row-fluid">
+                    <div class="span1"></div>
+                    <div class="span10">
+<article itemscope>
+<div class="row-fluid">
+    <header class="page-header span10 offset2">
+        <h1>
+            <a href="/2022-09-01-nft-platform">
+                Notes on <span class="caps">NFT</span> Platforms <br/>
+            </a>
+        </h1>
+    </header>
+</div>
+
+<div class="row-fluid">
+    <div class="span2 table-of-content">
+        <nav>
+        <h4>Contents</h4>
+        <div class="toc">
+<ul>
+<li><a href="#nft-data-model"><span class="caps">NFT</span> Data Model</a></li>
+<li><a href="#comparing-nft-platforms">Comparing <span class="caps">NFT</span> Platforms</a><ul>
+<li><a href="#blockchain-type">Blockchain Type</a></li>
+<li><a href="#programmability">Programmability</a></li>
+<li><a href="#media-storage-and-delivery">Media Storage and Delivery</a></li>
+<li><a href="#developer-experiences">Developer Experiences</a></li>
+</ul>
+</li>
+<li><a href="#footnotes">Footnotes</a></li>
+</ul>
+</div>
+        </nav>
+    </div>
+    <div class="span8 article-content">
+            
+            <p>A non-fungible token (<span class="caps">NFT</span>) represents ownership of a non-interchangeable unit of data. <span class="caps">NFT</span> is a powerful primitive because it enables natively digital ownership. Existing use cases of NFTs are still at the beginning of this evolution. The <span class="caps">ERC721</span> standard has only a few functions that are programmed primarily on the ownership variable, allowing users to create, own, and trade their digital assets. Future NFTs will be programs of a more diverse and sophisticated set of state variables. For example, NFTs could represent a metaverse playing character. The player’s history, status, and relationships could be represented by the <span class="caps">NFT</span> state and state transitions. The <span class="caps">NFT</span>’s program defines how the character could or could not interact with its environments.</p>
+<p><span class="caps">NFT</span> platforms are the decentralized infrastructure where NFTs are minted, updated, and traded. Platforms are different from <span class="caps">NFT</span> marketplaces. Users buy and sell NFTs in marketplaces, and marketplaces are built on top of <span class="caps">NFT</span> platforms. Examples of <span class="caps">NFT</span> marketplaces are OpenSea, <span class="caps">NBA</span> Top Shot, or Autograph. The core of an <span class="caps">NFT</span> platform is a blockchain, the decentralized database where NFTs are defined and created. <span class="caps">NFT</span> platform could include more offerings, such as <span class="caps">SDK</span>, bridges, managed services, etc. Examples of <span class="caps">NFT</span> platforms are Ethereum, Solana, and ImmutableX, and Stargaze.</p>
+<p>In this post, I describe the <span class="caps">NFT</span> data model as a foundation to understand <span class="caps">NFT</span> platforms. I then compare and discuss the features of <span class="caps">NFT</span> platforms: blockchain type, programmability, scalability, media storage and delivery, and developer experience.</p>
+<h4 id="nft-data-model"><span class="caps">NFT</span> Data Model</h4>
+<p>NFTs are simple, specialized state machines. A state machine has state and transition functions. An <span class="caps">NFT</span> has three types of data: an owner, metadata, and the unique media content. An <span class="caps">NFT</span> has an owner. Although it is not required, most NFTs are uniquely associated with some media content. An <span class="caps">NFT</span> also has a set of state transitions that define the capabilities of the <span class="caps">NFT</span>.</p>
+<p>Let’s make these ideas concrete. Let’s take <span class="caps">ERC721</span> as an example. A typical <span class="caps">ERC721</span> implementation contains the following on-chain data: <code>token_id</code>, <code>owner address</code>, <code>name</code>, and <code>symbol</code>. All the public and private functions only depend on the variable <code>owner address</code>. A common extension includes an off-chain metadata specification, where an <span class="caps">NFT</span> also contains a <code>token_url</code>. The url is a link to some off-chain bytes. These off-chain bytes are usually required to be a json file that contains key-value pairs such as description, image_url, etc. These key-value pairs are metadata. It should be noted that the on-chain data points <code>name</code> and <code>symbol</code> are also metadata. The third data type is the actual media content. It is referenced as a special off-chain metadata in the <code>image_url</code> key. Its value is a yet another link, pointing to the off-chain location where the media content is stored.</p>
+<p>The distinction of on-chain variables and off-chain metadata are important because off-chain data is not programmable. For example, an in-game <span class="caps">NFT</span> representing a property such that it is only transferable if it has a house built on it. This simple verification check could not be coded again the metadata <code>has_house: bool</code><sup id="sf-2022-09-01-nft-platform-1-back"><a href="#sf-2022-09-01-nft-platform-1" class="simple-footnote" title="It is possible to get around it with a complex setup of merkelizing the off-chain metadata state and the transition function takes in an additional argument in the form of a merkle proof. It makes a simple function very complicated. It also introduces the problem of data availability for the off-chain data because the function caller has to construct the merkle proof.">1</a></sup>. Other than programmability, off-chain metadata introduces unnecessary dependencies. The data’s availability is not guaranteed by the platform but by a third party service provider. For example, one popular solution is to pay for Pinata’s pinning service to ensure that the media content is available through a <span class="caps">IPFS</span> query.</p>
+<p>Off-chain media content is not programmable. For example, someone wants to program an audio <span class="caps">NFT</span> such that the first 1000 listeners would get rewarded. The <span class="caps">NFT</span>’s on-chain state machine only contains a reference to its media. The media is stored and delivered by a third party service, and the service does not talk back to the state machine to inform who and how the media is used.</p>
+<h4 id="comparing-nft-platforms">Comparing <span class="caps">NFT</span> Platforms</h4>
+<p>Future NFTs will be mini-programs that does not just operate on ownership data but also on arbitrary metadata and the usage behaviors of associated media content. For an example in gaming, monster cards could be combined to form a more powerful card. Those rules will be on-chain transition functions. For an example in the creator economy, a song represented by an <span class="caps">NFT</span> could monetize directly if the song becomes popular and garner millions of streams.</p>
+<p>I will discuss the key aspects of how to evaluate <span class="caps">NFT</span> platforms: blockchain type, programmability, scalability, media storage and delivery, and developer experience.</p>
+<!--&#8212; |                       | Smart Contract               | ImmutableX                           | Stargaze                             | Desired Features                     |
+| &#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;- | &#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212; | &#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212; | &#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212; | &#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212;&#8212; | 
+| Blockchain            |                              | zk-rollup                            | proof of stake                       |                                      |                                    |
+| Programmability       | allow user-defined behaviors | only supports ERC721, ERC20, ERC1155 | CosmWasm deployed through governance | user-defined behaviors               |
+| Scalability           | blockchain specific          | single machine state size            | single machine state size            |                                      | low cost horizontal scalable state |
+| Media                 | third party                  | third party                          | third party                          | p2p media, on-chain media usage data |
+| Developer Experiences | blockchain tx                | APIs                                 | blockchain tx                        | APIs, managed services               |
+
+&#8212;-->
+<h6 id="blockchain-type">Blockchain Type</h6>
+<p>An <span class="caps">NFT</span> platform is a place where the <span class="caps">NFT</span> data model could be deployed. There are two common patterns to accomplish that. The first pattern is via smart contracts. The second pattern is to build application specific blockchains that natively encodes the <span class="caps">NFT</span> state machine.</p>
+<p>Any general purpose L1 and L2 chains could be used as a <span class="caps">NFT</span> platform. Examples are Ethereum, Solana, Flow, Polygon, Optimism, and Starknet. These blockchains do not natively understand the concept of NFTs. Developers implement the state machine that encapsulates the <span class="caps">NFT</span> data model. In practice, the community of a blockchain agrees on some standards that correspond to basic functionalities of NFTs.</p>
+<p>The second type of <span class="caps">NFT</span> platforms are decentralized protocols that are purpose-built for NFTs. The core state machine of a general purpose blockchain is a virtual machine. Instead, <span class="caps">NFT</span> specific chains implement the <span class="caps">NFT</span> data model directly. <span class="caps">NFT</span> behaviors are explicitly coded as state transition functions in the core protocol. ImmutableX is an example of a purpose-built state machine. Developers do not write the <span class="caps">NFT</span> data model in smart contracts. <span class="caps">NFT</span> functionalities are explicitly defined as core concepts by the protocol.</p>
+<p>Smart contract NFTs inherit blockchain characteristics of the host blockchain. The blockchain does the heavy lifting on making available a general purpose, deterministic state machine. An <span class="caps">NFT</span> is a small program that runs inside that virtual machine.</p>
+<p>ImmutableX is an application-specific, zero-knowledge (zk) rollup chain built on the Starkex platform and custom data availability solution. The chain sequence and process transactions in batches. The hash of the final state of each batch and a zk validity proof are posted to Ethereum. The ImmutableX platform relies on <span class="caps">STARK</span> validity proof to guarantee the validity of <span class="caps">NFT</span> state transitions. However, the protocol stores raw transactions in a custom network that is run by a data availability committee, which is equivalent to proof of authority.</p>
+<h6 id="programmability">Programmability</h6>
+<p>For example, a developer wants to program an <span class="caps">NFT</span> to represent a metaverse character. The character’s skill development path should be governed by a set of rules. The character has to first attend woodworking training to gain certification. The certification unlocks her ability to enter quests.</p>
+<p>Future <span class="caps">NFT</span> use cases will expand greatly beyond the <span class="caps">ERC721</span> standard. There are already many proposed standards on the Ethereum platforms, e.g. Permit, Micropayments, Subscription, Entangled Token, Multi Tokens, Re-Fungible Token, etc.</p>
+<p>There will also be custom use cases that won’t be standardized. For example, a monster card game is encoded by NFTs. Cards could be combined. Cards could get updated based on previous battles. Each card’s metadata is recorded on-chain. The cards’ state transitions are different for each card game. For a second example, a developer wants to program an <span class="caps">NFT</span> to represent a sword that is interoperable in many games. There are specific rules that the sword could get upgraded. Special gemstones could be melted into the sword, or special monster kills could enhance a sword’s characteristics. The rules are written as the state transition functions, and on-chain metadata are used to record the sword’s current status. For a third example, a developer wants to program an <span class="caps">NFT</span> sword to be non-transferable once the sword gains a certain status. This is similar to soul bound token, with the exception that the <span class="caps">NFT</span> is soul bound to another in-game character, which could be another <span class="caps">NFT</span>. There will be countless such examples.</p>
+<p>There are also use cases that require the <span class="caps">NFT</span> program to operate on media usage data. For example, a developer wants to program an audio <span class="caps">NFT</span> such that the first 1000 listeners would get rewarded. For a second example, a developer wants to program a video <span class="caps">NFT</span> such that the <span class="caps">NFT</span> owner could claim a reward whenever the video has a 1000 incremental views. A creator works with a sponsor to create a video that embeds a short message from the sponsor, and the sponsor contributes to a reward. If the <span class="caps">NFT</span> transition functions only contain a reference to its media, the two previous examples cannot be programmed. When the media is stored and delivered by a third party service, the <span class="caps">NFT</span> state machine cannot learn who and how the <span class="caps">NFT</span> media is used.</p>
+<p><span class="caps">NFT</span> platforms need to satisfy two requirements to allow for these future use cases. First, the platform allows a scripting environment to program user defined state transition functions. Second, the scripting environment has access to arbitrary on-chain metadata and metadata associated with media usage.</p>
+<p>Smart contract <span class="caps">NFT</span> platform trivially allows for on-chain metadata and scripting environments. The key challenge for smart contract NFTs is that on-chain metadata is expensive. This will be discussed more in the scalability subsection. Another challenge is that smart contract platforms do not have access to media usage data. This feature could be built separately to complement a smart contract platform. At a minimum, it requires coordination between the <span class="caps">NFT</span> state machine and the content delivery network. This will be discussed more in media storage and delivery subsection.</p>
+<p>ImmutableX does not allow user defined <span class="caps">NFT</span> behaviors. ImmutableX only supports basic <span class="caps">ERC721</span> behaviors, so it does not need to allow for user defined programming. Furthermore, it depends on Starkex to generate and verify validity proof. Starkex only supports basic token operations that are defined in <span class="caps">ERC</span>-20, <span class="caps">ERC</span>-721, and <span class="caps">ERC</span>-1155. Starkex cannot verify state transitions of custom state machines, even those state machines were written in specialized Cairo programs. The choice of zk rollup makes adding user defined state transition more complicated. It would require their zk validity proof system to have the ability to interpret and validate user defined scripts because all the <span class="caps">NFT</span> level state transitions have to be aggregated into a single zk validation proof. Beyond scripting, ImmutableX has to add support for generic metadata. It is hard to envision that ImmutableX can add support for media storage and delivery.</p>
+<p>Stargaze is supposed to be a purpose-built application blockchain, but it is built as a blockchain with a general purpose virtual machine. The NFTs are implemented as smart contracts written in webassembly. The key difference is that developers are not allowed to deploy smart contracts directly. User defined smart contracts are posted on a forum and voted into deployment by a governance protocol. Scalability</p>
+<p>The discussion of blockchain scalability should be application specific. The most common metric of blockchain scalability focuses on the metric of transactions per second (<span class="caps">TPS</span>), which incorporates data from block time, block size, and transaction size. However, applications have different kinds of transactions. For example, some applications require a lot of transactions that create new key-value pairs on-chain. These transactions increase the state size incrementally. The blockchain has to deal with a storage bottleneck because transaction processors have to maintain the state in local storage. In a different example, payment applications mostly create transactions that are about fungible token transfers. The transactions are small, require low compute resources to process, and do not accumulate into a large state. <span class="caps">TPS</span> is a excellent metric for this type of application. For a third example, if transactions are computationally expensive, the bottleneck might be on processing power of validators. Different transaction types push a blockchain’s boundaries in different ways. It could be bottlenecks of physical limitation in storage, <span class="caps">CPU</span>, or network. Or it could be bottlenecks that are imposed by design choices such as in gossip, consensus, and data availability mechanisms.</p>
+<p>Future use cases of <span class="caps">NFT</span> will increase the demand for on-chain metadata and user defined transactions that operate on those metadata. These use cases might push the limit on blockchain design choices. I will not go into details of the limitations of those design choices in this post. Instead, I will discuss the physical limitations that impact all blockchains regardless of how the implementationof mempool, gossip, consensus, and blockchain data model. Processing nodes might be able to avoid the bottleneck in network bandwidth or <span class="caps">CPU</span> resources. Network could reach <span class="caps">100MB</span>/s, and it is possible there are hardware and software solutions that could allow a single machine to handle that data rate. Storage is a hard limit. <span class="caps">NFT</span> use cases will incrementally put more and more metadata on-chain. Programmability requires the state to be read and write accessible. The state grows indefinitely. If the accumulation rate is just 1 <span class="caps">MB</span>/s, the state grows to 30 <span class="caps">TB</span> in one year. The rest of the blockchain components might be able to handle transactions that summed to <span class="caps">100MB</span>/s, but if even just 1% of those transactions are metadata updates, a non-sharded blockchain will be bottlenecked by storage.</p>
+<p>There are two common solutions to expand the state size beyond a single machine. One is state expiry and another is state sharding. The first strategy prunes the old data from the state. The strategy has to allow expired data to be recovered. The main drawback is dependence on third party services to hold the expired data. The second strategy is sharding. When the state grows beyond what could be handled in a single machine, the system uses more machines. This approach does not just scale storage, it increases throughput for network and <span class="caps">CPU</span> resources as well.</p>
+<p>As <span class="caps">NFT</span> usage of on-chain metadata increases overtime, blockchains will have to deal with the problem of large state. Ethereum approaches the problem with both a state expiry solution and sharding. Some blockchains are built as sharded chains, e.g. Near, Polkadot, and Sui. But some blockchains are not sharded, e.g. Solana, Polygon, ImmutableX. It is worth noting that a layer 2 chain such as ImmutableX could be sharded as well. They could shard their chain state and have different sequencing nodes for each shard. Each shard could still use the same non-sharded L1 layer to maintain state and verify validation proofs.</p>
+<p>There is no existing <span class="caps">NFT</span> platform that guarantees low cost, horizontally scalable on-chain metadata. The state of non-sharded blockchains will be limited to a single machine. It is also difficult to fully harness the scalability of sharded Even for smart contract NFTs on sharded blockchains, NFTs</p>
+<p>Sharded blockchains usually do not expose sharding control to smart contracts. For <span class="caps">NFT</span> smart contracts to fully leverage sharding, they have to adapt to the specific sharding architecture of the host chain so NFTs could interoperate across shards. A lot of the popular <span class="caps">NFT</span> smart contract platforms are blockchains that are optimized financial applications. On-chain data is too expensive for the purpose of <span class="caps">NFT</span> programmability.</p>
+<p>One solution is to build a sharded, <span class="caps">NFT</span>-specific blockchain. A blockchain of this kind could shard the chain according to the <span class="caps">NFT</span> data model and behavior. A lot of <span class="caps">NFT</span> behaviors are self-contained or limited to interact with closely related NFTs. These patterns are easily parallelizable. The chain should tailor the security requirement and cost structure for <span class="caps">NFT</span> use cases.</p>
+<h6 id="media-storage-and-delivery">Media Storage and Delivery</h6>
+<p>Existing <span class="caps">NFT</span> platforms are designed to support collectible NFTs. Existing <span class="caps">NFT</span> platforms do not handle media storage and delivery. It is important to note that on-chain media storage is not feasible. The generally accepted practice is that the <span class="caps">NFT</span> contains a reference to the media. The media is stored and delivered through third party solutions that do not communicate with the state machines that manage the NFTs.</p>
+<p>A <span class="caps">NFT</span> platform that integrates the handling of media storage and delivery offers two major benefits. The first benefit is convenience and decentralization. <span class="caps">NFT</span> developers do not need to go to a centrally operated third party service provider to host the media. The second benefit is <span class="caps">NFT</span> programmability. When users interact with third party services to retrieve the media, the <span class="caps">NFT</span> platform cannot exercise any control over how that media is consumed or how to react to the usage behavior.</p>
+<p>This feature could be seen as an incentivized, peer-to-peer content network. The nodes participating in the delivery network interact directly with client applications. They fulfill media requests. These content nodes want to be paid for their work. The content nodes report back to a blockchain about their work and get rewarded there.</p>
+<p>This component could be built on top of smart contract <span class="caps">NFT</span> platforms as well. The blockchain network and the delivery network are connected via usage report transactions. The content nodes submit transactions to claim rewards. In theory, these user defined functions could be defined on any smart contract platform. The key challenge is that usage reports might be large transactions and require heavy use of on-chain metadata.</p>
+<p>I am not aware that anyone is working on such a solution as of the writing of this post.</p>
+<h6 id="developer-experiences">Developer Experiences</h6>
+<p>Existing <span class="caps">NFT</span> platforms is not user friendly. Choosing a platform usually requires in-depth knowledge of decentralized infrastructure. Developers have to learn the best practices of smart contract systems because security is a must-have. Developers have to integrate with <span class="caps">NFT</span> marketplaces. They have to provide guidance to users on how to manage wallets, acquire cryptocurrencies, and navigate blockchain transactions. Developers might also need to develop purpose-built user interfaces so users could access and manage NFTs in contexts that are not already covered by existing marketplaces.</p>
+<p>ImmutableX alleviates one aspect of the challenges listed above. ImmutableX allows developers to interact with their chain through APIs calls. Developers do not need to write smart contracts to define <span class="caps">NFT</span> behaviors because all the available behaviors are predefined. The platform also provides users with a dedicated marketplace <span class="caps">UI</span> to interact with its NFTs.</p>
+<p>Developers should have the option to implement <span class="caps">NFT</span> behaviors with managed services. For example, a game developer could simply sign up for a service and acquire an <span class="caps">API</span> key to get started on implementing <span class="caps">NFT</span> functionalities. It could be as easy as integrating an <span class="caps">SMS</span> texting service using Twilio. The platform could also enable game users to interact with NFTs without requiring them to navigate a web3 wallet. Both the developers and users should always have the option to reclaim custody of their assets. Developers should always have the option to interact directly with the decentralized layers should they choose to go with that route.</p>
+<hr>
+<h4 id="footnotes">Footnotes</h4><ol class="simple-footnotes"><li id="sf-2022-09-01-nft-platform-1">It is possible to get around it with a complex setup of merkelizing the off-chain metadata state and the transition function takes in an additional argument in the form of a merkle proof. It makes a simple function very complicated. It also introduces the problem of data availability for the off-chain data because the function caller has to construct the merkle proof. <a href="#sf-2022-09-01-nft-platform-1-back" class="simple-footnote-back">↩</a></li></ol>
+
+
+
+             
+ 
+            
+            
+            
+
+
+
+
+
+
+
+
+            <hr/>
+            <script src="https://utteranc.es/client.js"
+                    repo="jinfwhuang/jinfwhuang.github.io"
+                    issue-term="pathname"
+                    label="user-comments"
+                    theme="github-light"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+
+            <hr/>
+<section>
+    <h2>Related Posts</h2>
+<ul class="related-posts-list">
+<li><a href="/2021-07-23-blockchain_throughput" title="Notes on Blockchain Throughput">Notes on Blockchain Throughput</a></li>
+<li><a href="/2021-09-06-dsn" title="Notes on Decentralized Storage Networks">Notes on Decentralized Storage Networks</a></li>
+<li><a href="/2022-03-15-stablecoins" title="Notes on ERC20 Stablecoins">Notes on ERC20 Stablecoins</a></li>
+<li><a href="/2021-03-22-ethereum-l2" title="Notes on Ethereum L2 Solutions">Notes on Ethereum L2 Solutions</a></li>
+<li><a href="/2022-10-01-scaling-nft-metadata" title="Scaling NFT Metadata">Scaling NFT Metadata</a></li>
+</ul>
+<hr />
+</section>
+            <aside>
+            <nav>
+            <ul class="articles-timeline">
+                <li class="previous-article">« <a href="/2021-03-22-ethereum-l2" title="Previous: Notes on Ethereum L2 Solutions">Notes on Ethereum L2 Solutions</a></li>
+                <li class="next-article"><a href="/2022-10-01-scaling-nft-metadata" title="Next: Scaling NFT Metadata">Scaling NFT Metadata</a> »</li>
+            </ul>
+            </nav>
+            </aside>
+        </div>
+        <section id="article-sidebar" class="span2">
+            <h4>Published</h4>
+            <time itemprop="dateCreated" datetime="2022-09-01T00:00:00-07:00">Thu 01 September 2022</time>
+            <!--             <h4>Category</h4>
+            <a class="category-link" href="/categories#misc-ref">misc</a>
+ -->
+            <h4>Tags</h4>
+            <ul class="list-of-tags tags-in-article">
+                <li><a href="/tags#web3-ref">web3
+                    <span class="superscript">6</span>
+</a></li>
+            </ul>
+<h4>Contact</h4>
+<div id="sidebar-social-link">
+    <a href="https://twitter.com/jinfwhuang" title="Twiiter" target="_blank" rel="nofollow noopener noreferrer">
+        <svg xmlns="http://www.w3.org/2000/svg" aria-label="Twitter" role="img" viewBox="0 0 512 512"><rect width="512" height="512" rx="15%" fill="#1da1f3"/><path fill="#fff" d="M437 152a72 72 0 0 1-40 12 72 72 0 0 0 32-40 72 72 0 0 1-45 17 72 72 0 0 0-122 65 200 200 0 0 1-145-74 72 72 0 0 0 22 94 72 72 0 0 1-32-7 72 72 0 0 0 56 69 72 72 0 0 1-32 1 72 72 0 0 0 67 50 200 200 0 0 1-105 29 200 200 0 0 0 309-179 200 200 0 0 0 35-37"/></svg>
+    </a>
+    <a href="https://www.linkedin.com/in/jinfwhuang" title="LinkedIn" target="_blank" rel="nofollow noopener noreferrer">
+        <svg xmlns="http://www.w3.org/2000/svg" aria-label="LinkedIn" role="img" viewBox="0 0 512 512" fill="#fff"><rect width="512" height="512" rx="15%" fill="#0077b5"/><circle cx="142" cy="138" r="37"/><path stroke="#fff" stroke-width="66" d="M244 194v198M142 194v198"/><path d="M276 282c0-20 13-40 36-40 24 0 33 18 33 45v105h66V279c0-61-32-89-76-89-34 0-51 19-59 32"/></svg>
+    </a>
+</div>
+            
+
+
+
+
+
+            
+
+
+
+
+
+        </section>
+</div>
+</article>
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe.
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides.
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo https://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>                    </div>
+                    <div class="span1"></div>
+                </div>
+            </div>
+        </div>
+<!--        <footer>
+
+    <div>
+        <span class="site-name"><span style="color:black;">Jin's Notes</span></span> - the hardest part is taking the first step
+    </div>
+
+
+
+    <div id="fpowered">
+        Powered by: <a href="http://getpelican.com/" title="Pelican Home Page" target="_blank" rel="nofollow noopener noreferrer">Pelican</a>
+        Theme: <a href="https://elegant.oncrashreboot.com/" title="Theme Elegant Home Page" target="_blank" rel="nofollow noopener noreferrer">Elegant</a>
+    </div>
+</footer>-->
+            <script src="//code.jquery.com/jquery.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+        <script src="/theme/js/elegant.prod.9e9d5ce754.js"></script>
+        <script>
+            function validateForm(query)
+            {
+                return (query.length > 0);
+            }
+        </script>
+
+
+
+
+    <script>
+    (function () {
+        if (window.location.hash.match(/^#comment-\d+$/)) {
+            $('#comment_thread').collapse('show');
+        }
+    })();
+    window.onhashchange=function(){
+        if (window.location.hash.match(/^#comment-\d+$/))
+            window.location.reload(true);
+    }
+    $('#comment_thread').on('shown', function () {
+        var link = document.getElementById('comment-accordion-toggle');
+        var old_innerHTML = link.innerHTML;
+        $(link).fadeOut(200, function() {
+            $(this).text('Click here to hide comments').fadeIn(200);
+        });
+        $('#comment_thread').on('hidden', function () {
+            $(link).fadeOut(200, function() {
+                $(this).text(old_innerHTML).fadeIn(200);
+            });
+        })
+    })
+</script>
+
+    </body>
+    <!-- Theme: Elegant built for Pelican
+        License : MIT -->
+
+</html>

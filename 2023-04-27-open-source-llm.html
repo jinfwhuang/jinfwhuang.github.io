@@ -1,0 +1,588 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="/theme/css/elegant.prod.9e9d5ce754.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="/theme/css/custom.css" media="screen">
+
+        <link rel="dns-prefetch" href="//fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+
+        <meta name="author" content="jin" />
+
+        <meta name="description" content="Large language models (LLM) are becoming an increasingly requisite component for modern applications. The text generation capability has crossed a threshold to perform many well-defined NLP tasks as well as human workers could. Many of the recent applications in the past year, in 2022-2023, leveraged close-source, privately hosted LLMs. Many …
+" />
+        <meta name="twitter:creator" content="@jinfwhuang">
+        <meta property="og:type" content="article" />
+        <meta name="twitter:card" content="summary">
+
+<meta name="keywords" content="ai, LLM, misc, " />
+
+<meta property="og:title" content="Open Source LLMs "/>
+<meta property="og:url" content="/2023-04-27-open-source-llm" />
+<meta property="og:description" content="Large language models (LLM) are becoming an increasingly requisite component for modern applications. The text generation capability has crossed a threshold to perform many well-defined NLP tasks as well as human workers could. Many of the recent applications in the past year, in 2022-2023, leveraged close-source, privately hosted LLMs. Many …" />
+<meta property="og:site_name" content="Jin&#39;s Notes" />
+<meta property="og:article:author" content="jin" />
+<meta property="og:article:published_time" content="2023-04-27T00:00:00-07:00" />
+<meta name="twitter:title" content="Open Source LLMs ">
+<meta name="twitter:description" content="Large language models (LLM) are becoming an increasingly requisite component for modern applications. The text generation capability has crossed a threshold to perform many well-defined NLP tasks as well as human workers could. Many of the recent applications in the past year, in 2022-2023, leveraged close-source, privately hosted LLMs. Many …">
+<meta property="og:image" content="/images/android-chrome-192x192.png" />
+<meta name="twitter:image" content="/images/android-chrome-192x192.png" >
+
+        <title>Open Source LLMs  · Jin&#39;s Notes
+</title>
+        <link rel="shortcut icon" href="/theme/images/favicon.ico" type="image/x-icon" />
+        <link rel="icon" href="/theme/images/apple-touch-icon-152x152.png" type="image/png" />
+        <link rel="apple-touch-icon" href="/theme/images/apple-touch-icon.png"  type="image/png" />
+        <link rel="apple-touch-icon" sizes="57x57" href="/theme/images/apple-touch-icon-57x57.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="/theme/images/apple-touch-icon-72x72.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="76x76" href="/theme/images/apple-touch-icon-76x76.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="/theme/images/apple-touch-icon-114x114.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="120x120" href="/theme/images/apple-touch-icon-120x120.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="144x144" href="/theme/images/apple-touch-icon-144x144.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="152x152" href="/theme/images/apple-touch-icon-152x152.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="152x152" href="/theme/images/apple-touch-icon-180x180.png" type="image/png" />
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+     m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+     })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-207279664-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+
+    </head>
+    <body>
+        <div id="content">
+            <div class="navbar navbar-static-top">
+                <div class="navbar-inner">
+                    <div class="container-fluid">
+                        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </a>
+                        <a class="brand" href="/"><span class=site-name><span style="color:black;">Jin's Notes</span></span></a>
+                        <div class="nav-collapse collapse">
+                            <ul class="nav pull-right top-menu">
+                                <li >
+                                    <a href=
+                                       "/"
+                                    >Home</a>
+                                </li>
+<!--                                <li ><a href="/categories">Categories</a></li>-->
+                                <li ><a href="/tags">Tags</a></li>
+                                <li ><a href="/archives">Archives</a></li>
+                                <li><form class="navbar-search" action="/search" onsubmit="return validateForm(this.elements['q'].value);"> <input type="text" class="search-query" placeholder="Search" name="q" id="tipue_search_input"></form></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid">
+                <div class="row-fluid">
+                    <div class="span1"></div>
+                    <div class="span10">
+<article itemscope>
+<div class="row-fluid">
+    <header class="page-header span10 offset2">
+        <h1>
+            <a href="/2023-04-27-open-source-llm">
+                Open Source LLMs <br/>
+            </a>
+        </h1>
+    </header>
+</div>
+
+<div class="row-fluid">
+    <div class="span2 table-of-content">
+        <nav>
+        <h4>Contents</h4>
+        <div class="toc">
+<ul>
+<li><a href="#ingredients-of-llm">Ingredients of <span class="caps">LLM</span></a></li>
+<li><a href="#start-with-a-pretrained-llm">Start with a Pretrained <span class="caps">LLM</span></a></li>
+<li><a href="#customizing-models">Customizing Models</a></li>
+<li><a href="#model-deployment">Model Deployment</a></li>
+<li><a href="#footnotes">Footnotes</a></li>
+</ul>
+</div>
+        </nav>
+    </div>
+    <div class="span8 article-content">
+            
+            <p>Large language models (<span class="caps">LLM</span>) are becoming an increasingly requisite component for modern applications. The text generation capability has crossed a threshold to perform many well-defined <span class="caps">NLP</span> tasks as well as human workers could. Many of the recent applications in the past year, in 2022-2023, leveraged close-source, privately hosted LLMs. Many of the best, largest state-of-the-art models are close-source and controlled by private companies such as OpenAI, Cohere, Adept, Anthropic, and Google.</p>
+<p>There is also rapid progress in the open-source community. At it stands today, open-source models are not likely to be able to match the capabilities of private LLMs due to training data, compute costs, and engineering resources. However, the open-source models could be sufficiently powerful for most applications. Open-source models have their advantages as well. For example, developers could choose a specific model size to match the application requirements to reduce compute waste. The open models could be further modified and trained for specific domains or <span class="caps">NLP</span> tasks.</p>
+<p>In this post, I am sharing my thoughts on how to get started on choosing an open-source <span class="caps">LLM</span>.</p>
+<h4 id="ingredients-of-llm">Ingredients of <span class="caps">LLM</span></h4>
+<p>I am going to describe the key factors that differentiate LLMs. The best way to gain a decent understanding of <span class="caps">LLM</span> is to read a few of the classic papers on the topic. I would recommend the original transformer paper(<a href='#vaswani2017attention' id='ref-vaswani2017attention-1'>
+    10
+</a>), the <span class="caps">BERT</span> (Bert <a href='#devlin2019bert' id='ref-devlin2019bert-1'>
+    2
+</a>), and <span class="caps">UL2</span> <a href='#tay2023ul2' id='ref-tay2023ul2-1'>
+    8
+</a>, and the instruct-gpt paper(<a href='#ouyang2022training' id='ref-ouyang2022training-1'>
+    4
+</a>). </p>
+<p>The first thing to notice about an <span class="caps">LLM</span> is its model architecture. All the recently published, relevant LLMs are transformers-based. That is, the key building block is transformer. Here are two excellent tutorials that describe this building block: <a href="https://nlp.seas.harvard.edu/2018/04/03/attention.html">1</a> and <a href="https://jalammar.github.io/illustrated-transformer/">2</a>. A transformer could be loosely understood as building a cross-attention, <code>n</code>-by-<code>n</code> matrix with the size <code>n</code> equal to the input length. The matrix tells the model how to represent each token based on the entire context. The full model has many layers, with each layer having many different multiple heads of these transformer units. One could perceive a transformer unit as a unique logical way to evaluate the input. For example, one unit is to evaluate the input’s language structure, the other unit is to evaluate the input’s historical context, etc.</p>
+<p>There are two major variants of transformer-based <span class="caps">LLM</span> that are popular: decoder-only and encoder-decoder. Encoder-only could be subsumed by the encoder-decoder model because the decoder part could be discarded for specific downstream tasks. However, from the perspective of <span class="caps">LLM</span> users, we don’t have to worry too much about the pros and cons of the different variants. The only key distinction is that the decoder-only model concatenates inputs and targets to process them together. This would make decoder-only models less appropriate for applications that require text embeddings.</p>
+<p>An <span class="caps">LLM</span>’s size is measured by its number of learned parameters. Many models are trained with multiple sizes for ablative experiments. The largest model is the most powerful. However, they could be expensive to deploy. For example, a medium size <span class="caps">INSTRUCTOR</span> model might be sufficient for a semantic search application. The biggest is not always the best. We could choose the model sizes based on trade-off of cost, computation, and model performance, </p>
+<p>Another <span class="caps">LLM</span> feature is the size of its context window. One of key limitations of transformers is quadratic memory and computation requirement with respect to input length. This limits the input length and the context window. There are variants of transformers, such as long-formers, <span class="caps">ETC</span>, and long-t5 that scale linearly to input length. However, there aren’t any powerful, truly large LMs that are fully trained in those architectures. If long context window is a requirement for your applications, you might have to adapt your model and train from scratch. However, pretraining from randomly initialed weights is very expensive and require a fairly substantial amount of engineering know-how.</p>
+<p>Another key ingredient is the pretraining objective. <span class="caps">LLM</span> gets its reasoning capabilities and knowledge through processing massive amounts of text. The key idea is to hide some part of the known text for each sample, and then ask the model to predict missing span. The objective is to score the prediction, and then use the score to calculate parameter gradients. There are different strategies to generate masked texts. The most common objectives are left-to-right span corruption (e.g. next token prediction), prefix + span corruption, random span corruption, or some combination of these techniques. For practitioners, we care more about the capabilities of the trained models, but less so about the exact training objective. However, if we need to adapt a pretrained model to another domain, we would have to program the objectives to allow the model to process additional corpus.</p>
+<p>Another ingredient is the training data. Pretraining data is unlabelled text. Fine-tuning data is labelled dataset, and is much smaller than the pretraining dataset. It is important to understand what data have been used for the pretrained checkpoints. This allows us to understand what domain the model could perform well, what knowledge the parameters could contain, and how to further improve the model.</p>
+<p>Another ingredient is input representation. The input representation is learned from the text corpus. We need to consider if the application domain has similar vocabularies. It is usually not a problem for LLMs that are trained on large, sufficiently diverse corpus.</p>
+<p>Lastly, we have to consider if the models are trained by reinforcement learning through some reward models. The technique of furthering training fine-tuned models to have more human-preferred outputs is known as reinforcement learning from human feedback (<span class="caps">RLHF</span>). It is different from fine-tuning with human-labeled data. <span class="caps">RLHF</span> takes labeled data to train a completely independent reward model. The reward model is used to evaluate outputs generated by the fine-tuned model. See <a href='#stiennon2022learning' id='ref-stiennon2022learning-1'>
+    6
+</a> for more details. This step has been shown to limit hallucination and optimize outputs for human preferences. However, this step also restricts the model’s variance and makes it more likely to generate similar, mundane outputs. <span class="caps">RLHF</span>-trained models are hard to further fine-tuned or modify for specific tasks.</p>
+<h4 id="start-with-a-pretrained-llm">Start with a Pretrained <span class="caps">LLM</span></h4>
+<p>The practical way of using an open-source <span class="caps">LLM</span> is to choose a pretrained checkpoint from well-known models. There are many overviews and surveys about LLMs. For example, <a href='#yang2023harnessing' id='ref-yang2023harnessing-1'>
+    11
+</a> provides a good overview of the history and the latest <span class="caps">LLM</span> models. As of the writing of this blog, I would consider one of these as a starting point: t5 (<a href='#raffel2020exploring' id='ref-raffel2020exploring-1'>
+    5
+</a>), long-t5 (<a href='#guo2022longt5' id='ref-guo2022longt5-1'>
+    3
+</a>), <a href="https://huggingface.co/docs/transformers/model_doc/flan-t5">flan-t5</a>, <a href="https://huggingface.co/google/flan-ul2">flan-ul2</a>, <a href="https://huggingface.co/EleutherAI/pythia-12b">pythia</a> (<a href='#biderman2023pythia' id='ref-biderman2023pythia-1'>
+    1
+</a>), <a href="https://huggingface.co/databricks/dolly-v2-12b">dolly</a>, instructor (<a href='#su2023embedder' id='ref-su2023embedder-1'>
+    7
+</a>), <a href="https://huggingface.co/docs/transformers/main/model_doc/llama">LLaMA</a> (<a href='#touvron2023llama' id='ref-touvron2023llama-1'>
+    9
+</a>), <a href="https://huggingface.co/tiiuae/falcon-7b">falcon</a>.</p>
+<p>I would also consult various well-known benchmark leaderboards on <span class="caps">LLM</span> and specific <span class="caps">NLP</span> tasks. For example, 
+<a href="https://huggingface.co/spaces/HuggingFaceH4/open_llm_leaderboard">open <span class="caps">LLM</span> leaderboard</a>, <a href="https://huggingface.co/spaces/mteb/leaderboard"><span class="caps">MTEB</span></a>, <a href="https://crfm.stanford.edu/helm/latest/"><span class="caps">HELM</span></a>, and <a href="https://lmsys.org/blog/2023-05-03-arena/">Chatbot Arena</a></p>
+<p>There is no one-size-fits-all step-by-step guide on how to choose a foundation model. I would start by understanding my application’s requirements. I would consider the application’s expected input and output. For example, I would ask some of these questions: what are the typical lengths of the application’s queries, do queries require supplementary contexts, are the outputs long form answers, etc. These questions would guide me to find a foundation model that best matches the characteristics of the application. I would also consider the desired <span class="caps">NLP</span> tasks and the model’s strengths and weaknesses. For example, depending on if it is a text search application or an <span class="caps">AI</span> assistant, I would choose an encoder or a decoder-only <span class="caps">LLM</span>.</p>
+<h4 id="customizing-models">Customizing Models</h4>
+<p>Once I choose pretrained checkpoint, I would consider how to further modify the model to fit my application. I could modify the last layers to target a classification task. I could modify the token search algorithm to allow for an output distribution as opposed to always selecting the output with the highest probability. I could discard the decoder component and only use the encoder to generate text embedding.</p>
+<p>If the application domain is very different from the text corpus used for pretraining, it could be appropriate to train the model from scratch. This might be viable for small models, but for models that cross the billion parameters threshold, both the <span class="caps">GPU</span> compute and engineering resources would be prohibitively expensive for most small teams.</p>
+<p>An <span class="caps">LLM</span> could be further customized by fine-tuning with high-quality datasets, e.g. <a href="https://huggingface.co/databricks/dolly-v2-12b">dolly-15k</a> or <a href="https://github.com/google-research/FLAN">flan</a>, that were not used to train the model. I could fine-tune the model with private data. I could set up a reinforcement learning loop to instruct the model to have more human-preferred outputs.<sup id="sf-2023-04-27-open-source-llm-1-back"><a href="#sf-2023-04-27-open-source-llm-1" class="simple-footnote" title="This could be brittle and should only be taken when there are sufficient resources to collect human feedback, set up the experiment, and evaluate the model.">1</a></sup> I could further train the model on its pretraining objective on a private corpus for domain adaptation. The model could also acquire additional knowledge from processing large amounts of domain-specific text, allowing the model to answer queries with information that might not be explicitly included in the context window.</p>
+<h4 id="model-deployment">Model Deployment</h4>
+<p>Training LLMs is very expensive, but even model inference is not cheap. Every prediction requires a forward pass. That passthrough needs to touch every parameter. For a 100 billion parameter model, that is 100 billion floating point operations at a minimum. A sentence response is as many passes as the length of the sentence. For latency reasons, the parameters need to be pre-loaded into memory, which is likely to be in the 10s <span class="caps">GB</span> range. While operations could be performed by the <span class="caps">CPU</span>, the matrix computation should ideally be performed in the <span class="caps">GPU</span>. Even for a moderate-size <span class="caps">LLM</span>, the inference model needs to be supported by a <span class="caps">GPU</span> with 10s <span class="caps">GB</span> of memory.<sup id="sf-2023-04-27-open-source-llm-2-back"><a href="#sf-2023-04-27-open-source-llm-2" class="simple-footnote" title=" I am not going to discuss model sharding at this post. It might be a topic for future post.">2</a></sup></p>
+<hr>
+<h4 id="footnotes">Footnotes</h4>
+<!-- # random notes
+https://www.youtube.com/watch?v=bZQun8Y4L2
+
+
+
+https://yjernite.github.io/lfqa.html
+
+https://github.com/Hannibal046/Awesome-LLM
+
+# low rank fine-tuning
+
+https://sebastianraschka.com/blog/2023/llm-finetuning-llama-adapter.html
+
+https://sebastianraschka.com/blog/2023/llm-finetuning-llama-adapter.html
+
+
+
+# llm for production
+https://huyenchip.com/2023/04/11/llm-engineering.html
+
+
+# data
+https://github.com/project-baize/baize-chatbot
+
+https://huggingface.co/tiiuae/falcon-40b-instruct
+
+https://huggingface.co/datasets/OpenAssistant/oasst1
+
+https://huggingface.co/blog/falcon
+
+
+
+ --><ol class="simple-footnotes"><li id="sf-2023-04-27-open-source-llm-1">This could be brittle and should only be taken when there are sufficient resources to collect human feedback, set up the experiment, and evaluate the model. <a href="#sf-2023-04-27-open-source-llm-1-back" class="simple-footnote-back">↩</a></li><li id="sf-2023-04-27-open-source-llm-2"> I am not going to discuss model sharding at this post. It might be a topic for future post. <a href="#sf-2023-04-27-open-source-llm-2-back" class="simple-footnote-back">↩</a></li></ol>
+
+
+            <div id="citations">
+    <hr>
+    <h3>Citations</h3>
+    <ol class="references">
+            <li id="vaswani2017attention">
+                <span class="reference-text">Vaswani, Ashish, Shazeer, Noam, Parmar, Niki, Uszkoreit, Jakob, Jones, Llion, Gomez, Aidan&nbsp;N., Kaiser, Lukasz, and Polosukhin, Illia.
+Attention is all you need.
+2017.
+<a href="https://arxiv.org/abs/1706.03762">arXiv:1706.03762</a>.</span>
+                    <a class="cite-backref" href="#ref-vaswani2017attention-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="devlin2019bert">
+                <span class="reference-text">Devlin, Jacob, Chang, Ming-Wei, Lee, Kenton, and Toutanova, Kristina.
+Bert: pre-training of deep bidirectional transformers for language understanding.
+2019.
+<a href="https://arxiv.org/abs/1810.04805">arXiv:1810.04805</a>.</span>
+                    <a class="cite-backref" href="#ref-devlin2019bert-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="tay2023ul2">
+                <span class="reference-text">Tay, Yi, Dehghani, Mostafa, Tran, Vinh&nbsp;Q., Garcia, Xavier, Wei, Jason, Wang, Xuezhi, Chung, Hyung&nbsp;Won, Shakeri, Siamak, Bahri, Dara, Schuster, Tal, Zheng, Huaixiu&nbsp;Steven, Zhou, Denny, Houlsby, Neil, and Metzler, Donald.
+Ul2: unifying language learning paradigms.
+2023.
+<a href="https://arxiv.org/abs/2205.05131">arXiv:2205.05131</a>.</span>
+                    <a class="cite-backref" href="#ref-tay2023ul2-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="ouyang2022training">
+                <span class="reference-text">Ouyang, Long, Wu, Jeff, Jiang, Xu, Almeida, Diogo, Wainwright, Carroll&nbsp;L., Mishkin, Pamela, Zhang, Chong, Agarwal, Sandhini, Slama, Katarina, Ray, Alex, Schulman, John, Hilton, Jacob, Kelton, Fraser, Miller, Luke, Simens, Maddie, Askell, Amanda, Welinder, Peter, Christiano, Paul, Leike, Jan, and Lowe, Ryan.
+Training language models to follow instructions with human feedback.
+2022.
+<a href="https://arxiv.org/abs/2203.02155">arXiv:2203.02155</a>.</span>
+                    <a class="cite-backref" href="#ref-ouyang2022training-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="stiennon2022learning">
+                <span class="reference-text">Stiennon, Nisan, Ouyang, Long, Wu, Jeff, Ziegler, Daniel&nbsp;M., Lowe, Ryan, Voss, Chelsea, Radford, Alec, Amodei, Dario, and Christiano, Paul.
+Learning to summarize from human feedback.
+2022.
+<a href="https://arxiv.org/abs/2009.01325">arXiv:2009.01325</a>.</span>
+                    <a class="cite-backref" href="#ref-stiennon2022learning-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="yang2023harnessing">
+                <span class="reference-text">Yang, Jingfeng, Jin, Hongye, Tang, Ruixiang, Han, Xiaotian, Feng, Qizhang, Jiang, Haoming, Yin, Bing, and Hu, Xia.
+Harnessing the power of llms in practice: a survey on chatgpt and beyond.
+2023.
+<a href="https://arxiv.org/abs/2304.13712">arXiv:2304.13712</a>.</span>
+                    <a class="cite-backref" href="#ref-yang2023harnessing-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="raffel2020exploring">
+                <span class="reference-text">Raffel, Colin, Shazeer, Noam, Roberts, Adam, Lee, Katherine, Narang, Sharan, Matena, Michael, Zhou, Yanqi, Li, Wei, and Liu, Peter&nbsp;J.
+Exploring the limits of transfer learning with a unified text-to-text transformer.
+2020.
+<a href="https://arxiv.org/abs/1910.10683">arXiv:1910.10683</a>.</span>
+                    <a class="cite-backref" href="#ref-raffel2020exploring-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="guo2022longt5">
+                <span class="reference-text">Guo, Mandy, Ainslie, Joshua, Uthus, David, Ontanon, Santiago, Ni, Jianmo, Sung, Yun-Hsuan, and Yang, Yinfei.
+Longt5: efficient text-to-text transformer for long sequences.
+2022.
+<a href="https://arxiv.org/abs/2112.07916">arXiv:2112.07916</a>.</span>
+                    <a class="cite-backref" href="#ref-guo2022longt5-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="biderman2023pythia">
+                <span class="reference-text">Biderman, Stella, Schoelkopf, Hailey, Anthony, Quentin, Bradley, Herbie, O'Brien, Kyle, Hallahan, Eric, Khan, Mohammad&nbsp;Aflah, Purohit, Shivanshu, Prashanth, USVSN&nbsp;Sai, Raff, Edward, Skowron, Aviya, Sutawika, Lintang, and van&nbsp;der Wal, Oskar.
+Pythia: a suite for analyzing large language models across training and scaling.
+2023.
+<a href="https://arxiv.org/abs/2304.01373">arXiv:2304.01373</a>.</span>
+                    <a class="cite-backref" href="#ref-biderman2023pythia-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="su2023embedder">
+                <span class="reference-text">Su, Hongjin, Shi, Weijia, Kasai, Jungo, Wang, Yizhong, Hu, Yushi, Ostendorf, Mari, Yih, Wen-tau, Smith, Noah&nbsp;A., Zettlemoyer, Luke, and Yu, Tao.
+One embedder, any task: instruction-finetuned text embeddings.
+2023.
+<a href="https://arxiv.org/abs/2212.09741">arXiv:2212.09741</a>.</span>
+                    <a class="cite-backref" href="#ref-su2023embedder-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="touvron2023llama">
+                <span class="reference-text">Touvron, Hugo, Lavril, Thibaut, Izacard, Gautier, Martinet, Xavier, Lachaux, Marie-Anne, Lacroix, Timothée, Rozière, Baptiste, Goyal, Naman, Hambro, Eric, Azhar, Faisal, Rodriguez, Aurelien, Joulin, Armand, Grave, Edouard, and Lample, Guillaume.
+Llama: open and efficient foundation language models.
+2023.
+<a href="https://arxiv.org/abs/2302.13971">arXiv:2302.13971</a>.</span>
+                    <a class="cite-backref" href="#ref-touvron2023llama-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+    </ol>
+</div>
+
+             
+ 
+            
+            
+            
+
+
+
+
+
+
+
+
+            <hr/>
+            <script src="https://utteranc.es/client.js"
+                    repo="jinfwhuang/jinfwhuang.github.io"
+                    issue-term="pathname"
+                    label="user-comments"
+                    theme="github-light"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+
+            <hr/>
+<section>
+    <h2>Related Posts</h2>
+<ul class="related-posts-list">
+<li><a href="/2023-04-04-document-search" title="Pretrained LLMs and Text Search - A practitioner&#39;s perspective">Pretrained LLMs and Text Search <small>A practitioner's perspective</small></a></li>
+<li><a href="/2023-06-04-domain-specific-ai-assistant" title="Domain Specific AI Assistants">Domain Specific AI Assistants</a></li>
+<li><a href="/2023-06-29-nn-beyond-one-gpu" title="Neural Net Beyond a Single GPU">Neural Net Beyond a Single GPU</a></li>
+</ul>
+<hr />
+</section>
+            <aside>
+            <nav>
+            <ul class="articles-timeline">
+                <li class="previous-article">« <a href="/2023-04-04-document-search" title="Previous: Pretrained LLMs and Text Search - A practitioner&#39;s perspective">Pretrained LLMs and Text Search <small class="subtitle">A practitioner's perspective</small></a></li>
+                <li class="next-article"><a href="/2023-06-04-domain-specific-ai-assistant" title="Next: Domain Specific AI Assistants">Domain Specific AI Assistants</a> »</li>
+            </ul>
+            </nav>
+            </aside>
+        </div>
+        <section id="article-sidebar" class="span2">
+            <h4>Published</h4>
+            <time itemprop="dateCreated" datetime="2023-04-27T00:00:00-07:00">Thu 27 April 2023</time>
+            <!--             <h4>Category</h4>
+            <a class="category-link" href="/categories#misc-ref">misc</a>
+ -->
+            <h4>Tags</h4>
+            <ul class="list-of-tags tags-in-article">
+                <li><a href="/tags#ai-ref">ai
+                    <span class="superscript">4</span>
+</a></li>
+                <li><a href="/tags#llm-ref">LLM
+                    <span class="superscript">3</span>
+</a></li>
+            </ul>
+<h4>Contact</h4>
+<div id="sidebar-social-link">
+    <a href="https://twitter.com/jinfwhuang" title="Twiiter" target="_blank" rel="nofollow noopener noreferrer">
+        <svg xmlns="http://www.w3.org/2000/svg" aria-label="Twitter" role="img" viewBox="0 0 512 512"><rect width="512" height="512" rx="15%" fill="#1da1f3"/><path fill="#fff" d="M437 152a72 72 0 0 1-40 12 72 72 0 0 0 32-40 72 72 0 0 1-45 17 72 72 0 0 0-122 65 200 200 0 0 1-145-74 72 72 0 0 0 22 94 72 72 0 0 1-32-7 72 72 0 0 0 56 69 72 72 0 0 1-32 1 72 72 0 0 0 67 50 200 200 0 0 1-105 29 200 200 0 0 0 309-179 200 200 0 0 0 35-37"/></svg>
+    </a>
+    <a href="https://www.linkedin.com/in/jinfwhuang" title="LinkedIn" target="_blank" rel="nofollow noopener noreferrer">
+        <svg xmlns="http://www.w3.org/2000/svg" aria-label="LinkedIn" role="img" viewBox="0 0 512 512" fill="#fff"><rect width="512" height="512" rx="15%" fill="#0077b5"/><circle cx="142" cy="138" r="37"/><path stroke="#fff" stroke-width="66" d="M244 194v198M142 194v198"/><path d="M276 282c0-20 13-40 36-40 24 0 33 18 33 45v105h66V279c0-61-32-89-76-89-34 0-51 19-59 32"/></svg>
+    </a>
+</div>
+            
+
+
+
+
+
+            
+
+
+
+
+
+        </section>
+</div>
+</article>
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe.
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides.
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo https://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>                    </div>
+                    <div class="span1"></div>
+                </div>
+            </div>
+        </div>
+<!--        <footer>
+
+    <div>
+        <span class="site-name"><span style="color:black;">Jin's Notes</span></span> - the hardest part is taking the first step
+    </div>
+
+
+
+    <div id="fpowered">
+        Powered by: <a href="http://getpelican.com/" title="Pelican Home Page" target="_blank" rel="nofollow noopener noreferrer">Pelican</a>
+        Theme: <a href="https://elegant.oncrashreboot.com/" title="Theme Elegant Home Page" target="_blank" rel="nofollow noopener noreferrer">Elegant</a>
+    </div>
+</footer>-->
+            <script src="//code.jquery.com/jquery.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+        <script src="/theme/js/elegant.prod.9e9d5ce754.js"></script>
+        <script>
+            function validateForm(query)
+            {
+                return (query.length > 0);
+            }
+        </script>
+
+
+
+
+    <script>
+    (function () {
+        if (window.location.hash.match(/^#comment-\d+$/)) {
+            $('#comment_thread').collapse('show');
+        }
+    })();
+    window.onhashchange=function(){
+        if (window.location.hash.match(/^#comment-\d+$/))
+            window.location.reload(true);
+    }
+    $('#comment_thread').on('shown', function () {
+        var link = document.getElementById('comment-accordion-toggle');
+        var old_innerHTML = link.innerHTML;
+        $(link).fadeOut(200, function() {
+            $(this).text('Click here to hide comments').fadeIn(200);
+        });
+        $('#comment_thread').on('hidden', function () {
+            $(link).fadeOut(200, function() {
+                $(this).text(old_innerHTML).fadeIn(200);
+            });
+        })
+    })
+</script>
+
+    </body>
+    <!-- Theme: Elegant built for Pelican
+        License : MIT -->
+
+</html>

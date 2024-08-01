@@ -1,0 +1,603 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="/theme/css/elegant.prod.9e9d5ce754.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="/theme/css/custom.css" media="screen">
+
+        <link rel="dns-prefetch" href="//fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+
+        <meta name="author" content="jin" />
+
+        <meta name="description" content="" />
+        <meta name="twitter:creator" content="@jinfwhuang">
+        <meta property="og:type" content="article" />
+        <meta name="twitter:card" content="summary">
+
+<meta name="keywords" content="database, streaming, misc, " />
+
+<meta property="og:title" content="Streaming Data Platform "/>
+<meta property="og:url" content="/2020-02-01-data-streaming" />
+<meta property="og:description" content="" />
+<meta property="og:site_name" content="Jin&#39;s Notes" />
+<meta property="og:article:author" content="jin" />
+<meta property="og:article:published_time" content="2020-02-01T00:00:00-08:00" />
+<meta name="twitter:title" content="Streaming Data Platform ">
+<meta name="twitter:description" content="">
+<meta property="og:image" content="/images/android-chrome-192x192.png" />
+<meta name="twitter:image" content="/images/android-chrome-192x192.png" >
+
+        <title>Streaming Data Platform  · Jin&#39;s Notes
+</title>
+        <link rel="shortcut icon" href="/theme/images/favicon.ico" type="image/x-icon" />
+        <link rel="icon" href="/theme/images/apple-touch-icon-152x152.png" type="image/png" />
+        <link rel="apple-touch-icon" href="/theme/images/apple-touch-icon.png"  type="image/png" />
+        <link rel="apple-touch-icon" sizes="57x57" href="/theme/images/apple-touch-icon-57x57.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="/theme/images/apple-touch-icon-72x72.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="76x76" href="/theme/images/apple-touch-icon-76x76.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="/theme/images/apple-touch-icon-114x114.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="120x120" href="/theme/images/apple-touch-icon-120x120.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="144x144" href="/theme/images/apple-touch-icon-144x144.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="152x152" href="/theme/images/apple-touch-icon-152x152.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="152x152" href="/theme/images/apple-touch-icon-180x180.png" type="image/png" />
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+     m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+     })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-207279664-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+
+    </head>
+    <body>
+        <div id="content">
+            <div class="navbar navbar-static-top">
+                <div class="navbar-inner">
+                    <div class="container-fluid">
+                        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </a>
+                        <a class="brand" href="/"><span class=site-name><span style="color:black;">Jin's Notes</span></span></a>
+                        <div class="nav-collapse collapse">
+                            <ul class="nav pull-right top-menu">
+                                <li >
+                                    <a href=
+                                       "/"
+                                    >Home</a>
+                                </li>
+<!--                                <li ><a href="/categories">Categories</a></li>-->
+                                <li ><a href="/tags">Tags</a></li>
+                                <li ><a href="/archives">Archives</a></li>
+                                <li><form class="navbar-search" action="/search" onsubmit="return validateForm(this.elements['q'].value);"> <input type="text" class="search-query" placeholder="Search" name="q" id="tipue_search_input"></form></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid">
+                <div class="row-fluid">
+                    <div class="span1"></div>
+                    <div class="span10">
+<article itemscope>
+<div class="row-fluid">
+    <header class="page-header span10 offset2">
+        <h1>
+            <a href="/2020-02-01-data-streaming">
+                Streaming Data&nbsp;Platform
+            </a>
+        </h1>
+    </header>
+</div>
+
+<div class="row-fluid">
+    <div class="span2 table-of-content">
+        <nav>
+        <h4>Contents</h4>
+        <div class="toc">
+<ul>
+<li><a href="#data-pipe">Data Pipe</a></li>
+<li><a href="#processor">Processor</a><ul>
+<li><a href="#source-processor">Source Processor</a></li>
+<li><a href="#sink-processor">Sink Processor</a></li>
+<li><a href="#materializing-the-data-pipe">Materializing the Data Pipe</a></li>
+</ul>
+</li>
+</ul>
+</div>
+        </nav>
+    </div>
+    <div class="span8 article-content">
+            
+            
+<p>I have been building streaming data platforms in the past decade. Streaming data platform has many benefits (<a href='#kreps2013' id='ref-kreps2013-1'>
+    13
+</a>, <a href='#fowler2006' id='ref-fowler2006-1'>
+    9
+</a>, <a href='#fowler2017' id='ref-fowler2017-1'>
+    10
+</a>, <a href='#akidau2015' id='ref-akidau2015-1'>
+    8
+</a>), and often, they are the most natural choice to organize data pipelines.</p>
+<p>I will describe the basic structure of a streaming data platform, technology choices, and common challenges. I am only writing down short opinions to explain my personal preferences. Please refer to original documentations for more details.</p>
+<p>A streaming data platform has two basic parts: data pipe and processor. Data pipe could be called message queue, event bus, distributed log, etc. It is the part of the system that stores the event data. Processors sit between different instances of the data pipe, connecting the pipes to form the topology of the streaming platform. </p>
+<h4 id="data-pipe">Data Pipe</h4>
+<p>The data pipe has to be rock solid. Any issues with this component cause the whole system to alert, and potentially lead to irreversible data losses. In my experiences, interacting with the data pipe’s APIs are straight forward, the most common challenges centered on cluster administrations. Here are some questions to ask:</p>
+<ul>
+<li>How do I maintain configurations of my cluster?</li>
+<li>How do I scale up and down the cluster?</li>
+<li>How do I upgrade my cluster?</li>
+<li>How do I migrate my cluster to a new environment?</li>
+<li>How do I mitigate data center failures?</li>
+</ul>
+<p>Here are some common technology choices:</p>
+<ul>
+<li>Kafka: It is by far the most popular and most mature solution.</li>
+<li>Pulsar: It could be an alternative. One of the most compelling features is the existence of a Presto connector that works with the Pulsar’s storage backend. One can set up Presto to query the streaming data directly (<a href='#pulsarsql2020' id='ref-pulsarsql2020-1'>
+    4
+</a>).</li>
+<li>Kinesis: It is a managed solution.</li>
+</ul>
+<p>It should be noted that once the clusters and usage grow. Data center failures will become a legitimate  concern. Federation is one way to add flexibility to cluster administrations. For example, see <a href='#dong2019' id='ref-dong2019-1'>
+    11
+</a>. However, it is an effort to add that capability, likely requiring a whole team to build and maintain that feature.</p>
+<p>Deploying data pipe clusters on Kubernetes could have many operational benefits. It could unify data-heavy clusters configurations and application deployments, reducing the complexity of the team’s overall devops process. The operator approach on k8s is increasingly popular. I have good experiences using <a href='#banzaicloud2020' id='ref-banzaicloud2020-1'>
+    1
+</a> for medium size Kafka clusters. But the hesitation on going all-in with k8s Kafka is about administration, again! One would have to think through the potential possibilities of cluster migration and cluster federation. K8s operators might not be flexible enough.</p>
+<h4 id="processor">Processor</h4>
+<p>The core of a streaming data platform is data processors. Processors roughly fall into three categories: source, internal processor, and sink. The hardest processor features to design properly are exactly once processing, state management, and system level monitoring.</p>
+<p>Achieving exactly once is hard because the applications have to be able to recover from a variety of failure scenarios. Kafka features such as idempotent producer and transaction have made building exactly-once semantics a lot easier (see <a href='#kafkaexactlyonce2019' id='ref-kafkaexactlyonce2019-1'>
+    12
+</a>). When processors have states, the offset and state management would have to work together. Usually, the states have to be backed up whenever the offset is committed. </p>
+<p>There are a few approaches that I would go about building these processors in Kafka:</p>
+<ul>
+<li>Rely on Kafka primitives</li>
+<li>Build on top of Kafka stream, see <a href='#kafkaStream2020' id='ref-kafkaStream2020-1'>
+    3
+</a></li>
+<li>Build on top of Flink; see <a href='#flinkstateful2020' id='ref-flinkstateful2020-1'>
+    6
+</a> and <a href='#flinktimely2020' id='ref-flinktimely2020-1'>
+    7
+</a> </li>
+<li>Build on top of Spark Stream, see <a href='#sparkStream2020' id='ref-sparkStream2020-1'>
+    5
+</a></li>
+</ul>
+<p>Monitoring is often overlooked, and it is hard to generalize. The challenge is to be able to have a watermark system in place to inform the progress of the whole processing pipeline. This requirement varies from product to product. For example, a streaming system have stock ticker prices as input events. There are 5 processors, and the last processor output a real time signal about buy or sell. The monitoring questions we would ask could be: How timely is this signal? The definition of “timely” could vary a lot depending on how the signal is calculated. Watermark is a generic term to refer to whatever information that is needed to allow downstream applications to make timely decisions. In many cases, this information cannot be part burned into the messages itself. Examples of such information is the failure rates of internal processors, number of unprocessed events, late arrival events, etc. I have not seen any framework that addresses this need. One common pattern to building a system monitor is using yet another data streaming pipeline. This monitoring pipeline has to be dead simple and its failures be independent from what it is monitoring.</p>
+<h6 id="source-processor">Source Processor</h6>
+<p>A ource processor could receive external traffic or process data from an object store (S3), and then write the data into the pipe. Source processor is different from internal and sink processor because it cannot use the offset marker in the data pipe to keep track of the progress to accomplish exactly-once-semantics. For example, if the data pipe is Kafka. The hard problem of periodic batch job producing into Kafka is defining job uniqueness and how to recover from job failures. The hard problem of edge servers persisting event into Kafka is coordinating the timing of Kafka receipt acknowledgement and responding to client requests.</p>
+<h6 id="sink-processor">Sink Processor</h6>
+<p>A sink processor takes data from the data pipe and load them into a storage engine. This component is not difficult to write, but it invariably feels like a painful step in building a data platform. It is partly because it is a common feature that every system needs, and yet we have to manually biuld this component from scratch. It is also partly because we have to write this component many times to target different storage engines based on how the data is used later on.</p>
+<p>In my experiences, this component is usually handcrafted on top of the same framework as the other internal processors. For example, if other internal processors use Kafka primitives directly, the sinks are built similarly. If the platform already uses Flink, the sinks are written using Flink.   </p>
+<p>I would definitely hope to see a mature solution targeting the most common storage engines. Kafka connect is a possibility (<a href='#kafkaconnect2020' id='ref-kafkaconnect2020-1'>
+    2
+</a>). It is tied into the Confluent platform, and it is not sufficiently flexible to be composable, and cannot be easily integrated into custom-built processors. </p>
+<h6 id="materializing-the-data-pipe">Materializing the Data Pipe</h6>
+<p>One of the pain points of a streaming platform is getting insights on in-flight data. One common way is to build many sink processors targeting intermediate stages, loading the data into an analytics database. See my <a href="/2019-02-03-analytics-database.md">post</a> on analytics databases. This approach is tedious and lead to more applications to maintain.</p>
+<p>Another way is write a processor that exposes materialized views. In the past, we have to write the data models and processing logic for these views, but in recent years, we are lucky to have these frameworks to help us to write this component.</p>
+<ul>
+<li><a href="https://docs.ksqldb.io/en/latest/">ksqldb</a></li>
+<li><a href="https://materialize.com/docs/">Materialize</a></li>
+</ul>
+<p>Additionally, this strategy is a great alternative to using a realtime query engine to serve user-facing queries.</p>
+
+
+            <div id="citations">
+    <hr>
+    <h3>Citations</h3>
+    <ol class="references">
+            <li id="kreps2013">
+                <span class="reference-text">Jcs.
+<em>The Log: What every software engineer should know about real-time data's unifying abstraction</em>.
+2013.
+URL: <a href="https://engineering.linkedin.com/distributed-systems/log-what-every-software-engineer-should-know-about-real-time-datas-unifying">https://engineering.linkedin.com/distributed-systems/log-what-every-software-engineer-should-know-about-real-time-datas-unifying</a>.</span>
+                    <a class="cite-backref" href="#ref-kreps2013-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="fowler2006">
+                <span class="reference-text">Fowler, Martin.
+<em>Focusing on Events</em>.
+2006.
+URL: <a href="https://www.martinfowler.com/eaaDev/EventNarrative.html">https://www.martinfowler.com/eaaDev/EventNarrative.html</a>.</span>
+                    <a class="cite-backref" href="#ref-fowler2006-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="fowler2017">
+                <span class="reference-text">Fowler, Martin.
+<em>What do you mean by “Event-Driven”?</em>
+2017.
+URL: <a href="https://martinfowler.com/articles/201701-event-driven.html">https://martinfowler.com/articles/201701-event-driven.html</a>.</span>
+                    <a class="cite-backref" href="#ref-fowler2017-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="akidau2015">
+                <span class="reference-text">Akidau, Tyler.
+<em>Streaming 101: The world beyond batch</em>.
+2015.
+URL: <a href="https://www.oreilly.com/radar/the-world-beyond-batch-streaming-101">https://www.oreilly.com/radar/the-world-beyond-batch-streaming-101</a>.</span>
+                    <a class="cite-backref" href="#ref-akidau2015-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="pulsarsql2020">
+                <span class="reference-text"><em>Pulsar SQL Overview</em>.
+2020.
+URL: <a href="https://pulsar.apache.org/docs/en/sql-overview/">https://pulsar.apache.org/docs/en/sql-overview/</a>.</span>
+                    <a class="cite-backref" href="#ref-pulsarsql2020-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="dong2019">
+                <span class="reference-text">Fui, Yupeng and Dong, Xiaoman.
+<em>Kafka Cluster Federation at Uber</em>.
+2019.
+URL: <a href="https://www.confluent.io/kafka-summit-san-francisco-2019/kafka-cluster-federation-at-uber/">https://www.confluent.io/kafka-summit-san-francisco-2019/kafka-cluster-federation-at-uber/</a>.</span>
+                    <a class="cite-backref" href="#ref-dong2019-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="banzaicloud2020">
+                <span class="reference-text"><em>Banzai Cloud Kafka Operator</em>.
+2020.
+URL: <a href="https://github.com/banzaicloud/kafka-operator">https://github.com/banzaicloud/kafka-operator</a>.</span>
+                    <a class="cite-backref" href="#ref-banzaicloud2020-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="kafkaexactlyonce2019">
+                <span class="reference-text">Gustafson, Jason, Junqueira, Flavio&nbsp;Paiva, Mehta, Apurva, Sriram, and Wang, Guozhang.
+<em>KIP-98 - Exactly Once Delivery and Transactional Messaging</em>.
+2019.
+URL: <a href="https://cwiki.apache.org/confluence/display/KAFKA/KIP-98+-+Exactly+Once+Delivery+and+Transactional+Messaging">https://cwiki.apache.org/confluence/display/KAFKA/KIP-98+-+Exactly+Once+Delivery+and+Transactional+Messaging</a>.</span>
+                    <a class="cite-backref" href="#ref-kafkaexactlyonce2019-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="kafkaStream2020">
+                <span class="reference-text"><em>Kafka Stream Architecture</em>.
+2020.
+URL: <a href="https://kafka.apache.org/27/documentation/streams/architecture">https://kafka.apache.org/27/documentation/streams/architecture</a>.</span>
+                    <a class="cite-backref" href="#ref-kafkaStream2020-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="flinkstateful2020">
+                <span class="reference-text"><em>Stateful Stream Processing</em>.
+2020.
+URL: <a href="https://ci.apache.org/projects/flink/flink-docs-stable/concepts/stateful-stream-processing.html">https://ci.apache.org/projects/flink/flink-docs-stable/concepts/stateful-stream-processing.html</a>.</span>
+                    <a class="cite-backref" href="#ref-flinkstateful2020-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="flinktimely2020">
+                <span class="reference-text"><em>Timely Stream Processing</em>.
+2020.
+URL: <a href="https://ci.apache.org/projects/flink/flink-docs-stable/concepts/timely-stream-processing.html">https://ci.apache.org/projects/flink/flink-docs-stable/concepts/timely-stream-processing.html</a>.</span>
+                    <a class="cite-backref" href="#ref-flinktimely2020-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="sparkStream2020">
+                <span class="reference-text"><em>Spark Streaming</em>.
+2020.
+URL: <a href="https://spark.apache.org/docs/latest/streaming-programming-guide.html">https://spark.apache.org/docs/latest/streaming-programming-guide.html</a>.</span>
+                    <a class="cite-backref" href="#ref-sparkStream2020-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="kafkaconnect2020">
+                <span class="reference-text"><em>Kafka Connect</em>.
+2020.
+URL: <a href="https://docs.confluent.io/platform/current/connect/index.htm">https://docs.confluent.io/platform/current/connect/index.htm</a>.</span>
+                    <a class="cite-backref" href="#ref-kafkaconnect2020-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+    </ol>
+</div>
+
+             
+ 
+            
+            
+            
+
+
+
+
+
+
+
+
+            <hr/>
+            <script src="https://utteranc.es/client.js"
+                    repo="jinfwhuang/jinfwhuang.github.io"
+                    issue-term="pathname"
+                    label="user-comments"
+                    theme="github-light"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+
+            <hr/>
+<section>
+    <h2>Related Posts</h2>
+<ul class="related-posts-list">
+<li><a href="/2020-02-03-analytics-database" title="Analytics Database">Analytics Database</a></li>
+</ul>
+<hr />
+</section>
+            <aside>
+            <nav>
+            <ul class="articles-timeline">
+                <li class="previous-article">« <a href="/2019-06-01-long-time-no-java" title="Previous: Long Time No Java">Long Time No Java</a></li>
+                <li class="next-article"><a href="/2020-02-03-analytics-database" title="Next: Analytics Database">Analytics Database</a> »</li>
+            </ul>
+            </nav>
+            </aside>
+        </div>
+        <section id="article-sidebar" class="span2">
+            <h4>Published</h4>
+            <time itemprop="dateCreated" datetime="2020-02-01T00:00:00-08:00">Sat 01 February 2020</time>
+            <!--             <h4>Category</h4>
+            <a class="category-link" href="/categories#misc-ref">misc</a>
+ -->
+            <h4>Tags</h4>
+            <ul class="list-of-tags tags-in-article">
+                <li><a href="/tags#database-ref">database
+                    <span class="superscript">2</span>
+</a></li>
+                <li><a href="/tags#streaming-ref">streaming
+                    <span class="superscript">1</span>
+</a></li>
+            </ul>
+<h4>Contact</h4>
+<div id="sidebar-social-link">
+    <a href="https://twitter.com/jinfwhuang" title="Twiiter" target="_blank" rel="nofollow noopener noreferrer">
+        <svg xmlns="http://www.w3.org/2000/svg" aria-label="Twitter" role="img" viewBox="0 0 512 512"><rect width="512" height="512" rx="15%" fill="#1da1f3"/><path fill="#fff" d="M437 152a72 72 0 0 1-40 12 72 72 0 0 0 32-40 72 72 0 0 1-45 17 72 72 0 0 0-122 65 200 200 0 0 1-145-74 72 72 0 0 0 22 94 72 72 0 0 1-32-7 72 72 0 0 0 56 69 72 72 0 0 1-32 1 72 72 0 0 0 67 50 200 200 0 0 1-105 29 200 200 0 0 0 309-179 200 200 0 0 0 35-37"/></svg>
+    </a>
+    <a href="https://www.linkedin.com/in/jinfwhuang" title="LinkedIn" target="_blank" rel="nofollow noopener noreferrer">
+        <svg xmlns="http://www.w3.org/2000/svg" aria-label="LinkedIn" role="img" viewBox="0 0 512 512" fill="#fff"><rect width="512" height="512" rx="15%" fill="#0077b5"/><circle cx="142" cy="138" r="37"/><path stroke="#fff" stroke-width="66" d="M244 194v198M142 194v198"/><path d="M276 282c0-20 13-40 36-40 24 0 33 18 33 45v105h66V279c0-61-32-89-76-89-34 0-51 19-59 32"/></svg>
+    </a>
+</div>
+            
+
+
+
+
+
+            
+
+
+
+
+
+        </section>
+</div>
+</article>
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe.
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides.
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo https://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>                    </div>
+                    <div class="span1"></div>
+                </div>
+            </div>
+        </div>
+<!--        <footer>
+
+    <div>
+        <span class="site-name"><span style="color:black;">Jin's Notes</span></span> - the hardest part is taking the first step
+    </div>
+
+
+
+    <div id="fpowered">
+        Powered by: <a href="http://getpelican.com/" title="Pelican Home Page" target="_blank" rel="nofollow noopener noreferrer">Pelican</a>
+        Theme: <a href="https://elegant.oncrashreboot.com/" title="Theme Elegant Home Page" target="_blank" rel="nofollow noopener noreferrer">Elegant</a>
+    </div>
+</footer>-->
+            <script src="//code.jquery.com/jquery.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+        <script src="/theme/js/elegant.prod.9e9d5ce754.js"></script>
+        <script>
+            function validateForm(query)
+            {
+                return (query.length > 0);
+            }
+        </script>
+
+
+
+
+    <script>
+    (function () {
+        if (window.location.hash.match(/^#comment-\d+$/)) {
+            $('#comment_thread').collapse('show');
+        }
+    })();
+    window.onhashchange=function(){
+        if (window.location.hash.match(/^#comment-\d+$/))
+            window.location.reload(true);
+    }
+    $('#comment_thread').on('shown', function () {
+        var link = document.getElementById('comment-accordion-toggle');
+        var old_innerHTML = link.innerHTML;
+        $(link).fadeOut(200, function() {
+            $(this).text('Click here to hide comments').fadeIn(200);
+        });
+        $('#comment_thread').on('hidden', function () {
+            $(link).fadeOut(200, function() {
+                $(this).text(old_innerHTML).fadeIn(200);
+            });
+        })
+    })
+</script>
+
+    </body>
+    <!-- Theme: Elegant built for Pelican
+        License : MIT -->
+
+</html>

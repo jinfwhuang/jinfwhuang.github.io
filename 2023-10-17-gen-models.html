@@ -1,0 +1,978 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="/theme/css/elegant.prod.9e9d5ce754.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="/theme/css/custom.css" media="screen">
+
+        <link rel="dns-prefetch" href="//fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+
+        <meta name="author" content="jin" />
+
+        <meta name="description" content="Generative AI is an immensely popular topic. We have seen many new models coming out the last few years. These models generate impossibly high quality samples in almost all digital media: text, images, speech, and music. This blog post takes a look at how some of these models are formulated …
+" />
+        <meta name="twitter:creator" content="@jinfwhuang">
+        <meta property="og:type" content="article" />
+        <meta name="twitter:card" content="summary">
+
+<meta name="keywords" content=", misc, " />
+
+<meta property="og:title" content="Generative Models and Neural Networks "/>
+<meta property="og:url" content="/2023-10-17-gen-models" />
+<meta property="og:description" content="Generative AI is an immensely popular topic. We have seen many new models coming out the last few years. These models generate impossibly high quality samples in almost all digital media: text, images, speech, and music. This blog post takes a look at how some of these models are formulated …" />
+<meta property="og:site_name" content="Jin&#39;s Notes" />
+<meta property="og:article:author" content="jin" />
+<meta property="og:article:published_time" content="2023-10-17T00:00:00-07:00" />
+<meta name="twitter:title" content="Generative Models and Neural Networks ">
+<meta name="twitter:description" content="Generative AI is an immensely popular topic. We have seen many new models coming out the last few years. These models generate impossibly high quality samples in almost all digital media: text, images, speech, and music. This blog post takes a look at how some of these models are formulated …">
+<meta property="og:image" content="/images/android-chrome-192x192.png" />
+<meta name="twitter:image" content="/images/android-chrome-192x192.png" >
+
+        <title>Generative Models and Neural Networks  · Jin&#39;s Notes
+</title>
+        <link rel="shortcut icon" href="/theme/images/favicon.ico" type="image/x-icon" />
+        <link rel="icon" href="/theme/images/apple-touch-icon-152x152.png" type="image/png" />
+        <link rel="apple-touch-icon" href="/theme/images/apple-touch-icon.png"  type="image/png" />
+        <link rel="apple-touch-icon" sizes="57x57" href="/theme/images/apple-touch-icon-57x57.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="/theme/images/apple-touch-icon-72x72.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="76x76" href="/theme/images/apple-touch-icon-76x76.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="/theme/images/apple-touch-icon-114x114.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="120x120" href="/theme/images/apple-touch-icon-120x120.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="144x144" href="/theme/images/apple-touch-icon-144x144.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="152x152" href="/theme/images/apple-touch-icon-152x152.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="152x152" href="/theme/images/apple-touch-icon-180x180.png" type="image/png" />
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+     m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+     })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-207279664-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+
+    </head>
+    <body>
+        <div id="content">
+            <div class="navbar navbar-static-top">
+                <div class="navbar-inner">
+                    <div class="container-fluid">
+                        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </a>
+                        <a class="brand" href="/"><span class=site-name><span style="color:black;">Jin's Notes</span></span></a>
+                        <div class="nav-collapse collapse">
+                            <ul class="nav pull-right top-menu">
+                                <li >
+                                    <a href=
+                                       "/"
+                                    >Home</a>
+                                </li>
+<!--                                <li ><a href="/categories">Categories</a></li>-->
+                                <li ><a href="/tags">Tags</a></li>
+                                <li ><a href="/archives">Archives</a></li>
+                                <li><form class="navbar-search" action="/search" onsubmit="return validateForm(this.elements['q'].value);"> <input type="text" class="search-query" placeholder="Search" name="q" id="tipue_search_input"></form></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid">
+                <div class="row-fluid">
+                    <div class="span1"></div>
+                    <div class="span10">
+<article itemscope>
+<div class="row-fluid">
+    <header class="page-header span10 offset2">
+        <h1>
+            <a href="/2023-10-17-gen-models">
+                Generative Models and Neural Networks<br/>
+            </a>
+        </h1>
+    </header>
+</div>
+
+<div class="row-fluid">
+    <div class="span2 table-of-content">
+        <nav>
+        <h4>Contents</h4>
+        <div class="toc">
+<ul>
+<li><a href="#the-role-of-neural-network">The Role of Neural Network</a></li>
+<li><a href="#examples">Examples</a><ul>
+<li><a href="#vq-vae"><span class="caps">VQ</span>-<span class="caps">VAE</span></a></li>
+<li><a href="#diffusion-via-score-matching">Diffusion via Score Matching</a></li>
+<li><a href="#diffusion-via-sde">Diffusion via <span class="caps">SDE</span></a></li>
+<li><a href="#diffusion-via-continuous-normalizing-flows-cnfs">Diffusion via Continuous Normalizing Flows (CNFs)</a></li>
+<li><a href="#gan"><span class="caps">GAN</span></a></li>
+<li><a href="#autoregressive-model-dalle">Autoregressive Model (<span class="caps">DALLE</span>)</a></li>
+</ul>
+</li>
+<li><a href="#discussion">Discussion</a></li>
+<li><a href="#footnotes">Footnotes</a></li>
+</ul>
+</div>
+        </nav>
+    </div>
+    <div class="span8 article-content">
+            
+            <p>Generative <span class="caps">AI</span> is an immensely popular topic. We have seen many new models coming out the last few years. These models generate impossibly high quality samples in almost all digital media: text, images, speech, and music. This blog post takes a look at how some of these models are formulated. I focus on making it obvious how neural networks are used as the key technique to approximate the most intractable components. My goal is to demystify these generative models, and empower distributed system engineers to dig deeper and become comfortable contributing to writing high performance codes for inference and training of <span class="caps">AI</span> models.</p>
+<h4 id="the-role-of-neural-network">The Role of Neural Network</h4>
+<p>A neural network is a parametrized function. A linear regression is a parametrized function. A neuralnet is a complicated version of that. The act of training is to optimize the parameters based on data. A modern deep neural network is the latest iteration of numerical technique on how we could approximate some extremely complex and high dimension real-world functions.</p>
+<p>A generative model is the easiest to be understood if we start writing down its inputs and outputs. For example, a text-to-image model takes text as input and output an image. The current state of the art model usually describes a series of interpretable transformations<sup id="sf-2023-10-17-gen-models-1-back"><a href="#sf-2023-10-17-gen-models-1" class="simple-footnote" title="It is worth noting that some generative models does not contain any interpretable intermediate steps. It could be just one giant blackbox neural network model that transforms the text into an image. Human researchers might understand how individual computation is performed, but we might not able to make sense of any intermediate representations.">1</a></sup>. Some of these transformations are easy to program, but some have to be approximated. The approximations are done by neural networks, where their parameters are learned from data.</p>
+<p>Let’s take diffusion image generation as an example. We can program the forward diffusion process. The starting image is<span class="math">\(x_0\)</span>. From <span class="math">\(x_{t-1}\)</span> to <span class="math">\(x_{t}\)</span>, we add gaussian noise to each pixel at each time step. Image generation is the reversed process, where we start with the pure white noise and denoise the image step by step. It should be clear that it is not possible to just write down a formula and program the reverse process. However, the reverse process exists. We take a set of images, <span class="math">\(\{x_0 \}_i^n\)</span>, we run the forward process, we would be able to get a set of dynamic process <span class="math">\(\{x_t \}, t \in [0, T]\)</span>. There exists a time-dependent probability transition function that describes the reversed process. That it, we should be able to sample <span class="math">\(x_{t-1}\)</span> given <span class="math">\(x_t\)</span> from <span class="math">\(p(x_{t-1}|x_t)\)</span>. We represent this conditional probability as a parametrized neural network <span class="math">\(p_\theta(x_{t-1}|x_t)\)</span>, where <span class="math">\(\theta\)</span> is the parameters. At this point, the question is about how to find the optimized parameters of the neural network.</p>
+<p>At the core of most generative models is a high dimensional probability distribution. Instead of working directly with text, image, sound, or video, we would like have a mechanism to convert those media into a more convenient encoded space. This conversion step is usually learned from data. There is a decoder that are built jointly with the encoder. The algorithm to calculate or train the encoder-decoder system is  not compute heavy relative to the approximation step of learning the sampling probability distribution. Much of the complexity of modeling is deciding which probability distribution to approximate. The approximation must be constructed in such a way that it could be efficiently learned from data, and the approximation is able to generalize well in the desired domain. Generated data are sampled from the learned probability distributions. The sampled data is then decoded to the desired media format.</p>
+<p>It is worth noting that neural network is not the only way to approximate a high dimensional function. In one extreme, we know that linear methods are way too simple to be useful. In another extreme, it is not like we could simulate the world at the quantum level to observe macroscopic behaviors. There are previously many different techniques used to estimate these density functions, such as <span class="caps">MCMC</span>, dimensionality reduction techniques, kernel density, bayesian methods, etc. However, they do not perform well enough to support the current generative models. The deep neural network approach enables a scale of learning and capability that is orders of magnitude more performant than previous methods.</p>
+<h4 id="examples">Examples</h4>
+<p>For each of these generative models, my aim is to succinctly describe two parts. The first part is what the neural networks represent. The second part is how to train those networks. The first part is usually very simple to use in practice, but almost always hard to put into words about its exact meaning. It is simple because we could just treat those trained neural networks as blackbox functions. We only need to understand the inputs and outputs. They are simple mathematical objects. In fact, they are almost always organized as high dimension tensors. They sometimes represent things we can easily correlate to physical objects, such as a <span class="math">\(3 \times H \times W\)</span> tensors, would represent an image. However, some of these functions would have inputs outputs that are less easy to be described in words. If we suspend our curiosity for interpretability, it is not hard to understand that a generative model is nothing but a series of transformations. The second part is about how to learn. Training a neural network is about updating their parameters. Samples are fed into the model, a loss is calculated, and the loss value provides guidance on how to update parameters. This process repeats itself for each batch of data. The tricky part is to explain the rationale behind each model’s unique choice of loss objective and what it is estimating. I will not go into too much details on those derivations. Instead, I will put on the engineering hat and just look at these loss objectives as they are written out. I want to describe in as little details as possible, but enough so that we could program these training steps. The goal here is to demystify these models to the extend that if we were to asked to rewrite both the training and inference components, we should be able to figure out the exact computations and be armed with sufficient theories to start writing high performing programs to perform the computations.</p>
+<p>Below is a summary of the models to be discussed.</p>
+<table>
+<thead>
+<tr>
+<th align="left">Model</th>
+<th align="left">Trained Neural Networks</th>
+<th align="left">Sampling Process</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td align="left"><span class="caps">VQ</span>-<span class="caps">VAE</span></td>
+<td align="left">- codebook embedding <span class="math">\(e_{\theta}\)</span> <br>- encoder <span class="math">\(E_{\theta}\)</span> <br>- decoder <span class="math">\(D_{\theta}\)</span><br>- priors <span class="math">\(p_\theta\)</span></td>
+<td align="left">- sample latent codes from <span class="math">\(p_\theta\)</span> <br>- feed the code to decoder</td>
+</tr>
+<tr>
+<td align="left">Diffusion via Score Matching</td>
+<td align="left">- estimate <span class="math">\(\epsilon_\theta\)</span></td>
+<td align="left">- <span class="math">\(\epsilon_\theta\)</span> solves for <span class="math">\(\mu_{\theta}\)</span>, which solves <span class="math">\(p_\theta\)</span> <br> - <span class="math">\(p_\theta\)</span> governs the probability transition from <span class="math">\(x_{t-1}\)</span> to <span class="math">\(x_t\)</span><br></td>
+</tr>
+<tr>
+<td align="left">Diffusion via <span class="caps">SDE</span></td>
+<td align="left">- estimate <span class="math">\(s_{\theta}(x)\)</span> to approximate <span class="math">\(\nabla_x \log p(x)\)</span></td>
+<td align="left">- numerically solve reverse <span class="caps">SDE</span> <br>- <span class="caps">SDE</span> governs <span class="math">\(x_{t-1}\)</span> to <span class="math">\(x_t\)</span> transition</td>
+</tr>
+<tr>
+<td align="left">Diffusion via <span class="caps">CNF</span></td>
+<td align="left">- estimate <span class="math">\(v_t(\theta)\)</span> to approximate a vector field that generates <span class="math">\(p_t\)</span></td>
+<td align="left">- Solve time-dependent probability <span class="math">\(p_t\)</span> <br>- <span class="math">\(p_t\)</span> governs <span class="math">\(x_{t-1}\)</span> to <span class="math">\(x_t\)</span> transition</td>
+</tr>
+<tr>
+<td align="left"><span class="caps">GAN</span></td>
+<td align="left">- image generator <br> - image discriminator</td>
+<td align="left">- run the generator</td>
+</tr>
+<tr>
+<td align="left"><span class="caps">DALLE</span></td>
+<td align="left">- visual encoder-decoder <br>- autoregressive seq model</td>
+<td align="left">- encode text by <span class="caps">BPE</span> <br>- generate the text-image token sequence autoregressively <br>- decode image tokens into image</td>
+</tr>
+</tbody>
+</table>
+<p><br></p>
+<h6 id="vq-vae"><span class="caps">VQ</span>-<span class="caps">VAE</span></h6>
+<p>I will unpack the Vector Quantized Variation AutoEncoder (<span class="caps">VQ</span>-<span class="caps">VAE</span>) model, loosely based on <a href='#oord2018neuraldiscreterepresentationlearning' id='ref-oord2018neuraldiscreterepresentationlearning-1'>
+    16
+</a>. 
+</p><figure>
+<img align="middle" src="images/2023-10-17/vq-vae-simple.png">
+<figcaption align="center">
+Fig. from <a href='#oord2018neuraldiscreterepresentationlearning' id='ref-oord2018neuraldiscreterepresentationlearning-2'>
+    16
+</a>
+</figcaption>
+</figure><p></p>
+<p>There are four components that are parametrized: the codebook embedding <span class="math">\(e_{\theta}\)</span>, encoder <span class="math">\(E_{\theta}\)</span>, and decoder <span class="math">\(D_{\theta}\)</span>, and the priors <span class="math">\(p_\theta\)</span> over the embedding space. The codebook is <span class="math">\(e_{\theta} \in \mathbb{R}^{K \times D}\)</span>. <span class="math">\(K\)</span> is the size of the codebook, and the <span class="math">\(D\)</span> is the code length for each of the embedding. <span class="math">\(\theta\)</span> denotes the entire set of parameters, which is learned through data. Note that the codebook is learned. The encoder is a neuralnet. It could be any neural network. <a href='#oord2018neuraldiscreterepresentationlearning' id='ref-oord2018neuraldiscreterepresentationlearning-3'>
+    16
+</a> uses a <span class="caps">CNN</span>, but this is a design choice that could be experimented. The exact architecture is not required by theory but will greatly impact empirical results. The encoder takes an image, <span class="math">\(x \in \mathbb{R}^{3 \times H \times W}\)</span> as input, and outputs into the embedding space <span class="math">\(\mathbb{R}^{D}\)</span>. The full dimensionality of this stage depends on the neuralnet architecture. For example, we could choose a <span class="math">\(32 \times 32\)</span> embedding vectors to represent an image of <span class="math">\(128 \times 128\)</span>. This output is quantized and drop its embedding dimension <span class="math">\(D\)</span>. Each embedding is quantized into a number <span class="math">\(z \in \{1, ... K\}\)</span>. That is, each embedding vector is no longer a <span class="math">\(D\)</span>-vector but just a number. Lastly, the decoder is another neuralnet that takes the quantized embedding and output an image in <span class="math">\(\mathbb{R}^{3 \times H \times W}\)</span>. The prior <span class="math">\(p_\theta\)</span> is over the embedding space. It could be such that it is conditioned on some labels. That is, <span class="math">\(p_\theta(z | l)\)</span>, where <span class="math">\(l\)</span> represents label classes. The prior allows us to sample an embedding based on a class label.</p>
+<p>Image generation is straight forward. First, we sample encodings from the priors neural network <span class="math">\(p_\theta(z|l)\)</span>. Second, the encodings are fed through the decoder network <span class="math">\(D_{\theta}\)</span> to generate an image. This methodology also applies well to music generation; see <a href='#dhariwal2020jukebox' id='ref-dhariwal2020jukebox-1'>
+    6
+</a>. The only difference is that instead of <span class="math">\(x\)</span> representing an image, it represent an audio segment.</p>
+<p>The key question is how to train these 4 components: <span class="math">\(e_{\theta}, E_{\theta}, D_{\theta}, and p_{\theta}\)</span>. This is broken down into two stages. The first stage approximate <span class="math">\(e_{\theta}, E_{\theta}, D_{\theta}\)</span>. Let’s write down the loss function associated with them:</p>
+<div class="math">\begin{equation}
+\mathscr{L}(x; \theta) = ||x - D_\theta()||_2^2 + ||sg[E_{\theta}(x)] - e_\theta||_2^2 + \beta ||sg[e_\theta] - E_\theta(x) ||_2^2
+\end{equation}</div>
+<p>Note that <span class="math">\(D_\theta(x)\)</span> is an abuse of notion to denote the generated image if we take the input as the quantized encoded embedding. The first term is the reconstruction loss, the second term is a simple vector quantization loss, and the third term is the commitment loss to ensure that embedding space does not grow too large. The goal here is not to explain how to derive or improve these loss terms, we want to know how to operationalize the training by using data. With this loss defined, it is now clear that all we have to do is to feed data into all the parametrized functions (e.g <span class="math">\(e, E, D\)</span>), calculate the loss, and then perform gradient descent with each batch of data.</p>
+<p>The second stage approximates priors’ probability distributions of the encodings, <span class="math">\(p_{\theta}\)</span>. It might be tempting to model the density functions explicitly via log likelihood, cross-entropy, or other probability divergence measures. This approach is empirically useless because the dimensionality of embedding space is too large. One of the breakthrough in <span class="caps">AI</span> is the ability to model probabilistic model with autoregressive models, as evidenced and made hugely popular by the success of <span class="caps">LLM</span>. This technique applies here as well. The encodings are treated as any other high dimensional object, in this case <span class="math">\(e = (e_1, e_2, ..., e_D)\)</span>. The model take a partial vector <span class="math">\((e_1, ... e_i)\)</span> as input and predicts the next token <span class="math">\(e_{i+1}\)</span>. The loss could be just a L2 loss between <span class="math">\((e_1, ... e_i, e_{i+1})\)</span> and <span class="math">\((e_1, ... e_i, \hat{e}_{i+1})\)</span>. This simple setup allows us to update the neural network. The current state of the art uses neural networks that are transformer based. </p>
+<p>See <a href='#bengio2013generalizeddenoisingautoencodersgenerative' id='ref-bengio2013generalizeddenoisingautoencodersgenerative-1'>
+    2
+</a>, <a href='#chen2017pixelsnail' id='ref-chen2017pixelsnail-1'>
+    5
+</a>, <a href='#chen2017variationallossyautoencoder' id='ref-chen2017variationallossyautoencoder-1'>
+    4
+</a>, <a href='#2019gpt2' id='ref-2019gpt2-1'>
+    10
+</a> for more details about estimating high dimension joint probability distribution. See <a href='#dhariwal2020jukebox' id='ref-dhariwal2020jukebox-2'>
+    6
+</a>, <a href='#razavi2019generating' id='ref-razavi2019generating-1'>
+    12
+</a> for details about more design space for vq-vae encode-decoder system.</p>
+<h6 id="diffusion-via-score-matching">Diffusion via Score Matching</h6>
+<p>One of the most popular image generating model is diffusion. We take a look at the model presented in  <a href='#ho2020denoising' id='ref-ho2020denoising-1'>
+    8
+</a>. <span class="math">\(x\)</span> is in the image space. There is a diffusion process <span class="math">\(x_t \sim \mathscr{N}(x_{t-1}, I)\)</span> such that, <span class="math">\(x_0\)</span> is the original image, and <span class="math">\(x_t\)</span> is the previous image <span class="math">\(x_{t-1}\)</span> plus some white noise. The generating model is the reverse of this process. We model this reverse process with a transition probability density. The transition process is represented as
+</p>
+<div class="math">\begin{equation}
+p_{\theta}(x_{t-1} | x_t) = \mathscr{N}(x_{t-1}; \mu_\theta(x_t, t), \sigma_\theta (x_t, t))
+\end{equation}</div>
+<p>
+For simplicity, we set <span class="math">\(\sigma_\theta\)</span> to be fixed and only focus on <span class="math">\(\mu_\theta\)</span>. We would like to approximate <span class="math">\(\mu_\theta\)</span> using a neuralnet. Once we have that approximation, the generating process is as simple as just start with a white noise <span class="math">\(x_T\)</span>, and then sample <span class="math">\(x_{t-1}\)</span> from <span class="math">\(x_t\)</span> based on the transition probability <span class="math">\(p_\theta\)</span>. We repeat this transition for <span class="math">\(T\)</span> steps.</p>
+<p>To approximate <span class="math">\(\mu_\theta\)</span>, we rewrite and parse out a new quantity <span class="math">\(\epsilon_{\theta}\)</span>, defined as
+</p>
+<div class="math">\begin{equation}
+\mu_{\theta}(x_t, t) = \frac{1}{\sqrt{\alpha_t}} \left[ x_t - \frac{\beta_t}{\sqrt{1- \bar{\alpha_t}}} \epsilon_{\theta}(x_t, t) \right]
+\end{equation}</div>
+<p>A neuralnet is setup to represent <span class="math">\(\epsilon_{\theta}\)</span> and is optimized by training on this loss,
+</p>
+<div class="math">\begin{equation}
+\mathscr{L}(x_0, t; \theta) = || \epsilon - \epsilon_{\theta} ( \sqrt{\bar{\alpha_t}} x_0 +  \sqrt{1- \bar{\alpha_t}} \epsilon, t) ||^2, 
+\end{equation}</div>
+<p>where <span class="math">\(\epsilon \sim \mathscr{N}(0, I)\)</span> and <span class="math">\(t \sim U(1, ..., T)\)</span>, and <span class="math">\(x_0\)</span> is a data sample. The loss could be calculated for each data point. The complexity of this generating model is deriving what the neuralnet supposes to represent and the loss function. But when these entities are written out, it is relatively straight forward to understand the computations both in inference and training stage.</p>
+<p>See <a href='#rombach2022highresolutionimagesynthesislatent' id='ref-rombach2022highresolutionimagesynthesislatent-1'>
+    13
+</a> for an improved version of this diffusion model.</p>
+<h6 id="diffusion-via-sde">Diffusion via <span class="caps">SDE</span></h6>
+<p>The diffusion process could be formulated as a stochastic process. This is my personal favorite because theory is compact and succinct. Let <span class="math">\(\{ x_t \}_{t=0}^T\)</span> be the forward diffusion process modeled as an Itô integral, 
+</p>
+<div class="math">\begin{equation}
+dx = f(x, t)dt + g(t) d \mathbb{W},
+\end{equation}</div>
+<p>
+where <span class="math">\(\mathbb{W}\)</span> is a Wierner process. <span class="math">\(f(x,t)\)</span> is a drift term, and <span class="math">\(g(t)\)</span> quadratic variation. For simplicity, we set them to be time-dependent constants. The reverse process is a known math result, see <a href='#anderson1982' id='ref-anderson1982-1'>
+    1
+</a>,
+</p>
+<div class="math">\begin{equation}
+dx = \left[ f(x,t) - g(t)^2 \nabla_x \log p_t(x)  \right]dt + g(t)dW, 
+\end{equation}</div>
+<p>
+where <span class="math">\(dt\)</span> is negative timestep and <span class="math">\(W\)</span> is a backward Wierner process. We can solve this backward <span class="caps">SDE</span> numerically if we know the term <span class="math">\(\nabla_x \log p_t(x)\)</span>. We estimate <span class="math">\(\nabla_x \log p_t(x)\)</span> with a neuralnet. With that, we have a generating model because the reverse process is fully described by the backward <span class="caps">SDE</span>.</p>
+<p>The neuralnet that needs to be learned from data is <span class="math">\(s_{\theta}(x, t) := \nabla_x \log p_t(x)\)</span>, which <a href='#song2021scorebasedgenerativemodelingstochastic' id='ref-song2021scorebasedgenerativemodelingstochastic-1'>
+    15
+</a> names the score function. It shows that this neural network could be efficiently trained by minimizing the objective 
+</p>
+<div class="math">\begin{equation}
+\mathscr{L}(x, t; \theta) = \mathbb{E}_{p_{data}(x)} \left[ tr(\nabla_x s_{\theta}(x)) + \frac{1}{2} ||s_{\theta}(x) ||^2  \right]
+\end{equation}</div>
+<p>
+The expectation is estimated by the batch average of training samples. There are additional techniques to training the score network that works with perturbed sample data; see <a href='#bengio2013generalizeddenoisingautoencodersgenerative' id='ref-bengio2013generalizeddenoisingautoencodersgenerative-2'>
+    2
+</a>. <a href='#song2021scorebasedgenerativemodelingstochastic' id='ref-song2021scorebasedgenerativemodelingstochastic-2'>
+    15
+</a> uses a random projection to approximate <span class="math">\(tr(\nabla_x s_{\theta}(x))\)</span>. Regardless of training methods, the key is that <span class="math">\(s_{\theta}\)</span> is approximated by neuralnet that could be efficiently trained from data samples.</p>
+<h6 id="diffusion-via-continuous-normalizing-flows-cnfs">Diffusion via Continuous Normalizing Flows (CNFs)</h6>
+<p>The continuous normalizing flow formulation is slightly involved but a more general approach than other diffusion setups. We follow the notation in <a href='#lipman2023flowmatchinggenerativemodeling' id='ref-lipman2023flowmatchinggenerativemodeling-1'>
+    9
+</a>. Let <span class="math">\(\{ x_t \}_{t=0}^T\)</span> be the series of transformation from noise to data. The time-dependent probability path governing this transformation is <span class="math">\(p_t\)</span>. We define a time-dependent map <span class="math">\(\phi_t\)</span>, which is called the flow,</p>
+<div class="math">\begin{eqnarray*}
+\frac{d}{dt} \phi_t(x) &amp;=&amp; v_t(\phi_t(x)) \\
+\phi_0(x) &amp;=&amp; x
+\end{eqnarray*}</div>
+<p>Then, <span class="math">\(p_t\)</span> is defined as,
+</p>
+<div class="math">\begin{equation}
+p_t = p_0 (\phi_t^{-1}(x)) \det \left[ \frac{\delta\phi_t^{-1}}{\delta x} \right]
+\end{equation}</div>
+<p>The most important object is <span class="math">\(v_t\)</span>, which is called the generating vector of the probability path. We approximate this vector by a neuralnet, <span class="math">\(v_t(\theta)\)</span>. The <span class="caps">ODE</span> and <span class="math">\(v_t(\theta) solve $\phi_t\)</span>, which lead to <span class="math">\(p_t\)</span>. There are some traditional numerical methods to solve <span class="caps">ODE</span>, or we could use a neural <span class="caps">ODE</span> technique; see <a href='#chen2019neuralordinarydifferentialequations' id='ref-chen2019neuralordinarydifferentialequations-1'>
+    3
+</a>. <span class="math">\(p_t\)</span> describes the transition probability of <span class="math">\(x\)</span>.</p>
+<p>Let’s describe how to estimate <span class="math">\(v_t(\theta)\)</span>. Consider the flow matching objective,
+</p>
+<div class="math">\begin{equation}
+\mathscr{L}(x, t; \theta) = \mathbb{E}_{t, p_t(x)} ||u_t(x) - v_t(x; \theta) ||^2
+\end{equation}</div>
+<p>But we don’t know <span class="math">\(p_t\)</span> and <span class="math">\(u_t\)</span>. Instead, we could switch to a conditional flow matching objective,
+</p>
+<div class="math">\begin{equation}
+\mathscr{L}(x, t; \theta) = \mathbb{E}_{t, q(x_0), p_t(x|x_0)} ||v_t(x; \theta) - u_t(x|x_0)||^2
+\end{equation}</div>
+<p>This loss leads to the same gradient with respect to <span class="math">\(\theta\)</span> as the flow matching objective. With this transformation, we can get a solid handle on <span class="math">\(p_t(x|x_0)\)</span>, and indirectly the generating function <span class="math">\(u_t(x|x_0)\)</span>. For example, we can consider a special, gaussian probability path,
+</p>
+<div class="math">\begin{equation}
+p_t(x|x_0) = \mathscr{N} (x | \mu_t(x_0), \sigma_t(x_0))
+\end{equation}</div>
+<p>
+It simply means that the transition is sampled from gaussian that has time-dependent mean and variance. This special flow leads to a rather simple form for <span class="math">\(u_t(x|x_0)\)</span>
+</p>
+<div class="math">\begin{equation}
+u_t(x|x_0) = \frac{\sigma_t^{\prime}(x_0)}{\sigma_t(x_0)} ( x - \mu_t(x_0)) + \mu_t^{\prime} (x_0)
+\end{equation}</div>
+<p>
+Let see how we update the parameters of the neuralnet representing <span class="math">\(v_t(\theta)\)</span>. Take a batch of samples, the expectation is estimated over the sample batch. <span class="math">\(u_t(x|x)\)</span> is directly calculated. We get the conditional flow matching loss value, and then we can perform gradient descent on <span class="math">\(\theta\)</span>. </p>
+<p>The <span class="caps">CNF</span> formulation is a generalization of diffusion model, e.g. as described in <a href='#song2021scorebasedgenerativemodelingstochastic' id='ref-song2021scorebasedgenerativemodelingstochastic-3'>
+    15
+</a>. This shows that even modeling the same generating process, we could approximate different components. <a href='#song2021scorebasedgenerativemodelingstochastic' id='ref-song2021scorebasedgenerativemodelingstochastic-4'>
+    15
+</a> uses the neuralnet to represent a score function, and <a href='#lipman2023flowmatchinggenerativemodeling' id='ref-lipman2023flowmatchinggenerativemodeling-2'>
+    9
+</a> approximates a time-dependent vector field.</p>
+<h6 id="gan"><span class="caps">GAN</span></h6>
+<p><span class="caps">GAN</span> model was introduced by <a href='#goodfellow2014generativeadversarialnetworks' id='ref-goodfellow2014generativeadversarialnetworks-1'>
+    7
+</a>. It uses two neural networks, a generator and a discriminator, to model a competitive game between the two neural networks. Take the example of a text-to-image <span class="caps">GAN</span> model. The generator neural network takes text as input and output image. The discriminator neural network takes input and image pair, and output a probability on if the image is real or fake. <span class="caps">GAN</span> models tend to be small in parameter size. They are are easy to use because sampling only requires running the generator neural network once to generate new samples.</p>
+<p>Training a <span class="caps">GAN</span> model updates the two networks simultaneously. The discriminator loss function keep tracks of how well it could distinguish the fake and the real images given a text-image pair. The generator loss function keeps track of how well it could trick the discriminator. When we feed a batch of text-image pairs to the generators, we get fake images. We can use the text, real image, and fake images to calculate the loss for both of the discriminator and the generator networks, allowing for updates of both network’s parameters.</p>
+<h6 id="autoregressive-model-dalle">Autoregressive Model (<span class="caps">DALLE</span>)</h6>
+<p>Autoregressive model is made popular by <span class="caps">GPT</span>. An autoregressive model takes a token sequence as input and outputs one more token. The initial sequence and the predicted token form a new token sequence to be fed into the model again. This process repeats itself until the predicted token is a special <span class="caps">STOP</span> token. Training on an autoregressive objective is often called pre-training because raw data could be fed into the model directly. The raw data could be text, image, audio, or video. These data are encoded into token space as sequences, and each token sequences could be converted into multiple subsequences and the next token as the input and expected output for training. This paradigm works extremely well for text, the so called language models.</p>
+<p>We can look at a specific example that deals with image, the dalle model described in <a href='#ramesh2021zeroshottexttoimagegeneration' id='ref-ramesh2021zeroshottexttoimagegeneration-1'>
+    11
+</a>. It has two major components: the visual encoder-decoder system and the prior over text-image token sequence. The first component is similar to what we discussed in details in the <span class="caps">VQ</span>-<span class="caps">VAE</span> model. For discussion simplicity, we just assume that its encoder-decoder setup follows what is described there. The key difference lies in how dalle estimates the prior. The text is encoded by the <span class="caps">BPE</span> encoder, see <a href='#sennrich2016neuralmachinetranslationrare' id='ref-sennrich2016neuralmachinetranslationrare-1'>
+    14
+</a>. This encoder is calculated from the corpus and does not require training a neural network. The text token length is padded to a fixed length of 256. The image is encoded by the visual encoder into the codebook space, which has dimension of <span class="math">\(K\)</span>. The text and visual token sequences are concatenated to be used as input in the second component, an autoregressive model over the visual token space. The generating process starts with a text token sequence. It repeatedly generates the next token until the desired image token sequence length is reached. The image token sequence is then decoded into an image by the visual decoder.</p>
+<p>The <span class="caps">BPE</span> encoder is calculated directly from the corpus. This algorithm is fast and efficient. The visual encoder-decoder follows similar steps as discussed <span class="caps">VQ</span>-<span class="caps">VAE</span>. This takes the form of multiple neural networks. The autoregressive neural network is trained on raw text-image pairs. The loss objective is how well the neuralnet predicts the next visual token. This is a technique to indirectly model the full probability distribution of the visual token space. It is an approach that is well demonstrated by <span class="caps">LLM</span> to approximate high dimension probability space. See <a href='#bengio2013generalizeddenoisingautoencodersgenerative' id='ref-bengio2013generalizeddenoisingautoencodersgenerative-3'>
+    2
+</a>, <a href='#chen2017pixelsnail' id='ref-chen2017pixelsnail-2'>
+    5
+</a>, <a href='#chen2017variationallossyautoencoder' id='ref-chen2017variationallossyautoencoder-2'>
+    4
+</a>, <a href='#2019gpt2' id='ref-2019gpt2-2'>
+    10
+</a>. The neural network in this components could be many orders of magnitude larger than the visual encoder system. The majority of the training resources is spent on training for an neural network to estimate a probability distribution.</p>
+<h4 id="discussion">Discussion</h4>
+<p>I have not said much about the internal architectures of the neural networks described in each example. It is a point that I want to make that the role of neural network is not required in theory. Any high dimension estimation methods could work. However, neural networks have become the only meaningful way to approximate high dimensional function in these models. As the writing of this post, these neural networks invariably use <span class="caps">CNN</span> and transformer components. I would expect that the internal architectures will evolve, and we might see new class of internal architectures as soon as in a few years.</p>
+<p>One of the most important aspect of model formulations is deciding on what to estimate. This decision is usually guided by two factors. The approximated entity should be easy to use in the inference stage. For example, the inference of <span class="caps">GAN</span> model is much faster than a diffusion or an autoregressive token model. <span class="caps">GAN</span> model only needs to pass through the generating neuralnet once to get the result, but a diffusion step needs to be run <span class="math">\(T\)</span>-many passes through the probability transition step.</p>
+<p>The other aspect of formulation is the efficiency of learning from data. It is easy to spot an entity that is useful to estimate with a neural network. For the example of an image diffusion process, it is obvious that we want to estimate the time-dependent, joint distribution that governs the reverse process. In theory, we could generate sequence samples from raw images, and use them to approximate the transition directly. This is not going to lead to good empirical results. Instead, we have the somewhat convoluted diffusion models in the form of score matching, <span class="caps">SDE</span>, and <span class="caps">CNF</span>. Each of these models make additional assumptions about the reverse process to allow for clever math so that we could derive some entities that could be efficiently learned from data.</p>
+<p>The learned models need to generalize well beyond sample data. The approximating neural network is trained on some loss objective. It is easy to get a neural network to fit the data well. The effectiveness of the model is not necessarily determined by this arbitrary loss objective, but on how well it performs for the intended generation task. The amazing thing about these deep learning techniques is that these tremendously large deep neural networks are able to acquire the ability to generalize to tasks that are not directly specified in the training data.</p>
+<hr>
+<h4 id="footnotes">Footnotes</h4>
+<!-- #### References
+
+https://yang-song.net/blog/2021/score/
+
+https://lilianweng.github.io/posts/2021-07-11-diffusion-models/ -->
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%&#64;#$&#64;#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%&#64;#$&#64;#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=default';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        // "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'auto' } }," +
+        "    jax: ['input/TeX','input/MathML','output/SVG']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['TeX', 'STIX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+
+</script><ol class="simple-footnotes"><li id="sf-2023-10-17-gen-models-1">It is worth noting that some generative models does not contain any interpretable intermediate steps. It could be just one giant blackbox neural network model that transforms the text into an image. Human researchers might understand how individual computation is performed, but we might not able to make sense of any intermediate representations. <a href="#sf-2023-10-17-gen-models-1-back" class="simple-footnote-back">↩</a></li></ol>
+
+
+            <div id="citations">
+    <hr>
+    <h3>Citations</h3>
+    <ol class="references">
+            <li id="oord2018neuraldiscreterepresentationlearning">
+                <span class="reference-text">van&nbsp;den Oord, Aaron, Vinyals, Oriol, and Kavukcuoglu, Koray.
+Neural discrete representation learning.
+2018.
+URL: <a href="https://arxiv.org/abs/1711.00937">https://arxiv.org/abs/1711.00937</a>, <a href="https://arxiv.org/abs/1711.00937">arXiv:1711.00937</a>.</span>
+                    <a class="cite-backref" href="#ref-oord2018neuraldiscreterepresentationlearning-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+                    <a class="cite-backref" href="#ref-oord2018neuraldiscreterepresentationlearning-2"
+                       title="Jump back to reference 2">
+                        <sup>
+                            <i>
+                                <b>
+                                    2
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+                    <a class="cite-backref" href="#ref-oord2018neuraldiscreterepresentationlearning-3"
+                       title="Jump back to reference 3">
+                        <sup>
+                            <i>
+                                <b>
+                                    3
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="dhariwal2020jukebox">
+                <span class="reference-text">Dhariwal, Prafulla, Jun, Heewoo, Payne, Christine, Kim, Jong&nbsp;Wook, Radford, Alec, and Sutskever, Ilya.
+Jukebox: a generative model for music.
+2020.
+<a href="https://arxiv.org/abs/2005.00341">arXiv:2005.00341</a>.</span>
+                    <a class="cite-backref" href="#ref-dhariwal2020jukebox-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+                    <a class="cite-backref" href="#ref-dhariwal2020jukebox-2"
+                       title="Jump back to reference 2">
+                        <sup>
+                            <i>
+                                <b>
+                                    2
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="bengio2013generalizeddenoisingautoencodersgenerative">
+                <span class="reference-text">Bengio, Yoshua, Yao, Li, Alain, Guillaume, and Vincent, Pascal.
+Generalized denoising auto-encoders as generative models.
+2013.
+URL: <a href="https://arxiv.org/abs/1305.6663">https://arxiv.org/abs/1305.6663</a>, <a href="https://arxiv.org/abs/1305.6663">arXiv:1305.6663</a>.</span>
+                    <a class="cite-backref" href="#ref-bengio2013generalizeddenoisingautoencodersgenerative-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+                    <a class="cite-backref" href="#ref-bengio2013generalizeddenoisingautoencodersgenerative-2"
+                       title="Jump back to reference 2">
+                        <sup>
+                            <i>
+                                <b>
+                                    2
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+                    <a class="cite-backref" href="#ref-bengio2013generalizeddenoisingautoencodersgenerative-3"
+                       title="Jump back to reference 3">
+                        <sup>
+                            <i>
+                                <b>
+                                    3
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="chen2017pixelsnail">
+                <span class="reference-text">Chen, Xi, Mishra, Nikhil, Rohaninejad, Mostafa, and Abbeel, Pieter.
+Pixelsnail: an improved autoregressive generative model.
+2017.
+<a href="https://arxiv.org/abs/1712.09763">arXiv:1712.09763</a>.</span>
+                    <a class="cite-backref" href="#ref-chen2017pixelsnail-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+                    <a class="cite-backref" href="#ref-chen2017pixelsnail-2"
+                       title="Jump back to reference 2">
+                        <sup>
+                            <i>
+                                <b>
+                                    2
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="chen2017variationallossyautoencoder">
+                <span class="reference-text">Chen, Xi, Kingma, Diederik&nbsp;P., Salimans, Tim, Duan, Yan, Dhariwal, Prafulla, Schulman, John, Sutskever, Ilya, and Abbeel, Pieter.
+Variational lossy autoencoder.
+2017.
+URL: <a href="https://arxiv.org/abs/1611.02731">https://arxiv.org/abs/1611.02731</a>, <a href="https://arxiv.org/abs/1611.02731">arXiv:1611.02731</a>.</span>
+                    <a class="cite-backref" href="#ref-chen2017variationallossyautoencoder-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+                    <a class="cite-backref" href="#ref-chen2017variationallossyautoencoder-2"
+                       title="Jump back to reference 2">
+                        <sup>
+                            <i>
+                                <b>
+                                    2
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="2019gpt2">
+                <span class="reference-text">Radford, Alec, Wu, Jeffrey, Child, Rewon, Luan, David, Amodei, Dario, and Sutskever, Ilya.
+Language models are unsupervised multitask learners.
+2018.
+URL: <a href="https://d4mucfpksywv.cloudfront.net/better-language-models/language-models.pdf">https://d4mucfpksywv.cloudfront.net/better-language-models/language-models.pdf</a>.</span>
+                    <a class="cite-backref" href="#ref-2019gpt2-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+                    <a class="cite-backref" href="#ref-2019gpt2-2"
+                       title="Jump back to reference 2">
+                        <sup>
+                            <i>
+                                <b>
+                                    2
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="razavi2019generating">
+                <span class="reference-text">Razavi, Ali, van&nbsp;den Oord, Aaron, and Vinyals, Oriol.
+Generating diverse high-fidelity images with vq-vae-2.
+2019.
+<a href="https://arxiv.org/abs/1906.00446">arXiv:1906.00446</a>.</span>
+                    <a class="cite-backref" href="#ref-razavi2019generating-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="ho2020denoising">
+                <span class="reference-text">Ho, Jonathan, Jain, Ajay, and Abbeel, Pieter.
+Denoising diffusion probabilistic models.
+2020.
+<a href="https://arxiv.org/abs/2006.11239">arXiv:2006.11239</a>.</span>
+                    <a class="cite-backref" href="#ref-ho2020denoising-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="rombach2022highresolutionimagesynthesislatent">
+                <span class="reference-text">Rombach, Robin, Blattmann, Andreas, Lorenz, Dominik, Esser, Patrick, and Ommer, Björn.
+High-resolution image synthesis with latent diffusion models.
+2022.
+URL: <a href="https://arxiv.org/abs/2112.10752">https://arxiv.org/abs/2112.10752</a>, <a href="https://arxiv.org/abs/2112.10752">arXiv:2112.10752</a>.</span>
+                    <a class="cite-backref" href="#ref-rombach2022highresolutionimagesynthesislatent-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="anderson1982">
+                <span class="reference-text">Anderson, Brian D&nbsp;O.
+Reverse-time diffusion equation models.
+<em>Stochastic Process Application</em>, 12(3):313&ndash;326, 1982.</span>
+                    <a class="cite-backref" href="#ref-anderson1982-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="song2021scorebasedgenerativemodelingstochastic">
+                <span class="reference-text">Song, Yang, Sohl-Dickstein, Jascha, Kingma, Diederik&nbsp;P., Kumar, Abhishek, Ermon, Stefano, and Poole, Ben.
+Score-based generative modeling through stochastic differential equations.
+2021.
+URL: <a href="https://arxiv.org/abs/2011.13456">https://arxiv.org/abs/2011.13456</a>, <a href="https://arxiv.org/abs/2011.13456">arXiv:2011.13456</a>.</span>
+                    <a class="cite-backref" href="#ref-song2021scorebasedgenerativemodelingstochastic-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+                    <a class="cite-backref" href="#ref-song2021scorebasedgenerativemodelingstochastic-2"
+                       title="Jump back to reference 2">
+                        <sup>
+                            <i>
+                                <b>
+                                    2
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+                    <a class="cite-backref" href="#ref-song2021scorebasedgenerativemodelingstochastic-3"
+                       title="Jump back to reference 3">
+                        <sup>
+                            <i>
+                                <b>
+                                    3
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+                    <a class="cite-backref" href="#ref-song2021scorebasedgenerativemodelingstochastic-4"
+                       title="Jump back to reference 4">
+                        <sup>
+                            <i>
+                                <b>
+                                    4
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="lipman2023flowmatchinggenerativemodeling">
+                <span class="reference-text">Lipman, Yaron, Chen, Ricky T.&nbsp;Q., Ben-Hamu, Heli, Nickel, Maximilian, and Le, Matt.
+Flow matching for generative modeling.
+2023.
+URL: <a href="https://arxiv.org/abs/2210.02747">https://arxiv.org/abs/2210.02747</a>, <a href="https://arxiv.org/abs/2210.02747">arXiv:2210.02747</a>.</span>
+                    <a class="cite-backref" href="#ref-lipman2023flowmatchinggenerativemodeling-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+                    <a class="cite-backref" href="#ref-lipman2023flowmatchinggenerativemodeling-2"
+                       title="Jump back to reference 2">
+                        <sup>
+                            <i>
+                                <b>
+                                    2
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="chen2019neuralordinarydifferentialequations">
+                <span class="reference-text">Chen, Ricky T.&nbsp;Q., Rubanova, Yulia, Bettencourt, Jesse, and Duvenaud, David.
+Neural ordinary differential equations.
+2019.
+URL: <a href="https://arxiv.org/abs/1806.07366">https://arxiv.org/abs/1806.07366</a>, <a href="https://arxiv.org/abs/1806.07366">arXiv:1806.07366</a>.</span>
+                    <a class="cite-backref" href="#ref-chen2019neuralordinarydifferentialequations-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="goodfellow2014generativeadversarialnetworks">
+                <span class="reference-text">Goodfellow, Ian&nbsp;J., Pouget-Abadie, Jean, Mirza, Mehdi, Xu, Bing, Warde-Farley, David, Ozair, Sherjil, Courville, Aaron, and Bengio, Yoshua.
+Generative adversarial networks.
+2014.
+URL: <a href="https://arxiv.org/abs/1406.2661">https://arxiv.org/abs/1406.2661</a>, <a href="https://arxiv.org/abs/1406.2661">arXiv:1406.2661</a>.</span>
+                    <a class="cite-backref" href="#ref-goodfellow2014generativeadversarialnetworks-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="ramesh2021zeroshottexttoimagegeneration">
+                <span class="reference-text">Ramesh, Aditya, Pavlov, Mikhail, Goh, Gabriel, Gray, Scott, Voss, Chelsea, Radford, Alec, Chen, Mark, and Sutskever, Ilya.
+Zero-shot text-to-image generation.
+2021.
+URL: <a href="https://arxiv.org/abs/2102.12092">https://arxiv.org/abs/2102.12092</a>, <a href="https://arxiv.org/abs/2102.12092">arXiv:2102.12092</a>.</span>
+                    <a class="cite-backref" href="#ref-ramesh2021zeroshottexttoimagegeneration-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="sennrich2016neuralmachinetranslationrare">
+                <span class="reference-text">Sennrich, Rico, Haddow, Barry, and Birch, Alexandra.
+Neural machine translation of rare words with subword units.
+2016.
+URL: <a href="https://arxiv.org/abs/1508.07909">https://arxiv.org/abs/1508.07909</a>, <a href="https://arxiv.org/abs/1508.07909">arXiv:1508.07909</a>.</span>
+                    <a class="cite-backref" href="#ref-sennrich2016neuralmachinetranslationrare-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+    </ol>
+</div>
+
+             
+ 
+            
+            
+            
+
+
+
+
+
+
+
+
+            <hr/>
+            <script src="https://utteranc.es/client.js"
+                    repo="jinfwhuang/jinfwhuang.github.io"
+                    issue-term="pathname"
+                    label="user-comments"
+                    theme="github-light"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+
+            <hr/>
+            <aside>
+            <nav>
+            <ul class="articles-timeline">
+                <li class="previous-article">« <a href="/2023-06-29-nn-beyond-one-gpu" title="Previous: Neural Net Beyond a Single GPU">Neural Net Beyond a Single GPU</a></li>
+            </ul>
+            </nav>
+            </aside>
+        </div>
+        <section id="article-sidebar" class="span2">
+            <h4>Published</h4>
+            <time itemprop="dateCreated" datetime="2023-10-17T00:00:00-07:00">Tue 17 October 2023</time>
+            <!--             <h4>Category</h4>
+            <a class="category-link" href="/categories#misc-ref">misc</a>
+ -->
+<h4>Contact</h4>
+<div id="sidebar-social-link">
+    <a href="https://twitter.com/jinfwhuang" title="Twiiter" target="_blank" rel="nofollow noopener noreferrer">
+        <svg xmlns="http://www.w3.org/2000/svg" aria-label="Twitter" role="img" viewBox="0 0 512 512"><rect width="512" height="512" rx="15%" fill="#1da1f3"/><path fill="#fff" d="M437 152a72 72 0 0 1-40 12 72 72 0 0 0 32-40 72 72 0 0 1-45 17 72 72 0 0 0-122 65 200 200 0 0 1-145-74 72 72 0 0 0 22 94 72 72 0 0 1-32-7 72 72 0 0 0 56 69 72 72 0 0 1-32 1 72 72 0 0 0 67 50 200 200 0 0 1-105 29 200 200 0 0 0 309-179 200 200 0 0 0 35-37"/></svg>
+    </a>
+    <a href="https://www.linkedin.com/in/jinfwhuang" title="LinkedIn" target="_blank" rel="nofollow noopener noreferrer">
+        <svg xmlns="http://www.w3.org/2000/svg" aria-label="LinkedIn" role="img" viewBox="0 0 512 512" fill="#fff"><rect width="512" height="512" rx="15%" fill="#0077b5"/><circle cx="142" cy="138" r="37"/><path stroke="#fff" stroke-width="66" d="M244 194v198M142 194v198"/><path d="M276 282c0-20 13-40 36-40 24 0 33 18 33 45v105h66V279c0-61-32-89-76-89-34 0-51 19-59 32"/></svg>
+    </a>
+</div>
+            
+
+
+
+
+
+            
+
+
+
+
+
+        </section>
+</div>
+</article>
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe.
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides.
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo https://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>                    </div>
+                    <div class="span1"></div>
+                </div>
+            </div>
+        </div>
+<!--        <footer>
+
+    <div>
+        <span class="site-name"><span style="color:black;">Jin's Notes</span></span> - the hardest part is taking the first step
+    </div>
+
+
+
+    <div id="fpowered">
+        Powered by: <a href="http://getpelican.com/" title="Pelican Home Page" target="_blank" rel="nofollow noopener noreferrer">Pelican</a>
+        Theme: <a href="https://elegant.oncrashreboot.com/" title="Theme Elegant Home Page" target="_blank" rel="nofollow noopener noreferrer">Elegant</a>
+    </div>
+</footer>-->
+            <script src="//code.jquery.com/jquery.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+        <script src="/theme/js/elegant.prod.9e9d5ce754.js"></script>
+        <script>
+            function validateForm(query)
+            {
+                return (query.length > 0);
+            }
+        </script>
+
+
+
+
+    <script>
+    (function () {
+        if (window.location.hash.match(/^#comment-\d+$/)) {
+            $('#comment_thread').collapse('show');
+        }
+    })();
+    window.onhashchange=function(){
+        if (window.location.hash.match(/^#comment-\d+$/))
+            window.location.reload(true);
+    }
+    $('#comment_thread').on('shown', function () {
+        var link = document.getElementById('comment-accordion-toggle');
+        var old_innerHTML = link.innerHTML;
+        $(link).fadeOut(200, function() {
+            $(this).text('Click here to hide comments').fadeIn(200);
+        });
+        $('#comment_thread').on('hidden', function () {
+            $(link).fadeOut(200, function() {
+                $(this).text(old_innerHTML).fadeIn(200);
+            });
+        })
+    })
+</script>
+
+    </body>
+    <!-- Theme: Elegant built for Pelican
+        License : MIT -->
+
+</html>
