@@ -20,18 +20,18 @@
 
 <meta name="keywords" content=", misc, " />
 
-<meta property="og:title" content="Generative Models and Neural Networks "/>
+<meta property="og:title" content="The Role of Neural Networks in Generative Models "/>
 <meta property="og:url" content="/2023-10-17-gen-models" />
 <meta property="og:description" content="Generative AI is an immensely popular topic. We have seen many new models coming out the last few years. These models generate impossibly high quality samples in almost all digital media: text, images, speech, and music. This blog post takes a look at how some of these models are formulated …" />
 <meta property="og:site_name" content="Jin&#39;s Notes" />
 <meta property="og:article:author" content="jin" />
 <meta property="og:article:published_time" content="2023-10-17T00:00:00-07:00" />
-<meta name="twitter:title" content="Generative Models and Neural Networks ">
+<meta name="twitter:title" content="The Role of Neural Networks in Generative Models ">
 <meta name="twitter:description" content="Generative AI is an immensely popular topic. We have seen many new models coming out the last few years. These models generate impossibly high quality samples in almost all digital media: text, images, speech, and music. This blog post takes a look at how some of these models are formulated …">
 <meta property="og:image" content="/images/android-chrome-192x192.png" />
 <meta name="twitter:image" content="/images/android-chrome-192x192.png" >
 
-        <title>Generative Models and Neural Networks  · Jin&#39;s Notes
+        <title>The Role of Neural Networks in Generative Models  · Jin&#39;s Notes
 </title>
         <link rel="shortcut icon" href="/theme/images/favicon.ico" type="image/x-icon" />
         <link rel="icon" href="/theme/images/apple-touch-icon-152x152.png" type="image/png" />
@@ -91,7 +91,7 @@
     <header class="page-header span10 offset2">
         <h1>
             <a href="/2023-10-17-gen-models">
-                Generative Models and Neural Networks<br/>
+                The Role of Neural Networks in Generative Models<br/>
             </a>
         </h1>
     </header>
@@ -103,7 +103,7 @@
         <h4>Contents</h4>
         <div class="toc">
 <ul>
-<li><a href="#the-role-of-neural-network">The Role of Neural Network</a></li>
+<li><a href="#neural-networks-as-approximations">Neural Networks as Approximations</a></li>
 <li><a href="#examples">Examples</a><ul>
 <li><a href="#vq-vae"><span class="caps">VQ</span>-<span class="caps">VAE</span></a></li>
 <li><a href="#diffusion-via-score-matching">Diffusion via Score Matching</a></li>
@@ -122,10 +122,10 @@
     <div class="span8 article-content">
             
             <p>Generative <span class="caps">AI</span> is an immensely popular topic. We have seen many new models coming out the last few years. These models generate impossibly high quality samples in almost all digital media: text, images, speech, and music. This blog post takes a look at how some of these models are formulated. I focus on making it obvious how neural networks are used as the key technique to approximate the most intractable components. My goal is to demystify these generative models, and empower distributed system engineers to dig deeper and become comfortable contributing to writing high performance codes for inference and training of <span class="caps">AI</span> models.</p>
-<h4 id="the-role-of-neural-network">The Role of Neural Network</h4>
-<p>A neural network is a parametrized function. A linear regression is a parametrized function. A neuralnet is a complicated version of that. The act of training is to optimize the parameters based on data. A modern deep neural network is the latest iteration of numerical technique on how we could approximate some extremely complex and high dimension real-world functions.</p>
+<h4 id="neural-networks-as-approximations">Neural Networks as Approximations</h4>
+<p>A neural network is a parametrized function. A linear regression is a parametrized function. A neuralnet is a complicated version of that. The act of training is to optimize the parameters based on data. A modern deep neural network is the latest iteration in numerical techniques on how we could approximate extremely complex, high dimension real-world functions.</p>
 <p>A generative model is the easiest to be understood if we start writing down its inputs and outputs. For example, a text-to-image model takes text as input and output an image. The current state of the art model usually describes a series of interpretable transformations<sup id="sf-2023-10-17-gen-models-1-back"><a href="#sf-2023-10-17-gen-models-1" class="simple-footnote" title="It is worth noting that some generative models does not contain any interpretable intermediate steps. It could be just one giant blackbox neural network model that transforms the text into an image. Human researchers might understand how individual computation is performed, but we might not able to make sense of any intermediate representations.">1</a></sup>. Some of these transformations are easy to program, but some have to be approximated. The approximations are done by neural networks, where their parameters are learned from data.</p>
-<p>Let’s take diffusion image generation as an example. We can program the forward diffusion process. The starting image is<span class="math">\(x_0\)</span>. From <span class="math">\(x_{t-1}\)</span> to <span class="math">\(x_{t}\)</span>, we add gaussian noise to each pixel at each time step. Image generation is the reversed process, where we start with the pure white noise and denoise the image step by step. It should be clear that it is not possible to just write down a formula and program the reverse process. However, the reverse process exists. We take a set of images, <span class="math">\(\{x_0 \}_i^n\)</span>, we run the forward process, we would be able to get a set of dynamic process <span class="math">\(\{x_t \}, t \in [0, T]\)</span>. There exists a time-dependent probability transition function that describes the reversed process. That it, we should be able to sample <span class="math">\(x_{t-1}\)</span> given <span class="math">\(x_t\)</span> from <span class="math">\(p(x_{t-1}|x_t)\)</span>. We represent this conditional probability as a parametrized neural network <span class="math">\(p_\theta(x_{t-1}|x_t)\)</span>, where <span class="math">\(\theta\)</span> is the parameters. At this point, the question is about how to find the optimized parameters of the neural network.</p>
+<p>Let’s take diffusion image generation as an example. We can program the forward diffusion process. The starting image is <span class="math">\(x_0\)</span>. From <span class="math">\(x_{t-1}\)</span> to <span class="math">\(x_{t}\)</span>, we add gaussian noise to each pixel at each time step. Image generation is the reversed process, where we start with the pure white noise and denoise the image step by step. It should be clear that it is not possible to just write down a formula and program the reverse process. However, the reverse process exists. We take a set of images, <span class="math">\(\{x_0 \}_i^n\)</span>, we run the forward process, we would be able to get a set of dynamic process <span class="math">\(\{x_t \}_{t=0}^{T}\)</span>. There exists a time-dependent probability transition function that describes the reversed process. That it, we should be able to sample <span class="math">\(x_{t-1}\)</span> given <span class="math">\(x_t\)</span> from <span class="math">\(p(x_{t-1}|x_t)\)</span>. We represent this conditional probability as a parametrized neural network <span class="math">\(p_\theta(x_{t-1}|x_t)\)</span>, where <span class="math">\(\theta\)</span> is the parameters. At this point, the question is about how to find the optimized parameters of the neural network.</p>
 <p>At the core of most generative models is a high dimensional probability distribution. Instead of working directly with text, image, sound, or video, we would like have a mechanism to convert those media into a more convenient encoded space. This conversion step is usually learned from data. There is a decoder that are built jointly with the encoder. The algorithm to calculate or train the encoder-decoder system is  not compute heavy relative to the approximation step of learning the sampling probability distribution. Much of the complexity of modeling is deciding which probability distribution to approximate. The approximation must be constructed in such a way that it could be efficiently learned from data, and the approximation is able to generalize well in the desired domain. Generated data are sampled from the learned probability distributions. The sampled data is then decoded to the desired media format.</p>
 <p>It is worth noting that neural network is not the only way to approximate a high dimensional function. In one extreme, we know that linear methods are way too simple to be useful. In another extreme, it is not like we could simulate the world at the quantum level to observe macroscopic behaviors. There are previously many different techniques used to estimate these density functions, such as <span class="caps">MCMC</span>, dimensionality reduction techniques, kernel density, bayesian methods, etc. However, they do not perform well enough to support the current generative models. The deep neural network approach enables a scale of learning and capability that is orders of magnitude more performant than previous methods.</p>
 <h4 id="examples">Examples</h4>
