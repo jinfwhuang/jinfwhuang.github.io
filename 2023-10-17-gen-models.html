@@ -175,25 +175,25 @@
 <p><br></p>
 <h6 id="vq-vae"><span class="caps">VQ</span>-<span class="caps">VAE</span></h6>
 <p>I will unpack the Vector Quantized Variation AutoEncoder (<span class="caps">VQ</span>-<span class="caps">VAE</span>) model, loosely based on <a href='#oord2018neuraldiscreterepresentationlearning' id='ref-oord2018neuraldiscreterepresentationlearning-1'>
-    16
+    17
 </a>. 
 </p><figure>
 <img align="middle" src="images/2023-10-17/vq-vae-simple.png">
 <figcaption align="center">
 Fig. from <a href='#oord2018neuraldiscreterepresentationlearning' id='ref-oord2018neuraldiscreterepresentationlearning-2'>
-    16
+    17
 </a>
 </figcaption>
 </figure><p></p>
 <p>There are four components that are parametrized: the codebook embedding <span class="math">\(e_{\theta}\)</span>, encoder <span class="math">\(E_{\theta}\)</span>, and decoder <span class="math">\(D_{\theta}\)</span>, and the priors <span class="math">\(p_\theta\)</span> over the embedding space. The codebook is <span class="math">\(e_{\theta} \in \mathbb{R}^{K \times D}\)</span>. <span class="math">\(K\)</span> is the size of the codebook, and the <span class="math">\(D\)</span> is the code length for each of the embedding. <span class="math">\(\theta\)</span> denotes the entire set of parameters, which is learned through data. Note that the codebook is learned. The encoder is a neuralnet. It could be any neural network. <a href='#oord2018neuraldiscreterepresentationlearning' id='ref-oord2018neuraldiscreterepresentationlearning-3'>
-    16
+    17
 </a> uses a <span class="caps">CNN</span>, but this is a design choice that could be experimented. The exact architecture is not required by theory but will greatly impact empirical results. The encoder takes an image, <span class="math">\(x \in \mathbb{R}^{3 \times H \times W}\)</span> as input, and outputs into the embedding space <span class="math">\(\mathbb{R}^{D}\)</span>. The full dimensionality of this stage depends on the neuralnet architecture. For example, we could choose a <span class="math">\(32 \times 32\)</span> embedding vectors to represent an image of <span class="math">\(128 \times 128\)</span>. This output is quantized and drop its embedding dimension <span class="math">\(D\)</span>. Each embedding is quantized into a number <span class="math">\(z \in \{1, ... K\}\)</span>. That is, each embedding vector is no longer a <span class="math">\(D\)</span>-vector but just a number. Lastly, the decoder is another neuralnet that takes the quantized embedding and output an image in <span class="math">\(\mathbb{R}^{3 \times H \times W}\)</span>. The prior <span class="math">\(p_\theta\)</span> is over the embedding space. It could be such that it is conditioned on some labels. That is, <span class="math">\(p_\theta(z | l)\)</span>, where <span class="math">\(l\)</span> represents label classes. The prior allows us to sample an embedding based on a class label.</p>
 <p>Image generation is straight forward. First, we sample encodings from the priors neural network <span class="math">\(p_\theta(z|l)\)</span>. Second, the encodings are fed through the decoder network <span class="math">\(D_{\theta}\)</span> to generate an image. This methodology also applies well to music generation; see <a href='#dhariwal2020jukebox' id='ref-dhariwal2020jukebox-1'>
     6
 </a>. The only difference is that instead of <span class="math">\(x\)</span> representing an image, it represent an audio segment.</p>
 <p>The key question is how to train these 4 components: <span class="math">\(e_{\theta}, E_{\theta}, D_{\theta}, and p_{\theta}\)</span>. This is broken down into two stages. The first stage approximate <span class="math">\(e_{\theta}, E_{\theta}, D_{\theta}\)</span>. Let’s write down the loss function associated with them:</p>
 <div class="math">\begin{equation}
-\mathscr{L}(x; \theta) = ||x - D_\theta()||_2^2 + ||sg[E_{\theta}(x)] - e_\theta||_2^2 + \beta ||sg[e_\theta] - E_\theta(x) ||_2^2
+\mathscr{L}(x; \theta) = ||x - D_\theta(x)||_2^2 + ||sg[E_{\theta}(x)] - e_\theta||_2^2 + \beta ||sg[e_\theta] - E_\theta(x) ||_2^2
 \end{equation}</div>
 <p>Note that <span class="math">\(D_\theta(x)\)</span> is an abuse of notion to denote the generated image if we take the input as the quantized encoded embedding. The first term is the reconstruction loss, the second term is a simple vector quantization loss, and the third term is the commitment loss to ensure that embedding space does not grow too large. The goal here is not to explain how to derive or improve these loss terms, we want to know how to operationalize the training by using data. With this loss defined, it is now clear that all we have to do is to feed data into all the parametrized functions (e.g <span class="math">\(e, E, D\)</span>), calculate the loss, and then perform gradient descent with each batch of data.</p>
 <p>The second stage approximates priors’ probability distributions of the encodings, <span class="math">\(p_{\theta}\)</span>. It might be tempting to model the density functions explicitly via log likelihood, cross-entropy, or other probability divergence measures. This approach is empirically useless because the dimensionality of embedding space is too large. One of the breakthrough in <span class="caps">AI</span> is the ability to model probabilistic model with autoregressive models, as evidenced and made hugely popular by the success of <span class="caps">LLM</span>. This technique applies here as well. The encodings are treated as any other high dimensional object, in this case <span class="math">\(e = (e_1, e_2, ..., e_D)\)</span>. The model take a partial vector <span class="math">\((e_1, ... e_i)\)</span> as input and predicts the next token <span class="math">\(e_{i+1}\)</span>. The loss could be just a L2 loss between <span class="math">\((e_1, ... e_i, e_{i+1})\)</span> and <span class="math">\((e_1, ... e_i, \hat{e}_{i+1})\)</span>. This simple setup allows us to update the neural network. The current state of the art uses neural networks that are transformer based. </p>
@@ -204,11 +204,11 @@ Fig. from <a href='#oord2018neuraldiscreterepresentationlearning' id='ref-oord20
 </a>, <a href='#chen2017variationallossyautoencoder' id='ref-chen2017variationallossyautoencoder-1'>
     4
 </a>, <a href='#2019gpt2' id='ref-2019gpt2-1'>
-    10
+    11
 </a> for more details about estimating high dimension joint probability distribution. See <a href='#dhariwal2020jukebox' id='ref-dhariwal2020jukebox-2'>
     6
 </a>, <a href='#razavi2019generating' id='ref-razavi2019generating-1'>
-    12
+    13
 </a> for details about more design space for vq-vae encode-decoder system.</p>
 <h6 id="diffusion-via-score-matching">Diffusion via Score Matching</h6>
 <p>One of the most popular image generating model is diffusion. We take a look at the model presented in  <a href='#ho2020denoising' id='ref-ho2020denoising-1'>
@@ -232,10 +232,10 @@ For simplicity, we set <span class="math">\(\sigma_\theta\)</span> to be fixed a
 \end{equation}</div>
 <p>where <span class="math">\(\epsilon \sim \mathscr{N}(0, I)\)</span> and <span class="math">\(t \sim U(1, ..., T)\)</span>, and <span class="math">\(x_0\)</span> is a data sample. The loss could be calculated for each data point. The complexity of this generating model is deriving what the neuralnet supposes to represent and the loss function. But when these entities are written out, it is relatively straight forward to understand the computations both in inference and training stage.</p>
 <p>See <a href='#rombach2022highresolutionimagesynthesislatent' id='ref-rombach2022highresolutionimagesynthesislatent-1'>
-    13
+    14
 </a> for an improved version of this diffusion model.</p>
 <h6 id="diffusion-via-sde">Diffusion via <span class="caps">SDE</span></h6>
-<p>The diffusion process could be formulated as a stochastic process. This is my personal favorite because theory is compact and succinct. Let <span class="math">\(\{ x_t \}_{t=0}^T\)</span> be the forward diffusion process modeled as an Itô integral, 
+<p>The diffusion process could be formulated as a stochastic process. This is my personal favorite because the theory is succinct and compact. Let <span class="math">\(\{ x_t \}_{t=0}^T\)</span> be the forward diffusion process modeled as an Itô integral, 
 </p>
 <div class="math">\begin{equation}
 dx = f(x, t)dt + g(t) d \mathbb{W},
@@ -251,7 +251,7 @@ dx = \left[ f(x,t) - g(t)^2 \nabla_x \log p_t(x)  \right]dt + g(t)dW,
 <p>
 where <span class="math">\(dt\)</span> is negative timestep and <span class="math">\(W\)</span> is a backward Wierner process. We can solve this backward <span class="caps">SDE</span> numerically if we know the term <span class="math">\(\nabla_x \log p_t(x)\)</span>. We estimate <span class="math">\(\nabla_x \log p_t(x)\)</span> with a neuralnet. With that, we have a generating model because the reverse process is fully described by the backward <span class="caps">SDE</span>.</p>
 <p>The neuralnet that needs to be learned from data is <span class="math">\(s_{\theta}(x, t) := \nabla_x \log p_t(x)\)</span>, which <a href='#song2021scorebasedgenerativemodelingstochastic' id='ref-song2021scorebasedgenerativemodelingstochastic-1'>
-    15
+    16
 </a> names the score function. It shows that this neural network could be efficiently trained by minimizing the objective 
 </p>
 <div class="math">\begin{equation}
@@ -261,7 +261,7 @@ where <span class="math">\(dt\)</span> is negative timestep and <span class="mat
 The expectation is estimated by the batch average of training samples. There are additional techniques to training the score network that works with perturbed sample data; see <a href='#bengio2013generalizeddenoisingautoencodersgenerative' id='ref-bengio2013generalizeddenoisingautoencodersgenerative-2'>
     2
 </a>. <a href='#song2021scorebasedgenerativemodelingstochastic' id='ref-song2021scorebasedgenerativemodelingstochastic-2'>
-    15
+    16
 </a> uses a random projection to approximate <span class="math">\(tr(\nabla_x s_{\theta}(x))\)</span>. Regardless of training methods, the key is that <span class="math">\(s_{\theta}\)</span> is approximated by neuralnet that could be efficiently trained from data samples.</p>
 <h6 id="diffusion-via-continuous-normalizing-flows-cnfs">Diffusion via Continuous Normalizing Flows (CNFs)</h6>
 <p>The continuous normalizing flow formulation is slightly involved but a more general approach than other diffusion setups. We follow the notation in <a href='#lipman2023flowmatchinggenerativemodeling' id='ref-lipman2023flowmatchinggenerativemodeling-1'>
@@ -276,7 +276,7 @@ The expectation is estimated by the batch average of training samples. There are
 <div class="math">\begin{equation}
 p_t = p_0 (\phi_t^{-1}(x)) \det \left[ \frac{\delta\phi_t^{-1}}{\delta x} \right]
 \end{equation}</div>
-<p>The most important object is <span class="math">\(v_t\)</span>, which is called the generating vector of the probability path. We approximate this vector by a neuralnet, <span class="math">\(v_t(\theta)\)</span>. The <span class="caps">ODE</span> and <span class="math">\(v_t(\theta) solve $\phi_t\)</span>, which lead to <span class="math">\(p_t\)</span>. There are some traditional numerical methods to solve <span class="caps">ODE</span>, or we could use a neural <span class="caps">ODE</span> technique; see <a href='#chen2019neuralordinarydifferentialequations' id='ref-chen2019neuralordinarydifferentialequations-1'>
+<p>The most important object is <span class="math">\(v_t\)</span>, which is called the generating vector of the probability path. We approximate this vector by a neuralnet, <span class="math">\(v_t(\theta)\)</span>. The <span class="caps">ODE</span> and <span class="math">\(v_t(\theta)\)</span> solves <span class="math">\(\phi_t\)</span>, which lead to <span class="math">\(p_t\)</span>. There are some traditional numerical methods to solve <span class="caps">ODE</span>, or we could use a neural <span class="caps">ODE</span> technique; see <a href='#chen2019neuralordinarydifferentialequations' id='ref-chen2019neuralordinarydifferentialequations-1'>
     3
 </a>. <span class="math">\(p_t\)</span> describes the transition probability of <span class="math">\(x\)</span>.</p>
 <p>Let’s describe how to estimate <span class="math">\(v_t(\theta)\)</span>. Consider the flow matching objective,
@@ -301,11 +301,9 @@ It simply means that the transition is sampled from gaussian that has time-depen
 u_t(x|x_0) = \frac{\sigma_t^{\prime}(x_0)}{\sigma_t(x_0)} ( x - \mu_t(x_0)) + \mu_t^{\prime} (x_0)
 \end{equation}</div>
 <p>
-Let see how we update the parameters of the neuralnet representing <span class="math">\(v_t(\theta)\)</span>. Take a batch of samples, the expectation is estimated over the sample batch. <span class="math">\(u_t(x|x)\)</span> is directly calculated. We get the conditional flow matching loss value, and then we can perform gradient descent on <span class="math">\(\theta\)</span>. </p>
-<p>The <span class="caps">CNF</span> formulation is a generalization of diffusion model, e.g. as described in <a href='#song2021scorebasedgenerativemodelingstochastic' id='ref-song2021scorebasedgenerativemodelingstochastic-3'>
-    15
-</a>. This shows that even modeling the same generating process, we could approximate different components. <a href='#song2021scorebasedgenerativemodelingstochastic' id='ref-song2021scorebasedgenerativemodelingstochastic-4'>
-    15
+Let see how we update the parameters of the neuralnet representing <span class="math">\(v_t(\theta)\)</span>. Take a batch of samples, the expectation is estimated over the sample batch. <span class="math">\(u_t(x|x_0)\)</span> is directly calculated. We get the conditional flow matching loss value, and then we can perform gradient descent on <span class="math">\(\theta\)</span>. </p>
+<p>The <span class="caps">CNF</span> formulation is a generalization of diffusion model. Even if we were to model the same generating process, we could approximate different components. <a href='#song2021scorebasedgenerativemodelingstochastic' id='ref-song2021scorebasedgenerativemodelingstochastic-3'>
+    16
 </a> uses the neuralnet to represent a score function, and <a href='#lipman2023flowmatchinggenerativemodeling' id='ref-lipman2023flowmatchinggenerativemodeling-2'>
     9
 </a> approximates a time-dependent vector field.</p>
@@ -313,13 +311,16 @@ Let see how we update the parameters of the neuralnet representing <span class="
 <p><span class="caps">GAN</span> model was introduced by <a href='#goodfellow2014generativeadversarialnetworks' id='ref-goodfellow2014generativeadversarialnetworks-1'>
     7
 </a>. It uses two neural networks, a generator and a discriminator, to model a competitive game between the two neural networks. Take the example of a text-to-image <span class="caps">GAN</span> model. The generator neural network takes text as input and output image. The discriminator neural network takes input and image pair, and output a probability on if the image is real or fake. <span class="caps">GAN</span> models tend to be small in parameter size. They are are easy to use because sampling only requires running the generator neural network once to generate new samples.</p>
-<p>Training a <span class="caps">GAN</span> model updates the two networks simultaneously. The discriminator loss function keep tracks of how well it could distinguish the fake and the real images given a text-image pair. The generator loss function keeps track of how well it could trick the discriminator. When we feed a batch of text-image pairs to the generators, we get fake images. We can use the text, real image, and fake images to calculate the loss for both of the discriminator and the generator networks, allowing for updates of both network’s parameters.</p>
+<p>Training a <span class="caps">GAN</span> model updates the two networks simultaneously. The discriminator loss function keep tracks of how well it could distinguish the fake and the real images given a text-image pair. The generator loss function keeps track of how well it could trick the discriminator. When we feed a batch of text-image pairs to the generators, we get fake images. We can use the text, real image, and fake images to calculate the loss for both of the discriminator and the generator networks, allowing for updates of both network’s parameters. </p>
+<p>This <a href="https://colab.research.google.com/github/tomsercu/gan-tutorial-pytorch/blob/master/2019-04-23%20GAN%20Tutorial.ipynb#scrollTo=VKPkXWoJlOGa">colab</a> and a <a href="https://pytorch.org/tutorials/beginner/dcgan_faces_tutorial.html">pytorch</a> tutorial nicely illustrate the training step of the adversarial game. See <a href='#radford2016unsupervisedrepresentationlearningdeep' id='ref-radford2016unsupervisedrepresentationlearningdeep-1'>
+    10
+</a> for how <span class="caps">CNN</span> is used for a <span class="caps">GAN</span> model.</p>
 <h6 id="autoregressive-model-dalle">Autoregressive Model (<span class="caps">DALLE</span>)</h6>
 <p>Autoregressive model is made popular by <span class="caps">GPT</span>. An autoregressive model takes a token sequence as input and outputs one more token. The initial sequence and the predicted token form a new token sequence to be fed into the model again. This process repeats itself until the predicted token is a special <span class="caps">STOP</span> token. Training on an autoregressive objective is often called pre-training because raw data could be fed into the model directly. The raw data could be text, image, audio, or video. These data are encoded into token space as sequences, and each token sequences could be converted into multiple subsequences and the next token as the input and expected output for training. This paradigm works extremely well for text, the so called language models.</p>
 <p>We can look at a specific example that deals with image, the dalle model described in <a href='#ramesh2021zeroshottexttoimagegeneration' id='ref-ramesh2021zeroshottexttoimagegeneration-1'>
-    11
+    12
 </a>. It has two major components: the visual encoder-decoder system and the prior over text-image token sequence. The first component is similar to what we discussed in details in the <span class="caps">VQ</span>-<span class="caps">VAE</span> model. For discussion simplicity, we just assume that its encoder-decoder setup follows what is described there. The key difference lies in how dalle estimates the prior. The text is encoded by the <span class="caps">BPE</span> encoder, see <a href='#sennrich2016neuralmachinetranslationrare' id='ref-sennrich2016neuralmachinetranslationrare-1'>
-    14
+    15
 </a>. This encoder is calculated from the corpus and does not require training a neural network. The text token length is padded to a fixed length of 256. The image is encoded by the visual encoder into the codebook space, which has dimension of <span class="math">\(K\)</span>. The text and visual token sequences are concatenated to be used as input in the second component, an autoregressive model over the visual token space. The generating process starts with a text token sequence. It repeatedly generates the next token until the desired image token sequence length is reached. The image token sequence is then decoded into an image by the visual decoder.</p>
 <p>The <span class="caps">BPE</span> encoder is calculated directly from the corpus. This algorithm is fast and efficient. The visual encoder-decoder follows similar steps as discussed <span class="caps">VQ</span>-<span class="caps">VAE</span>. This takes the form of multiple neural networks. The autoregressive neural network is trained on raw text-image pairs. The loss objective is how well the neuralnet predicts the next visual token. This is a technique to indirectly model the full probability distribution of the visual token space. It is an approach that is well demonstrated by <span class="caps">LLM</span> to approximate high dimension probability space. See <a href='#bengio2013generalizeddenoisingautoencodersgenerative' id='ref-bengio2013generalizeddenoisingautoencodersgenerative-3'>
     2
@@ -328,7 +329,7 @@ Let see how we update the parameters of the neuralnet representing <span class="
 </a>, <a href='#chen2017variationallossyautoencoder' id='ref-chen2017variationallossyautoencoder-2'>
     4
 </a>, <a href='#2019gpt2' id='ref-2019gpt2-2'>
-    10
+    11
 </a>. The neural network in this components could be many orders of magnitude larger than the visual encoder system. The majority of the training resources is spent on training for an neural network to estimate a probability distribution.</p>
 <h4 id="discussion">Discussion</h4>
 <p>I have not said much about the internal architectures of the neural networks described in each example. It is a point that I want to make that the role of neural network is not required in theory. Any high dimension estimation methods could work. However, neural networks have become the only meaningful way to approximate high dimensional function in these models. As the writing of this post, these neural networks invariably use <span class="caps">CNN</span> and transformer components. I would expect that the internal architectures will evolve, and we might see new class of internal architectures as soon as in a few years.</p>
@@ -685,16 +686,6 @@ URL: <a href="https://arxiv.org/abs/2011.13456">https://arxiv.org/abs/2011.13456
                             </i>
                         </sup>
                     </a>
-                    <a class="cite-backref" href="#ref-song2021scorebasedgenerativemodelingstochastic-4"
-                       title="Jump back to reference 4">
-                        <sup>
-                            <i>
-                                <b>
-                                    4
-                                </b>
-                            </i>
-                        </sup>
-                    </a>
             </li>
             <li id="lipman2023flowmatchinggenerativemodeling">
                 <span class="reference-text">Lipman, Yaron, Chen, Ricky T.&nbsp;Q., Ben-Hamu, Heli, Nickel, Maximilian, and Le, Matt.
@@ -744,6 +735,22 @@ Generative adversarial networks.
 2014.
 URL: <a href="https://arxiv.org/abs/1406.2661">https://arxiv.org/abs/1406.2661</a>, <a href="https://arxiv.org/abs/1406.2661">arXiv:1406.2661</a>.</span>
                     <a class="cite-backref" href="#ref-goodfellow2014generativeadversarialnetworks-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="radford2016unsupervisedrepresentationlearningdeep">
+                <span class="reference-text">Radford, Alec, Metz, Luke, and Chintala, Soumith.
+Unsupervised representation learning with deep convolutional generative adversarial networks.
+2016.
+URL: <a href="https://arxiv.org/abs/1511.06434">https://arxiv.org/abs/1511.06434</a>, <a href="https://arxiv.org/abs/1511.06434">arXiv:1511.06434</a>.</span>
+                    <a class="cite-backref" href="#ref-radford2016unsupervisedrepresentationlearningdeep-1"
                        title="Jump back to reference 1">
                         <sup>
                             <i>
@@ -816,7 +823,8 @@ URL: <a href="https://arxiv.org/abs/1508.07909">https://arxiv.org/abs/1508.07909
             <aside>
             <nav>
             <ul class="articles-timeline">
-                <li class="previous-article">« <a href="/2023-06-29-nn-beyond-one-gpu" title="Previous: Neural Net Beyond a Single GPU">Neural Net Beyond a Single GPU</a></li>
+                <li class="previous-article">« <a href="/2023-06-25-wing-foiling-tips" title="Previous: First Notes on Wing Foiling - I am still early in the process">First Notes on Wing Foiling <small class="subtitle">I am still early in the process</small></a></li>
+                <li class="next-article"><a href="/2024-08-01-vision-dataset" title="Next: Open Source Vision Datasets">Open Source Vision Datasets</a> »</li>
             </ul>
             </nav>
             </aside>

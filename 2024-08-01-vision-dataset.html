@@ -1,0 +1,938 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="/theme/css/elegant.prod.9e9d5ce754.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="/theme/css/custom.css" media="screen">
+
+        <link rel="dns-prefetch" href="//fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+
+        <meta name="author" content="jin" />
+
+        <meta name="description" content="In the past year I have worked with a few projects that use vision datasets. People might give them fancy names, but in simple terms, they are just datasets with images and videos that are annotated with text descriptions. For the purpose of training large models, projects almost always start …
+" />
+        <meta name="twitter:creator" content="@jinfwhuang">
+        <meta property="og:type" content="article" />
+        <meta name="twitter:card" content="summary">
+
+<meta name="keywords" content=", misc, " />
+
+<meta property="og:title" content="Open Source Vision Datasets "/>
+<meta property="og:url" content="/2024-08-01-vision-dataset" />
+<meta property="og:description" content="In the past year I have worked with a few projects that use vision datasets. People might give them fancy names, but in simple terms, they are just datasets with images and videos that are annotated with text descriptions. For the purpose of training large models, projects almost always start …" />
+<meta property="og:site_name" content="Jin&#39;s Notes" />
+<meta property="og:article:author" content="jin" />
+<meta property="og:article:published_time" content="2024-08-01T00:00:00-07:00" />
+<meta name="twitter:title" content="Open Source Vision Datasets ">
+<meta name="twitter:description" content="In the past year I have worked with a few projects that use vision datasets. People might give them fancy names, but in simple terms, they are just datasets with images and videos that are annotated with text descriptions. For the purpose of training large models, projects almost always start …">
+<meta property="og:image" content="/images/android-chrome-192x192.png" />
+<meta name="twitter:image" content="/images/android-chrome-192x192.png" >
+
+        <title>Open Source Vision Datasets  · Jin&#39;s Notes
+</title>
+        <link rel="shortcut icon" href="/theme/images/favicon.ico" type="image/x-icon" />
+        <link rel="icon" href="/theme/images/apple-touch-icon-152x152.png" type="image/png" />
+        <link rel="apple-touch-icon" href="/theme/images/apple-touch-icon.png"  type="image/png" />
+        <link rel="apple-touch-icon" sizes="57x57" href="/theme/images/apple-touch-icon-57x57.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="/theme/images/apple-touch-icon-72x72.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="76x76" href="/theme/images/apple-touch-icon-76x76.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="/theme/images/apple-touch-icon-114x114.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="120x120" href="/theme/images/apple-touch-icon-120x120.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="144x144" href="/theme/images/apple-touch-icon-144x144.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="152x152" href="/theme/images/apple-touch-icon-152x152.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="152x152" href="/theme/images/apple-touch-icon-180x180.png" type="image/png" />
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+     m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+     })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-207279664-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+
+    </head>
+    <body>
+        <div id="content">
+            <div class="navbar navbar-static-top">
+                <div class="navbar-inner">
+                    <div class="container-fluid">
+                        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </a>
+                        <a class="brand" href="/"><span class=site-name><span style="color:black;">Jin's Notes</span></span></a>
+                        <div class="nav-collapse collapse">
+                            <ul class="nav pull-right top-menu">
+                                <li >
+                                    <a href=
+                                       "/"
+                                    >Home</a>
+                                </li>
+<!--                                <li ><a href="/categories">Categories</a></li>-->
+                                <li ><a href="/tags">Tags</a></li>
+                                <li ><a href="/archives">Archives</a></li>
+                                <li><form class="navbar-search" action="/search" onsubmit="return validateForm(this.elements['q'].value);"> <input type="text" class="search-query" placeholder="Search" name="q" id="tipue_search_input"></form></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid">
+                <div class="row-fluid">
+                    <div class="span1"></div>
+                    <div class="span10">
+<article itemscope>
+<div class="row-fluid">
+    <header class="page-header span10 offset2">
+        <h1>
+            <a href="/2024-08-01-vision-dataset">
+                Open Source Vision Datasets<br/>
+            </a>
+        </h1>
+    </header>
+</div>
+
+<div class="row-fluid">
+    <div class="span2 table-of-content">
+        <nav>
+        <h4>Contents</h4>
+        <div class="toc">
+<ul>
+<li><a href="#image-dataset-before-imagenet">Image Dataset before ImageNet</a></li>
+<li><a href="#image-datasets">Image Datasets</a></li>
+<li><a href="#video-datasets">Video Datasets</a></li>
+<li><a href="#footnotes">Footnotes</a></li>
+</ul>
+</div>
+        </nav>
+    </div>
+    <div class="span8 article-content">
+            
+            <p>In the past year I have worked with a few projects that use vision datasets. People might give them fancy names, but in simple terms, they are just datasets with images and videos that are annotated with text descriptions. For the purpose of training large models, projects almost always start with open source datasets. They are the most accessible, and more likely than not, they will make a large contribution to the full training datasets. There are two common additional sources, commerical (e.g. iStock, Shutterstock, <a href="https://lfi-online.de/en/gallery/">Leixa</a>, <a href="https://www.alamy.com/">Alamy</a>, <a href="https://www.artstation.com/">Artistation</a>, Adobe Stock) and internal datasets (e.g. <span class="caps">JFT</span>-300M, <span class="caps">JFT</span>-3B, <span class="caps">IG</span>-1B). I am compiling most of the well known open source datasets into a few tables to showcase how vision datasets have evolve over time.</p>
+<h4 id="image-dataset-before-imagenet">Image Dataset before ImageNet</h4>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Released</th>
+<th>Size</th>
+<th>Source</th>
+<th>Org</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://www.nist.gov/itl/products-and-services/color-feret-database"><span class="caps">FERET</span></a></td>
+<td>2000</td>
+<td>14k</td>
+<td>curated</td>
+<td><span class="caps">NIST</span></td>
+<td>faces</td>
+</tr>
+<tr>
+<td><a href="https://data.caltech.edu/records/mzrjq-6wc02">caltech-101</a></td>
+<td>2003</td>
+<td>9k</td>
+<td>curated</td>
+<td>Caltech</td>
+<td>objects</td>
+</tr>
+<tr>
+<td><a href="https://vision.ucsd.edu/datasets/extended-yale-face-database-b-b">Yale Face B+</a></td>
+<td>2005</td>
+<td>16k</td>
+<td>curated</td>
+<td>Yale</td>
+<td>faces</td>
+</tr>
+<tr>
+<td>Caltech-256</td>
+<td>2007</td>
+<td>30k</td>
+<td>curated</td>
+<td>Caltech</td>
+<td>objects</td>
+</tr>
+<tr>
+<td>Oxford-5k</td>
+<td>2007</td>
+<td>5k</td>
+<td>curated</td>
+<td>Oxford</td>
+<td>buildings</td>
+</tr>
+<tr>
+<td><span class="caps">LFW</span></td>
+<td>2007</td>
+<td>12k</td>
+<td>web</td>
+<td>U Mass.</td>
+<td>Labeled Faces in the Wild</td>
+</tr>
+<tr>
+<td><span class="caps">PASCAL</span> <span class="caps">VOC</span></td>
+<td>2007</td>
+<td>30k</td>
+<td>curated</td>
+<td>Microsoft</td>
+<td>objects</td>
+</tr>
+<tr>
+<td><a href="https://press.liacs.nl/mirflickr/#sec_introduction"><span class="caps">MIRFLICKR</span>-25K</a></td>
+<td>2008</td>
+<td>25k</td>
+<td>flickr</td>
+<td>Leiden</td>
+<td>objects, concepts</td>
+</tr>
+<tr>
+<td>Tiny Image</td>
+<td>2008</td>
+<td>80m</td>
+<td>web</td>
+<td><span class="caps">MIT</span></td>
+<td>classification</td>
+</tr>
+<tr>
+<td><a href="https://paperswithcode.com/dataset/nus-wide"><span class="caps">NUS</span>-<span class="caps">WIDE</span></a></td>
+<td>2009</td>
+<td>270k</td>
+<td>flickr</td>
+<td><span class="caps">NUS</span></td>
+<td>classification</td>
+</tr>
+<tr>
+<td><a href="https://groups.csail.mit.edu/vision/SUN/hierarchy.html"><span class="caps">SUN</span></a></td>
+<td>2009</td>
+<td>130k</td>
+<td>web</td>
+<td><span class="caps">MIT</span></td>
+<td>environmental scenes, places and the objects</td>
+</tr>
+<tr>
+<td>ImageNet</td>
+<td>2009</td>
+<td>14m</td>
+<td>web</td>
+<td>Princeton</td>
+<td>classification</td>
+</tr>
+</tbody>
+</table>
+<p style="text-align:center;"><strong>Table 1: Early Image Datasets</strong></p>
+<p>ImageNet kick started the revolution of training large, deep neural net model using large amount of image. While image datasets existed before ImageNet, they were much smaller in scale. They tend to cover a narrow, specific purpose. They all involve human curation and annotations. ImageNet’s key differentiator was its size. It was considerably larger than previous dataset. Its labels were still annotated by humans, maintaining its accuracy. There was a curious case of TinyImages because it also had scale, but it did not have nearly the impact that ImageNet had. The key differentiator was that ImageNet retained the image’s full resolution, it used human annotation, and it hosted a very popular benchmark competition.</p>
+<h4 id="image-datasets">Image Datasets</h4>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Released</th>
+<th>Size</th>
+<th>Source</th>
+<th>Org</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>TinyImages</td>
+<td>2008</td>
+<td>80m</td>
+<td>web</td>
+<td><span class="caps">MIT</span></td>
+<td></td>
+</tr>
+<tr>
+<td>ImageNet</td>
+<td>2009</td>
+<td>14m</td>
+<td>web</td>
+<td>Princeton</td>
+<td></td>
+</tr>
+<tr>
+<td><span class="caps">SBU</span> caption</td>
+<td>2011</td>
+<td>1m</td>
+<td>flickr</td>
+<td>Stony Brook</td>
+<td></td>
+</tr>
+<tr>
+<td>flicker 30k</td>
+<td>2014</td>
+<td>31k</td>
+<td>flickr</td>
+<td>Urbana-Champaign</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="https://multimediacommons.wordpress.com/yfcc100m-core-dataset/">yfcc100m</a></td>
+<td>2015</td>
+<td>100m</td>
+<td>flickr</td>
+<td>Yahoo</td>
+<td></td>
+</tr>
+<tr>
+<td>open images</td>
+<td>2016</td>
+<td>9m</td>
+<td>web</td>
+<td>Google</td>
+<td></td>
+</tr>
+<tr>
+<td>JFT300m</td>
+<td>2017</td>
+<td>300m</td>
+<td></td>
+<td>Google</td>
+<td>not public</td>
+</tr>
+<tr>
+<td>cc3m</td>
+<td>2018</td>
+<td>3m</td>
+<td>web</td>
+<td>Google</td>
+<td>Conceptual Captions</td>
+</tr>
+<tr>
+<td><span class="caps">IG</span>-1B</td>
+<td>2019</td>
+<td>1b</td>
+<td>Instagram</td>
+<td>Meta</td>
+<td>not public</td>
+</tr>
+<tr>
+<td><span class="caps">LAION</span> 400m</td>
+<td>2021</td>
+<td>400m</td>
+<td>common crawl</td>
+<td><span class="caps">LAION</span></td>
+<td></td>
+</tr>
+<tr>
+<td>cc12m</td>
+<td>2021</td>
+<td>12m</td>
+<td>web</td>
+<td>Google</td>
+<td></td>
+</tr>
+<tr>
+<td>redcap</td>
+<td>2021</td>
+<td>12m</td>
+<td>reddit</td>
+<td>U Michigan</td>
+<td></td>
+</tr>
+<tr>
+<td><a href="https://github.com/google-research-datasets/wit?tab=readme-ov-file"><span class="caps">WIT</span></a></td>
+<td>2021</td>
+<td>11m</td>
+<td>wikipedia</td>
+<td>Google</td>
+<td></td>
+</tr>
+<tr>
+<td>WebImageText</td>
+<td>2021</td>
+<td>400m</td>
+<td>web</td>
+<td>OpenAI</td>
+<td>- not released<br>- <span class="caps">CLIP</span></td>
+</tr>
+<tr>
+<td><a href="https://research.google/blog/align-scaling-up-visual-and-vision-language-representation-learning-with-noisy-text-supervision/"><span class="caps">ALIGN</span></a></td>
+<td>2021</td>
+<td>1.8b</td>
+<td>web</td>
+<td>Google</td>
+<td>- not released<br>- <span class="caps">ALIGN</span></td>
+</tr>
+<tr>
+<td><span class="caps">JFT3B</span></td>
+<td>2021</td>
+<td>3b</td>
+<td></td>
+<td>Google</td>
+<td>not public</td>
+</tr>
+<tr>
+<td><span class="caps">LAION</span> 5B</td>
+<td>2022</td>
+<td>5b</td>
+<td>common crawl</td>
+<td><span class="caps">LAION</span></td>
+<td></td>
+</tr>
+<tr>
+<td>Coyo 700m</td>
+<td>2022</td>
+<td>700m</td>
+<td>common crawl</td>
+<td>Kakao Brain</td>
+<td></td>
+</tr>
+<tr>
+<td>CommonPool</td>
+<td>2023</td>
+<td>12.8b</td>
+<td>common crawl</td>
+<td><span class="caps">LAION</span></td>
+<td><a href="https://www.datacomp.ai/">DataComp</a></td>
+</tr>
+</tbody>
+</table>
+<p style="text-align:center;"><strong>Table 2: Web Datasets</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Released</th>
+<th>Size</th>
+<th>Source</th>
+<th>Org</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><span class="caps">CIFAR</span>-10</td>
+<td>2009</td>
+<td>60k</td>
+<td>TinyImages</td>
+<td><span class="caps">CIFAR</span></td>
+<td>classification</td>
+</tr>
+<tr>
+<td>ImageNet</td>
+<td>2009</td>
+<td>14m</td>
+<td>web</td>
+<td>Princeton</td>
+<td>classification</td>
+</tr>
+<tr>
+<td><span class="caps">MS</span>-<span class="caps">COCO</span></td>
+<td>2014</td>
+<td>300k</td>
+<td>web</td>
+<td>Microsfot</td>
+<td>- segmentation<br>- context<br>- multiple captions</td>
+</tr>
+<tr>
+<td>Visual Genome</td>
+<td>2015</td>
+<td>100k</td>
+<td>ms-coco<br>yfcc100m</td>
+<td>Stanford</td>
+<td>- relationships<br>- bounding boxes</td>
+</tr>
+<tr>
+<td>Open Images</td>
+<td>2016</td>
+<td>9m</td>
+<td>web</td>
+<td>Google</td>
+<td>- relationships<br>- segmentation<br>- labels</td>
+</tr>
+<tr>
+<td>Hierarchical Paragraphs</td>
+<td>2017</td>
+<td>15k</td>
+<td>visual genome</td>
+<td>Stanford</td>
+<td>- Hierarchical Approach for Generating Descriptive Image Paragraphs<br>- dense paragraph</td>
+</tr>
+<tr>
+<td>Localized Narratives</td>
+<td>2020</td>
+<td>900k</td>
+<td>ms-coco, open images</td>
+<td>Google</td>
+<td>- voice and mouse movement</td>
+</tr>
+<tr>
+<td>Hateful Memes</td>
+<td>2020</td>
+<td>10k</td>
+<td>Getty</td>
+<td>Meta</td>
+<td></td>
+</tr>
+<tr>
+<td>Crossmodal-3600</td>
+<td>2022</td>
+<td>3.6k</td>
+<td>curated</td>
+<td>Google</td>
+<td>36 languages</td>
+</tr>
+<tr>
+<td>Segment Anything</td>
+<td>2023</td>
+<td>11m</td>
+<td>- licenced</td>
+<td>Meta</td>
+<td>- segmentation</td>
+</tr>
+<tr>
+<td><span class="caps">DCI</span></td>
+<td>2023</td>
+<td>7.8k</td>
+<td>segment anything</td>
+<td>Meta</td>
+<td>- Densely Caption Images (<span class="caps">DCI</span>)<br>- multiple rounds of human annotations</td>
+</tr>
+<tr>
+<td>vision2ui</td>
+<td>2024</td>
+<td>3m</td>
+<td>web</td>
+<td>Peking</td>
+<td>ui images</td>
+</tr>
+<tr>
+<td><span class="caps">DOCCI</span></td>
+<td>2024</td>
+<td>15k</td>
+<td>curated</td>
+<td>Google</td>
+<td>- highly detailed description<br>- donated by one person</td>
+</tr>
+<tr>
+<td><span class="caps">IIW</span></td>
+<td>2024</td>
+<td>9k</td>
+<td>curated</td>
+<td>Deepmind</td>
+<td>- ImageInWords<br>- highly detailed<br>- sequentially refined</td>
+</tr>
+</tbody>
+</table>
+<p style="text-align:center;"><strong>Table 3: Curated Datasets</strong></p>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Released</th>
+<th>Size</th>
+<th>Source</th>
+<th>Org</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>clevr</td>
+<td>2017</td>
+<td>100k</td>
+<td>generated images</td>
+<td>stanford, meta</td>
+<td>- visual question answering</td>
+</tr>
+<tr>
+<td><span class="caps">LAION</span>-coco</td>
+<td>2022</td>
+<td>600m</td>
+<td><span class="caps">LAION</span> 2b</td>
+<td>laion</td>
+<td>- recaptioning</td>
+</tr>
+<tr>
+<td><span class="caps">LAION</span>-translate</td>
+<td>2022</td>
+<td>3b</td>
+<td><span class="caps">LAION</span> 5b</td>
+<td>laion</td>
+<td>- machine translation</td>
+</tr>
+<tr>
+<td><span class="caps">COYO</span>-Labeled-300M</td>
+<td>2022</td>
+<td>300m</td>
+<td>coyo</td>
+<td>kakaobrain</td>
+<td>- machine labels<br>- ImageNet labels</td>
+</tr>
+<tr>
+<td>Pixel-Prose</td>
+<td>2023</td>
+<td>16m</td>
+<td>- <span class="caps">LAION</span><br>- cc12m<br>- redcap</td>
+<td>u maryland</td>
+<td>- dense caption<br>- using Google Gemini</td>
+</tr>
+<tr>
+<td>Pick-a-Pic</td>
+<td>2023</td>
+<td>500k</td>
+<td>generated images</td>
+<td>stability ai</td>
+<td>- user prompts<br>- generated images</td>
+</tr>
+<tr>
+<td><a href="https://github.com/SivanDoveh/DAC"><span class="caps">DAC</span></a></td>
+<td>2023</td>
+<td>3m</td>
+<td>cc3m</td>
+<td><span class="caps">IBM</span></td>
+<td>- Dense and Aligned Captions<br>- <span class="caps">LLM</span> expansion<br>- segmented parts</td>
+</tr>
+<tr>
+<td>Recap-Datacomp-1B</td>
+<td>2024</td>
+<td>1.3b</td>
+<td>common-pool</td>
+<td>santa cruz</td>
+<td>- recap with LLaVA</td>
+</tr>
+</tbody>
+</table>
+<p style="text-align:center;"><strong>Table 4: Examples Synthetic Datasets</strong></p>
+<p>Image dataset scales from 10’s million from ImageNet dataset to 10’s billions in recent years. The model and training dataset size increases exponentially because of transformers-based deep learning models. Companies such as Facebook and Google first experimented with internal datasets that are in the 100s million to billions ranges (e.g. <span class="caps">IG</span>-1B and <span class="caps">JFT</span>-300m). It took a few years for the open source community to catch up. <span class="caps">LAION</span> adopted similar automatic scraping and filtering techniques to curate <span class="caps">LAION</span>-400m, and later on with <span class="caps">LAION</span> 2B, and Common-Pool. These images became the backbone of data sources for all image generators and multimodal models. </p>
+<p>The latest dataset is the 12B dataset Common-Pool. We are probably reaching the limit through scraping the common crawl archive. It is possible that we get to 100 billion, but in my opinion, that is the upper bound of the public domain. There are other data sources that could break this scaling limit. Social media platform such as Instagram has 100s of billion of posts. The total image counts in personal photo archive (e.g. Google photos, Apple photos) should be well into the trillion level, and they contain much higher quality photos. For example, <span class="caps">DOCCI</span> is an example where one researcher is able to curate more than 10,000 high quality images in a few years. IoT devices could be a rich source of image data as well.</p>
+<p>The quality and the diversity of the images in these datasets resembles the content of <span class="caps">LAION</span>-400m. This is evidenced by how similar generated images look and feel across different the latest models and products. The content of the datasets such as yfcc100m, <span class="caps">LAION</span>-2B, Common-Pool, and Coyo are remarkably similar. One could extract similar subsets from those datasets. For example, if one were to extract a subset of images that filters for humans, aesthetic, size, aspect ratio, and text-image alignment, the filtered subset have very similar images. I suspect that is just the nature of images in public digital domain. It is a reflection of the evolution of digital media. More likely than not, the Google and Facebook private datasets look similar to the open source, web-scraped versions.</p>
+<p>The text descriptions are still in the middle of active development. We have a few varieties. The first generation of text is merely for classification. They are objects and concetps. Examples are TinyImages, ImageNet, and <span class="caps">SUN</span>. The second variety is description scraped from the <code>alt</code> attribute in html <code>img</code> tag. This description tends to be short, noisy, and could contain irrelevant texts. The third variety is typified by <span class="caps">DCI</span>, <span class="caps">IIW</span>, and <span class="caps">DOCCI</span>. In the last couple of years, it is all about vision-language models. That means the text is desired to be general and contain as much details as possible. The descriptions in <span class="caps">DCI</span>, <span class="caps">IIW</span>, and <span class="caps">DOCCI</span> are human annotated through multiple rounds. They are impossibly detailed. They are purposely and painstakingly annotated to include a lot of details. They are time consuming to create. These datasets are rare and small, in the 10k range<sup id="sf-2024-08-01-vision-dataset-1-back"><a href="#sf-2024-08-01-vision-dataset-1" class="simple-footnote" title="It would be interesting to see a team to devote a lot of human resources to create a 500k dataset with such detailed description and use that to train a captioning model. That is one experimental design that no one has attempted to push the limit of language-vision models.">1</a></sup>. Fourth type is recaptioning. This is a big trend. Most of the synthetic data focuses on recaptioning. A lot of the image, video, and multimodal model training dataset choose to use recaptioned descriptions over raw texts <sup id="sf-2024-08-01-vision-dataset-2-back"><a href="#sf-2024-08-01-vision-dataset-2" class="simple-footnote" title="Model interdependence is a fascinating phenomenon that is not widely discussed yet. Most generated outputs look remarkably similar. Their architectures are similar. Their training data are similar. They also use a lot of the same underlying models to process data or create synthetic data. Recaptioning is the most common such examples. From a information theoretical standpoint, the models all contain knowledge. It is not surprising their results are similar. It is almost tempting that they will invariably converge as models get larger and become more capable, unless they contain different starting information.">2</a></sup>.</p>
+<h4 id="video-datasets">Video Datasets</h4>
+<table>
+<thead>
+<tr>
+<th>Name</th>
+<th>Released</th>
+<th>Size</th>
+<th>Source</th>
+<th>Org</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ucf-101</td>
+<td>2012</td>
+<td>13k clips</td>
+<td>youtube</td>
+<td>U of Central Florida</td>
+<td>classification</td>
+</tr>
+<tr>
+<td>activity-net</td>
+<td>2015</td>
+<td>30k videos</td>
+<td>youtube</td>
+<td><span class="caps">KAUST</span></td>
+<td>classification</td>
+</tr>
+<tr>
+<td>kinetics 600</td>
+<td>2018</td>
+<td>500k clips</td>
+<td>youtube</td>
+<td>Deepmind</td>
+<td>classification</td>
+</tr>
+<tr>
+<td>ssv2</td>
+<td>2018</td>
+<td>220k clips</td>
+<td>crowd sourced</td>
+<td>Qualcomm</td>
+<td>- action recognition<br>- video understanding</td>
+</tr>
+<tr>
+<td>how-to-100m</td>
+<td>2019</td>
+<td>1.2m videos, 136m clips</td>
+<td>youtube</td>
+<td>Deepmind</td>
+<td>- instruction videos</td>
+</tr>
+<tr>
+<td>movienet</td>
+<td>2020</td>
+<td>1000 movies</td>
+<td></td>
+<td><span class="caps">CUHK</span></td>
+<td></td>
+</tr>
+<tr>
+<td>WebVid-10M</td>
+<td>2021</td>
+<td>10m clips</td>
+<td>Shutterstock</td>
+<td>Oxford</td>
+<td>- low resolution<br>- poor visual<br>- watermarks</td>
+</tr>
+<tr>
+<td>merlot</td>
+<td>2021</td>
+<td>6m videos, 180 m clips</td>
+<td>youtube</td>
+<td>Allen Institute for <span class="caps">AI</span></td>
+<td>- aim to be generic, diverse<br>- <span class="caps">YT</span>-Temporal-180m</td>
+</tr>
+<tr>
+<td>celebv-hq</td>
+<td>2022</td>
+<td>15k videos</td>
+<td>youtube</td>
+<td>Nanyang Technological University</td>
+<td>- focus on humans</td>
+</tr>
+<tr>
+<td>hd-vila-100m</td>
+<td>2022</td>
+<td>3.3m, 100m</td>
+<td>youtube</td>
+<td>Microsoft</td>
+<td>- aim to be diverse</td>
+</tr>
+<tr>
+<td><a href="https://github.com/antoyang/VidChapters">VidChapters-7M</a></td>
+<td>2023</td>
+<td>817k videos, 7m chapters</td>
+<td>youtube</td>
+<td>Meta</td>
+<td></td>
+</tr>
+<tr>
+<td><span class="caps">HD</span>-<span class="caps">VG</span>-130M</td>
+<td>2024</td>
+<td>1.5m, 130m</td>
+<td>youtube</td>
+<td>Microsoft</td>
+<td></td>
+</tr>
+<tr>
+<td>panda 70m</td>
+<td>2024</td>
+<td>3.3m, 70m</td>
+<td><span class="caps">HD</span>-<span class="caps">VILA</span>-100M</td>
+<td>Snap</td>
+<td>- recap</td>
+</tr>
+<tr>
+<td>merlot reserve</td>
+<td>2024</td>
+<td>20m</td>
+<td>youtube</td>
+<td>Allen Institute for <span class="caps">AI</span></td>
+<td><span class="caps">YT</span>-Temporal-1B</td>
+</tr>
+</tbody>
+</table>
+<p style="text-align:center;"><strong>Table 4: Examples Synthetic Datasets</strong></p>
+<p>Almost all of the open source video dataset use Youtube as the data source. All the significant datasets are of this variety. Their creation process is simple. They scrape youtube ids based on some criteria. For example, celebv-hq focuses on celebrity. How-to-100m focuses how-to videos. <span class="caps">HD</span>-Vila and Merlot datasets attempt to cover diverse topics. These youtube videos are cut to 5 to 20 seconds short clips, usually cut on the scene changing boundaries. Different dataset might apply additional filtering, processing of metadata, and recaptioning. Youtube is the singularly important data source for video dataset. If Google were to pursue serious law suits against major <span class="caps">AI</span> model developers and open source researchers in the near future, it could impact many research projects and video <span class="caps">AI</span> products. There are alternative sources of videos, such as movies, broadcast studio archives, short video platforms, and alternative video platforms. Still, youtube is king.</p>
+<p>In theory, video datasets should be orders of magnitude larger than image datasets. In practice, open source video datasets are comparable to image dataset, or slightly smaller. Each youtube video is roughly <span class="caps">30MB</span>. The largest video dataset is about <span class="caps">500TB</span> (Merlot Reserve). This comparable to <span class="caps">LAION</span> 2B. This is partly due to the compute resources those dataset creation teams have access to. Large industrial labs such as OpenAI are certainly working to create datasets an order of magnitude larger than these. It also indicates that video dataset is still in its early stages. Unlike image datasets, I expect video datasets to dramatically increase its scale in the coming years, if not the coming months. Video models should still have a lot of room to grow. It is exciting to see what kind of video editing will be enabled by the next generation of video models in the next few years.</p>
+<hr>
+<h4 id="footnotes">Footnotes</h4>
+<!-- # Tooling
+
+- phash
+  - A perceptual hash is a fingerprint of a multimedia file derived from various features from its content. Unlike cryptographic hash functions which rely on the avalanche effect of small changes in input leading to drastic changes in the output, perceptual hashes are "close" to one another if the features are similar.
+  - https://www.phash.org/
+
+
+- https://pypi.org/project/img2dataset/
+ --><ol class="simple-footnotes"><li id="sf-2024-08-01-vision-dataset-1">It would be interesting to see a team to devote a lot of human resources to create a 500k dataset with such detailed description and use that to train a captioning model. That is one experimental design that no one has attempted to push the limit of language-vision models. <a href="#sf-2024-08-01-vision-dataset-1-back" class="simple-footnote-back">↩</a></li><li id="sf-2024-08-01-vision-dataset-2">Model interdependence is a fascinating phenomenon that is not widely discussed yet. Most generated outputs look remarkably similar. Their architectures are similar. Their training data are similar. They also use a lot of the same underlying models to process data or create synthetic data. Recaptioning is the most common such examples. From a information theoretical standpoint, the models all contain knowledge. It is not surprising their results are similar. It is almost tempting that they will invariably converge as models get larger and become more capable, unless they contain different starting information. <a href="#sf-2024-08-01-vision-dataset-2-back" class="simple-footnote-back">↩</a></li></ol>
+
+
+
+             
+ 
+            
+            
+            
+
+
+
+
+
+
+
+
+            <hr/>
+            <script src="https://utteranc.es/client.js"
+                    repo="jinfwhuang/jinfwhuang.github.io"
+                    issue-term="pathname"
+                    label="user-comments"
+                    theme="github-light"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+
+            <hr/>
+            <aside>
+            <nav>
+            <ul class="articles-timeline">
+                <li class="previous-article">« <a href="/2023-10-17-gen-models" title="Previous: The Role of Neural Networks in Generative Models">The Role of Neural Networks in Generative Models</a></li>
+            </ul>
+            </nav>
+            </aside>
+        </div>
+        <section id="article-sidebar" class="span2">
+            <h4>Published</h4>
+            <time itemprop="dateCreated" datetime="2024-08-01T00:00:00-07:00">Thu 01 August 2024</time>
+            <!--             <h4>Category</h4>
+            <a class="category-link" href="/categories#misc-ref">misc</a>
+ -->
+<h4>Contact</h4>
+<div id="sidebar-social-link">
+    <a href="https://twitter.com/jinfwhuang" title="Twiiter" target="_blank" rel="nofollow noopener noreferrer">
+        <svg xmlns="http://www.w3.org/2000/svg" aria-label="Twitter" role="img" viewBox="0 0 512 512"><rect width="512" height="512" rx="15%" fill="#1da1f3"/><path fill="#fff" d="M437 152a72 72 0 0 1-40 12 72 72 0 0 0 32-40 72 72 0 0 1-45 17 72 72 0 0 0-122 65 200 200 0 0 1-145-74 72 72 0 0 0 22 94 72 72 0 0 1-32-7 72 72 0 0 0 56 69 72 72 0 0 1-32 1 72 72 0 0 0 67 50 200 200 0 0 1-105 29 200 200 0 0 0 309-179 200 200 0 0 0 35-37"/></svg>
+    </a>
+    <a href="https://www.linkedin.com/in/jinfwhuang" title="LinkedIn" target="_blank" rel="nofollow noopener noreferrer">
+        <svg xmlns="http://www.w3.org/2000/svg" aria-label="LinkedIn" role="img" viewBox="0 0 512 512" fill="#fff"><rect width="512" height="512" rx="15%" fill="#0077b5"/><circle cx="142" cy="138" r="37"/><path stroke="#fff" stroke-width="66" d="M244 194v198M142 194v198"/><path d="M276 282c0-20 13-40 36-40 24 0 33 18 33 45v105h66V279c0-61-32-89-76-89-34 0-51 19-59 32"/></svg>
+    </a>
+</div>
+            
+
+
+
+
+
+            
+
+
+
+
+
+        </section>
+</div>
+</article>
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe.
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides.
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo https://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>                    </div>
+                    <div class="span1"></div>
+                </div>
+            </div>
+        </div>
+<!--        <footer>
+
+    <div>
+        <span class="site-name"><span style="color:black;">Jin's Notes</span></span> - the hardest part is taking the first step
+    </div>
+
+
+
+    <div id="fpowered">
+        Powered by: <a href="http://getpelican.com/" title="Pelican Home Page" target="_blank" rel="nofollow noopener noreferrer">Pelican</a>
+        Theme: <a href="https://elegant.oncrashreboot.com/" title="Theme Elegant Home Page" target="_blank" rel="nofollow noopener noreferrer">Elegant</a>
+    </div>
+</footer>-->
+            <script src="//code.jquery.com/jquery.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+        <script src="/theme/js/elegant.prod.9e9d5ce754.js"></script>
+        <script>
+            function validateForm(query)
+            {
+                return (query.length > 0);
+            }
+        </script>
+
+
+
+
+    <script>
+    (function () {
+        if (window.location.hash.match(/^#comment-\d+$/)) {
+            $('#comment_thread').collapse('show');
+        }
+    })();
+    window.onhashchange=function(){
+        if (window.location.hash.match(/^#comment-\d+$/))
+            window.location.reload(true);
+    }
+    $('#comment_thread').on('shown', function () {
+        var link = document.getElementById('comment-accordion-toggle');
+        var old_innerHTML = link.innerHTML;
+        $(link).fadeOut(200, function() {
+            $(this).text('Click here to hide comments').fadeIn(200);
+        });
+        $('#comment_thread').on('hidden', function () {
+            $(link).fadeOut(200, function() {
+                $(this).text(old_innerHTML).fadeIn(200);
+            });
+        })
+    })
+</script>
+
+    </body>
+    <!-- Theme: Elegant built for Pelican
+        License : MIT -->
+
+</html>

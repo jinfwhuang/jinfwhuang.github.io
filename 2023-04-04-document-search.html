@@ -153,7 +153,7 @@
     1
 </a>). <span class="caps">LLM</span>-based embeddings, e.g. <a href="https://platform.openai.com/docs/api-reference/embeddings">OpenAI embedding</a>, have lengths in the 1000s.</p>
 <h4 id="cross-encoding-ranking-model">Cross Encoding Ranking Model</h4>
-<p>Both sparse and dense vector models are representation-based. They separate the computations between indexing and query. Cross-encoding requires both the query and the document to be provided as input to calculate a relevance score. They are also called interaction-based models. It is possible to use <span class="caps">LSTM</span> or Conv-net to encode the query-document pair. The biggest gain has been using pre-trained <span class="caps">LLM</span> as the starting point for model training. The query and document are concatenated as the input. An <span class="caps">LLM</span> encodes the input and is trained as a binary classification model. Once trained on a labelled dataest, the model could be used to give a relevance score to any query-document pair. See <a href='#nogueira2020passage' id='ref-nogueira2020passage-1'>
+<p>Both sparse and dense vector models are representation-based. They separate the computations between indexing and query. Cross-encoding requires both the query and the document to be provided as input to calculate a relevance score. They are also called interaction-based models. It is possible to use <span class="caps">LSTM</span> or  ConvNet to encode the query-document pair. The biggest gain has been using pre-trained <span class="caps">LLM</span> as the starting point for model training. The query and document are concatenated as the input. An <span class="caps">LLM</span> encodes the input and is trained as a binary classification model. Once trained on a labelled dataest, the model could be used to give a relevance score to any query-document pair. See <a href='#nogueira2020passage' id='ref-nogueira2020passage-1'>
     6
 </a> and <a href='#nogueira2019multistage' id='ref-nogueira2019multistage-1'>
     7
@@ -466,7 +466,6 @@ Beir: a heterogenous benchmark for zero-shot evaluation of information retrieval
 <ul class="related-posts-list">
 <li><a href="/2023-04-27-open-source-llm" title="Open Source LLMs">Open Source LLMs</a></li>
 <li><a href="/2023-06-04-domain-specific-ai-assistant" title="Domain Specific AI Assistants">Domain Specific AI Assistants</a></li>
-<li><a href="/2023-06-29-nn-beyond-one-gpu" title="Neural Net Beyond a Single GPU">Neural Net Beyond a Single GPU</a></li>
 </ul>
 <hr />
 </section>
@@ -488,7 +487,7 @@ Beir: a heterogenous benchmark for zero-shot evaluation of information retrieval
             <h4>Tags</h4>
             <ul class="list-of-tags tags-in-article">
                 <li><a href="/tags#ai-ref">ai
-                    <span class="superscript">4</span>
+                    <span class="superscript">3</span>
 </a></li>
                 <li><a href="/tags#llm-ref">LLM
                     <span class="superscript">3</span>
