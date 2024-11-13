@@ -1,0 +1,413 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="/theme/css/elegant.prod.9e9d5ce754.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="/theme/css/custom.css" media="screen">
+
+        <link rel="dns-prefetch" href="//fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+
+        <meta name="author" content="jin" />
+
+        <meta name="description" content="One of the most underrated changes that the recent AI models made possible is data transformation for unstructured data. For the purpose of our discussion, we loosely say that structured data is tabular data, and unstructured data is binary blobs. For example, free form texts, images, and audios are unstructured …
+" />
+        <meta name="twitter:creator" content="@jinfwhuang">
+        <meta property="og:type" content="article" />
+        <meta name="twitter:card" content="summary">
+
+<meta name="keywords" content="ai, misc, " />
+
+<meta property="og:title" content="Analytics for Binary Blobs "/>
+<meta property="og:url" content="/2024-10-28-binary-storage-engine" />
+<meta property="og:description" content="One of the most underrated changes that the recent AI models made possible is data transformation for unstructured data. For the purpose of our discussion, we loosely say that structured data is tabular data, and unstructured data is binary blobs. For example, free form texts, images, and audios are unstructured …" />
+<meta property="og:site_name" content="Jin&#39;s Notes" />
+<meta property="og:article:author" content="jin" />
+<meta property="og:article:published_time" content="2024-10-28T00:00:00-07:00" />
+<meta name="twitter:title" content="Analytics for Binary Blobs ">
+<meta name="twitter:description" content="One of the most underrated changes that the recent AI models made possible is data transformation for unstructured data. For the purpose of our discussion, we loosely say that structured data is tabular data, and unstructured data is binary blobs. For example, free form texts, images, and audios are unstructured …">
+<meta property="og:image" content="/images/android-chrome-192x192.png" />
+<meta name="twitter:image" content="/images/android-chrome-192x192.png" >
+
+        <title>Analytics for Binary Blobs  · Jin&#39;s Notes
+</title>
+        <link rel="shortcut icon" href="/theme/images/favicon.ico" type="image/x-icon" />
+        <link rel="icon" href="/theme/images/apple-touch-icon-152x152.png" type="image/png" />
+        <link rel="apple-touch-icon" href="/theme/images/apple-touch-icon.png"  type="image/png" />
+        <link rel="apple-touch-icon" sizes="57x57" href="/theme/images/apple-touch-icon-57x57.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="/theme/images/apple-touch-icon-72x72.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="76x76" href="/theme/images/apple-touch-icon-76x76.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="/theme/images/apple-touch-icon-114x114.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="120x120" href="/theme/images/apple-touch-icon-120x120.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="144x144" href="/theme/images/apple-touch-icon-144x144.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="152x152" href="/theme/images/apple-touch-icon-152x152.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="152x152" href="/theme/images/apple-touch-icon-180x180.png" type="image/png" />
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+     m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+     })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-207279664-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+
+    </head>
+    <body>
+        <div id="content">
+            <div class="navbar navbar-static-top">
+                <div class="navbar-inner">
+                    <div class="container-fluid">
+                        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </a>
+                        <a class="brand" href="/"><span class=site-name><span style="color:black;">Jin's Notes</span></span></a>
+                        <div class="nav-collapse collapse">
+                            <ul class="nav pull-right top-menu">
+                                <li >
+                                    <a href=
+                                       "/"
+                                    >Home</a>
+                                </li>
+<!--                                <li ><a href="/categories">Categories</a></li>-->
+                                <li ><a href="/tags">Tags</a></li>
+                                <li ><a href="/archives">Archives</a></li>
+                                <li><form class="navbar-search" action="/search" onsubmit="return validateForm(this.elements['q'].value);"> <input type="text" class="search-query" placeholder="Search" name="q" id="tipue_search_input"></form></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid">
+                <div class="row-fluid">
+                    <div class="span1"></div>
+                    <div class="span10">
+<article itemscope>
+<div class="row-fluid">
+    <header class="page-header span10 offset2">
+        <h1>
+            <a href="/2024-10-28-binary-storage-engine">
+                Analytics for Binary Blobs<br/>
+            </a>
+        </h1>
+    </header>
+</div>
+
+<div class="row-fluid">
+        <div class="span8 offset2 article-content">
+            
+            <p>One of the most underrated changes that the recent <span class="caps">AI</span> models made possible is data transformation for unstructured data. For the purpose of our discussion, we loosely say that structured data is tabular data, and unstructured data is binary blobs. For example, free form texts, images, and audios are unstructured. Before the recent transformer base LLMs and vision-language models, extracting useful information from unstructured data requires purposely engineered pipelines. With the power of the latest model, many data points could be extracted by selecting a model and setting a prompt. For example, say we want to get the key financial metrics (e.g. profit margin, revenue growth, and debt ratio) from annual reports. In the past, this is a full pipeline that is custom built and validated. It is not something that could be done in a few hours.It is now conceivable that this is just a <span class="caps">SQL</span> query that only requires a few minutes to write.</p>
+<p>Let do a short short review of analytics databases. I had an old <a href="/2020-02-03-analytics-database">post</a> on this topic that discussed the realtime and batch mode divide, and at the time, I implicitly ignored unstructured data because established analytics solution do not handle binary blobs. In this note, we focus on structured vs. unstructured data. To simplify discussion, I also ignore analytics solutions tailored to transactions, caching, and streaming processing, e.g. mysql, redis, kafka. For structured data, the most popular options are Hive, Iceberg, Delta Lake, Snowflake. For unstructured data, they are almost always stored in object store as S3, Google Cloud Storage, or Azure Object Store. Analytics databases are designed to store and process large amount of structured data. Data is a table where each column has a defined type such as text, number, or boolean. Each table scales to trillions of rows or beyond. A single table could have petabytes or data<sup id="sf-2024-10-28-binary-storage-engine-1-back"><a href="#sf-2024-10-28-binary-storage-engine-1" class="simple-footnote" title="In theory, it could go up to exabyte, but I have not personally use these solutions at that scale.">1</a></sup>. The query pattern is something logically equivalent to <span class="caps">SQL</span> statements. Query execution is equivalent to batch processing. The most popular query engines are MapReduce, Tez, SparkSQL, Presto, Flink, and Ray. Most databases support a variety of these engines. For example, Hive, Iceberg, and Delta Lake all support Presto, Flink, and Spark. In many ways, these solutions are similar<sup id="sf-2024-10-28-binary-storage-engine-2-back"><a href="#sf-2024-10-28-binary-storage-engine-2" class="simple-footnote" title="I don’t really buy the marketing hype of lakehouse. Hive was the standard open source data warehouse solution for many years. Marketing folks coined the term lakehouse to differentiate the new comers (e.g. Iceberg, Delta Lake, and Hudi) from existing data analytics solution, which used to be called data warehouse. To me, Iceberg is a straight-forward next iteration of Hive, and it is solving mostly the same set of problems with additional optimizations. It is silly to create a new category because the problem statements have not changed.">2</a></sup>.</p>
+<p>I will use Iceberg as an example to illustrate the key components a data analytics solution. A workin Iceberg deployment has three components: data, metadata, and query engine. Data are stored as parquet files in an distributed file system or an object store. A table’s <a href="https://www.dremio.com/resources/guides/apache-iceberg-an-architectural-look-under-the-covers/">metadata layer</a> is managed by metadata files, which manage manifest files, which manage manifest lists, which manage data files. All four of these file types (metadata files, manifest files, manifest list, and parquet files) contain some sort of hints, e.g. partitions, column information, value ranges or bloom filters, that are use for skipping data<sup id="sf-2024-10-28-binary-storage-engine-3-back"><a href="#sf-2024-10-28-binary-storage-engine-3" class="simple-footnote" title="A query is able to first take advantage of the various metadata available to filter out unnecessary data files to use. Finding files is just working through the metadata files, it is done locally and does not involve a distributed compute engine; this is known as scan planning. For example, manifest list contains value ranges, manifest files has column level stats, and parquet file has row groups, each row group has column level stats.">3</a></sup>. Query execution first filters data and then apply some compute actions. They are translated to a distributed compute engine such Spark and Presto. 
+</p><figure>
+<img width="50%" src="images/2024-10-28/iceberg-metadata.jpeg" style="display: block; margin-left: auto; margin-right: auto;">
+<figcaption align="center">
+Iceberg Table Internals
+</figcaption>
+</figure>
+Other solutions such as Snowflake, Delta Lake, Hive are similar in broad strokes. For example, the key difference between Hive and Iceberg is how metadata is organized. Hive’s metadata is much simpler than Iceberg. A Hive table metadata only keep tracks of what partition is registered. Each partition corresponds to a S3 dir. Iceberg has much more design around metadata.<p></p>
+<p>Object stores do not offer analytics capabilities. Object stores could be viewed as key-value store or a distributed file system. When it is viewed as a key-value store, we should not be confused it as a low latency distributed key-value store in the vein of dynamodb, aerospike, or distributed Redis. Object store is not meant to be used for read/write 10 bytes object millions of times per second. Another way to look at an object store is that it is a horizontally scaled out file system. In fact, most of the previously mentioned analytics database use a object store to as the storage backend for data files. Object store is extremely simple yet powerful. It is a foundational component of almost all modern data platforms. However, in order to get useful information out of billion or trillion of binary blobs stored in object store, we usually have to build custom data pipelines to extract information.</p>
+<p>In the past, we only bother to run queries on structured metadata because it is expensive to extract useful information from unstructured data. It requires a lot of validation to get each extraction to be sufficiently high fidelity. With <span class="caps">VLM</span> and <span class="caps">LLM</span>, each new question is literally just another question written in plain English. Working with unstructured data is no longer restricted to teams with expensive engineering talents. Anyone should be empowered to ask meaningful questions and be given the ability to execute those queries. Anyone who is willing to execute <span class="caps">SQL</span> had been able to get meaning out of structured data. The data transformation from unstructured from structured should be just as easy <sup id="sf-2024-10-28-binary-storage-engine-4-back"><a href="#sf-2024-10-28-binary-storage-engine-4" class="simple-footnote" title="Furthermore, it is becoming more and more robust that we could create SQL queries just by prompting. The next iteration is clearly that using plain English, we could create datasets or reports by just using English for both structured and unstructured data.">4</a></sup>.</p>
+<p>The most common solution to get analytics from unstructured data is to write one-off custom batch jobs. The batch jobs are written as distributed data processing programs, sometimes run directly on VMs, on top of kubernetes, or integrated with distribute compute frame work like Spark or Ray. The job create new structured data, which could combined with existing tables to generate reports or new datasets to be used for training or other data science needs. For example, a team has a trillion of binary objects, e.g. texts or images. The team continually adds new data points because the team has new documents. The team continually extracts information, e.g. new questions are asked about the text documents or the images. The newly extracted metadata is combined with existing metadata, all expressed in <span class="caps">SQL</span>, to generate new reports or training datasets. A reasonable solution is to use Iceberg to store metadata and S3 to store binary blobs. When new data comes in, they go through a data processing pipeline, which is its own independent system. The processing pipelines generate metadata and ingest into Iceberg. To ask new questions about the documents, we create new processing pipelines to generate additional metadata to be merged or append to IceBerg. We run <span class="caps">SQL</span> queries in Iceberg to generate reports or training datasets<sup id="sf-2024-10-28-binary-storage-engine-5-back"><a href="#sf-2024-10-28-binary-storage-engine-5" class="simple-footnote" title="The most popular framework to build these processing pipeline is Ray, especially if GPU-heavy models are used frequently. It could be done with Spark. It is also not uncommon to write distributed jobs from scratch combining with simple job queues backed by Redis or MySQL.">5</a></sup>. This kind of system is functional but not ideal. The processing pipeline needs be built, maintained, and execute. It would require dedicated engineering know-how. It also slows down iteration. Multiple components have to be executed and monitored separately. Data users such as business analysts, data scientists, <span class="caps">AI</span> researchers who are not also pipeline builders could learn to use the system by ways of better documentations or trainings. But in practice, it invariably requires cycles by someone with deep knowledge of the engineering pipelines.</p>
+<p>Snowflake is the one of the few solutions that attempts to give out-of-the-box analytics capability to <a href="https://docs.snowflake.com/en/user-guide/unstructured-intro">unstructured data</a>. It allows users to write User Defined Functions to process binary objects. However, it still feels that its unstructured data processing capability is an independent feature from its core <span class="caps">SQL</span> analytics. It does not integrate key-value object references directly with its tabular table. <span class="caps">UDF</span> is defined in Java. It is hard to translate <span class="caps">AI</span> models into <span class="caps">SQL</span> functions.</p>
+<p>I would want to see an analytics solution that integrates tabular metadata with arbitrary binary blobs. The user experience goes something like the following. Data storage is table that supports both structured data and binary blobs. For example, we have a table of text documents and images. We have 10 columns of metadata for each object. There is a column that references its binary data as a S3 key. Users want to create a new datasets that has 3 columns from the table and two additional columns extracted from the binary blobs. They could write a statement similar to</p>
+<div class="highlight"><pre><span></span><span class="k">CREATE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">are_people_surfing</span><span class="p">(</span><span class="n">file</span><span class="w"> </span><span class="nb">BINARY</span><span class="p">)</span>
+<span class="k">RETURNS</span><span class="w"> </span><span class="nb">BOOLEAN</span>
+<span class="p">...</span>
+
+<span class="k">CREATE</span><span class="w"> </span><span class="k">FUNCTION</span><span class="w"> </span><span class="n">is_there_kid_in_the_image</span><span class="p">(</span><span class="n">file</span><span class="w"> </span><span class="nb">BINARY</span><span class="p">)</span>
+<span class="k">RETURNS</span><span class="w"> </span><span class="nb">BOOLEAN</span>
+<span class="p">...</span>
+
+<span class="k">SELECT</span><span class="w"> </span><span class="n">col1</span><span class="p">,</span><span class="w"> </span><span class="n">col2</span><span class="p">,</span><span class="w"> </span><span class="n">col3</span><span class="p">,</span><span class="w"> </span><span class="n">are_people_surfing</span><span class="p">(</span><span class="n">img_col</span><span class="p">),</span><span class="w"> </span><span class="n">is_there_kid_in_the_image</span><span class="p">(</span><span class="n">img_col</span><span class="p">)</span><span class="w"> </span><span class="k">FROM</span><span class="w"> </span><span class="k">table</span>
+</pre></div>
+
+
+<p>It might looks like it is only an incremental change from existing analytics solutions such as Snowflake and Iceberg. The key components are: an unified view for both structured and unstructured, enabling analytics of binary blobs at query time, and integrating <span class="caps">LLM</span> and <span class="caps">VLM</span> models in <span class="caps">SQL</span> queries. An out-of-the-box data analytics solution with these features would reduce the engineering overhead for many data engineering teams<sup id="sf-2024-10-28-binary-storage-engine-6-back"><a href="#sf-2024-10-28-binary-storage-engine-6" class="simple-footnote" title="Let us sketch out how to build this solution with popular open source components as of the writing of this note. We pick S3, IceBerg, and Ray to be the backbones. Iceberg is the metadata store. S3 could be viewed as an internal component of Iceberg. Ray is the compute engine. The main reason to choose Ray here is that we want to be able to integrate AI models and SQL executions. As of the writing of this blog, Ray dataset does not provide a SQL API for writing data transformations. We need to build three major components to get to a working version: translating SQL statements into Ray Dataset execution and connecting models to user defined SQL functions.">6</a></sup>. Furthermore, it will empower many data users to directly work with data by asking plain English questions. I have personally seen many different teams have this need and devoted sizable engineering resources to fulfill that need. These teams have a lot of unstructured data would are cumbersome to use with existing out-of-the-box solutions.</p>
+<hr>
+<h4 id="footnotes">Footnotes</h4>
+<!--
+
+- [Iceberg](https://www.dremio.com/resources/guides/apache-iceberg-an-architectural-look-under-the-covers/) under the covers
+- Iceberg [table spec](https://iceberg.apache.org/spec/#primitive-types)
+
+
+- [Iceberg and S3](https://medium.com/inquery-data/registering-s3-files-into-apache-iceberg-tables-without-the-rewrites-3c087cb01658)
+
+
+
+#### Unsorted notes
+
+
+Batch
+- Hive with MapReduce, Tez, SparkSQL, Presto, Flink, 
+- Iceberg
+- Hudi
+- Delta Lake
+- Snowflake
+
+Near real-time:
+- Doris
+- Clickhouse
+- Druid
+- Elasticsearch
+
+
+# Hudi
+- Similar to iceberg
+
+
+# Delta Lake
+A table includes:
+- data files
+- Transaction Log
+
+- BigLake
+- Snowflake and unstructured data
+- S3 and Lake Formation
+
+
+# Snowflake
+- Similar to Iceberg or Hive. In fact, snowflake offers iceberg tables. It just optimizes the queries and management.
+
+- snowflake architecture: https://nimbusintelligence.com/2023/10/snowflake-architecture/
+
+
+## Take Clickhouse as an example on how it enables near-realtime query.
+
+Storage format is optimized for query. 
+  - Specialized indices 
+    - sorted based on primary key
+    - multiple sorted orders via projections
+    - skip indices. The basic structure is that data is stored in blocks called granule, and each granule has some metadata to support data skipping, e.g. minmax or bloomfilter. This is clever way to quickly filtering out unnecessary data
+    - Data is stored locally , co-location.
+
+Regardless of how well the database is constructed, it is near real-time at best. If a query has to crunch through a lot of data, say 100 terabytes of data, for answers, that 100 TB of data has to be loaded, filtered, and aggregated to generate an answer. Some queries could be fast, but it is always possible to encounter queries that will run slow. There is no magic solution. In order to get near real-time performance, the supported queries have to be well crafted to respect the pre-computed indices.
+
+
+Typically text-heavy, such as form responses and social media conversations, unstructured data also encompasses images, video, and audio. Industry-specific file types such as VCF (genomics), KDF (semiconductors), or HDF5 (aeronautics) are included in this category.
+
+
+Commercial solutions: snowflake, amazon redshift, google BigQuery
+
+
+# Who is building this solution
+- Snowflake, Databricks
+
+
+
+Databricks Data Intelligence Platform
+
+ --><ol class="simple-footnotes"><li id="sf-2024-10-28-binary-storage-engine-1">In theory, it could go up to exabyte, but I have not personally use these solutions at that scale. <a href="#sf-2024-10-28-binary-storage-engine-1-back" class="simple-footnote-back">↩</a></li><li id="sf-2024-10-28-binary-storage-engine-2">I don’t really buy the marketing hype of lakehouse. Hive was the standard open source data warehouse solution for many years. Marketing folks coined the term lakehouse to differentiate the new comers (e.g. Iceberg, Delta Lake, and Hudi) from existing data analytics solution, which used to be called data warehouse. To me, Iceberg is a straight-forward next iteration of Hive, and it is solving mostly the same set of problems with additional optimizations. It is silly to create a new category because the problem statements have not changed. <a href="#sf-2024-10-28-binary-storage-engine-2-back" class="simple-footnote-back">↩</a></li><li id="sf-2024-10-28-binary-storage-engine-3">A query is able to first take advantage of the various metadata available to filter out unnecessary data files to use. Finding files is just working through the metadata files, it is done locally and does not involve a distributed compute engine; this is known as <a href="https://iceberg.apache.org/docs/nightly/performance/#scan-planning">scan planning</a>. For example, manifest list contains value ranges, manifest files has column level stats, and parquet file has row groups, each row group has column level stats. <a href="#sf-2024-10-28-binary-storage-engine-3-back" class="simple-footnote-back">↩</a></li><li id="sf-2024-10-28-binary-storage-engine-4">Furthermore, it is becoming more and more robust that we could create <span class="caps">SQL</span> queries just by prompting. The next iteration is clearly that using plain English, we could create datasets or reports by just using English for both structured and unstructured data. <a href="#sf-2024-10-28-binary-storage-engine-4-back" class="simple-footnote-back">↩</a></li><li id="sf-2024-10-28-binary-storage-engine-5">The most popular framework to build these processing pipeline is Ray, especially if <span class="caps">GPU</span>-heavy models are used frequently. It could be done with Spark. It is also not uncommon to write distributed jobs from scratch combining with simple job queues backed by Redis or MySQL. <a href="#sf-2024-10-28-binary-storage-engine-5-back" class="simple-footnote-back">↩</a></li><li id="sf-2024-10-28-binary-storage-engine-6">Let us sketch out how to build this solution with popular open source components as of the writing of this note. We pick S3, IceBerg, and Ray to be the backbones. Iceberg is the metadata store. S3 could be viewed as an internal component of Iceberg. Ray is the compute engine. The main reason to choose Ray here is that we want to be able to integrate <span class="caps">AI</span> models and <span class="caps">SQL</span> executions. As of the writing of this blog, Ray dataset does not provide a <span class="caps">SQL</span> <span class="caps">API</span> for writing data transformations. We need to build three major components to get to a working version: translating <span class="caps">SQL</span> statements into Ray Dataset execution and connecting models to user defined <span class="caps">SQL</span> functions. <a href="#sf-2024-10-28-binary-storage-engine-6-back" class="simple-footnote-back">↩</a></li></ol>
+
+
+
+             
+ 
+            
+            
+            
+
+
+
+
+
+
+
+
+            <hr/>
+            <script src="https://utteranc.es/client.js"
+                    repo="jinfwhuang/jinfwhuang.github.io"
+                    issue-term="pathname"
+                    label="user-comments"
+                    theme="github-light"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+
+            <hr/>
+<section>
+    <h2>Related Posts</h2>
+<ul class="related-posts-list">
+<li><a href="/2023-04-04-document-search" title="Pretrained LLMs and Text Search - A practitioner&#39;s perspective">Pretrained LLMs and Text Search <small>A practitioner's perspective</small></a></li>
+<li><a href="/2023-04-27-open-source-llm" title="Open Source LLMs">Open Source LLMs</a></li>
+<li><a href="/2023-06-04-domain-specific-ai-assistant" title="Domain Specific AI Assistants">Domain Specific AI Assistants</a></li>
+<li><a href="/2023-10-17-gen-models" title="The Role of Neural Networks in Generative Models">The Role of Neural Networks in Generative Models</a></li>
+<li><a href="/2024-08-01-vision-dataset" title="Open Source Vision Datasets">Open Source Vision Datasets</a></li>
+</ul>
+<hr />
+</section>
+            <aside>
+            <nav>
+            <ul class="articles-timeline">
+                <li class="previous-article">« <a href="/2024-08-01-vision-dataset" title="Previous: Open Source Vision Datasets">Open Source Vision Datasets</a></li>
+                <li class="next-article"><a href="/2024-11-11-flat-water-paddle-up" title="Next: My Journey: Flat Water Foiling Paddle Up">My Journey: Flat Water Foiling Paddle Up</a> »</li>
+            </ul>
+            </nav>
+            </aside>
+        </div>
+        <section id="article-sidebar" class="span2">
+            <h4>Published</h4>
+            <time itemprop="dateCreated" datetime="2024-10-28T00:00:00-07:00">Mon 28 October 2024</time>
+            <!--             <h4>Category</h4>
+            <a class="category-link" href="/categories#misc-ref">misc</a>
+ -->
+            <h4>Tags</h4>
+            <ul class="list-of-tags tags-in-article">
+                <li><a href="/tags#ai-ref">ai
+                    <span class="superscript">6</span>
+</a></li>
+            </ul>
+<h4>Contact</h4>
+<div id="sidebar-social-link">
+    <a href="https://twitter.com/jinfwhuang" title="Twiiter" target="_blank" rel="nofollow noopener noreferrer">
+        <svg xmlns="http://www.w3.org/2000/svg" aria-label="Twitter" role="img" viewBox="0 0 512 512"><rect width="512" height="512" rx="15%" fill="#1da1f3"/><path fill="#fff" d="M437 152a72 72 0 0 1-40 12 72 72 0 0 0 32-40 72 72 0 0 1-45 17 72 72 0 0 0-122 65 200 200 0 0 1-145-74 72 72 0 0 0 22 94 72 72 0 0 1-32-7 72 72 0 0 0 56 69 72 72 0 0 1-32 1 72 72 0 0 0 67 50 200 200 0 0 1-105 29 200 200 0 0 0 309-179 200 200 0 0 0 35-37"/></svg>
+    </a>
+    <a href="https://www.linkedin.com/in/jinfwhuang" title="LinkedIn" target="_blank" rel="nofollow noopener noreferrer">
+        <svg xmlns="http://www.w3.org/2000/svg" aria-label="LinkedIn" role="img" viewBox="0 0 512 512" fill="#fff"><rect width="512" height="512" rx="15%" fill="#0077b5"/><circle cx="142" cy="138" r="37"/><path stroke="#fff" stroke-width="66" d="M244 194v198M142 194v198"/><path d="M276 282c0-20 13-40 36-40 24 0 33 18 33 45v105h66V279c0-61-32-89-76-89-34 0-51 19-59 32"/></svg>
+    </a>
+</div>
+            
+
+
+
+
+
+            
+
+
+
+
+
+        </section>
+</div>
+</article>
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe.
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides.
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo https://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>                    </div>
+                    <div class="span1"></div>
+                </div>
+            </div>
+        </div>
+<!--        <footer>
+
+    <div>
+        <span class="site-name"><span style="color:black;">Jin's Notes</span></span> - the hardest part is taking the first step
+    </div>
+
+
+
+    <div id="fpowered">
+        Powered by: <a href="http://getpelican.com/" title="Pelican Home Page" target="_blank" rel="nofollow noopener noreferrer">Pelican</a>
+        Theme: <a href="https://elegant.oncrashreboot.com/" title="Theme Elegant Home Page" target="_blank" rel="nofollow noopener noreferrer">Elegant</a>
+    </div>
+</footer>-->
+            <script src="//code.jquery.com/jquery.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+        <script src="/theme/js/elegant.prod.9e9d5ce754.js"></script>
+        <script>
+            function validateForm(query)
+            {
+                return (query.length > 0);
+            }
+        </script>
+
+
+
+
+    <script>
+    (function () {
+        if (window.location.hash.match(/^#comment-\d+$/)) {
+            $('#comment_thread').collapse('show');
+        }
+    })();
+    window.onhashchange=function(){
+        if (window.location.hash.match(/^#comment-\d+$/))
+            window.location.reload(true);
+    }
+    $('#comment_thread').on('shown', function () {
+        var link = document.getElementById('comment-accordion-toggle');
+        var old_innerHTML = link.innerHTML;
+        $(link).fadeOut(200, function() {
+            $(this).text('Click here to hide comments').fadeIn(200);
+        });
+        $('#comment_thread').on('hidden', function () {
+            $(link).fadeOut(200, function() {
+                $(this).text(old_innerHTML).fadeIn(200);
+            });
+        })
+    })
+</script>
+
+    </body>
+    <!-- Theme: Elegant built for Pelican
+        License : MIT -->
+
+</html>
