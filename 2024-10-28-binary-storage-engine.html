@@ -20,18 +20,18 @@
 
 <meta name="keywords" content="ai, misc, " />
 
-<meta property="og:title" content="Analytics for Binary Blobs "/>
+<meta property="og:title" content="Analytics for Binary Blobs  - AI Database "/>
 <meta property="og:url" content="/2024-10-28-binary-storage-engine" />
 <meta property="og:description" content="One of the most underrated changes that the recent AI models made possible is data transformation for unstructured data. For the purpose of our discussion, we loosely say that structured data is tabular data, and unstructured data is binary blobs. For example, free form texts, images, and audios are unstructured …" />
 <meta property="og:site_name" content="Jin&#39;s Notes" />
 <meta property="og:article:author" content="jin" />
 <meta property="og:article:published_time" content="2024-10-28T00:00:00-07:00" />
-<meta name="twitter:title" content="Analytics for Binary Blobs ">
+<meta name="twitter:title" content="Analytics for Binary Blobs  - AI Database ">
 <meta name="twitter:description" content="One of the most underrated changes that the recent AI models made possible is data transformation for unstructured data. For the purpose of our discussion, we loosely say that structured data is tabular data, and unstructured data is binary blobs. For example, free form texts, images, and audios are unstructured …">
 <meta property="og:image" content="/images/android-chrome-192x192.png" />
 <meta name="twitter:image" content="/images/android-chrome-192x192.png" >
 
-        <title>Analytics for Binary Blobs  · Jin&#39;s Notes
+        <title>Analytics for Binary Blobs  - AI Database  · Jin&#39;s Notes
 </title>
         <link rel="shortcut icon" href="/theme/images/favicon.ico" type="image/x-icon" />
         <link rel="icon" href="/theme/images/apple-touch-icon-152x152.png" type="image/png" />
@@ -92,6 +92,9 @@
         <h1>
             <a href="/2024-10-28-binary-storage-engine">
                 Analytics for Binary Blobs<br/>
+                <small class="subtitle">
+                    AI Database
+                </small>
             </a>
         </h1>
     </header>
@@ -129,7 +132,7 @@ Other solutions such as Snowflake, Delta Lake, Hive are similar in broad strokes
 
 <p>It might looks like it is only an incremental change from existing analytics solutions such as Snowflake and Iceberg. The key components are: an unified view for both structured and unstructured, enabling analytics of binary blobs at query time, and integrating <span class="caps">LLM</span> and <span class="caps">VLM</span> models in <span class="caps">SQL</span> queries. An out-of-the-box data analytics solution with these features would reduce the engineering overhead for many data engineering teams<sup id="sf-2024-10-28-binary-storage-engine-6-back"><a href="#sf-2024-10-28-binary-storage-engine-6" class="simple-footnote" title="Let us sketch out how to build this solution with popular open source components as of the writing of this note. We pick S3, IceBerg, and Ray to be the backbones. Iceberg is the metadata store. S3 could be viewed as an internal component of Iceberg. Ray is the compute engine. The main reason to choose Ray here is that we want to be able to integrate AI models and SQL executions. As of the writing of this blog, Ray dataset does not provide a SQL API for writing data transformations. We need to build three major components to get to a working version: translating SQL statements into Ray Dataset execution and connecting models to user defined SQL functions.">6</a></sup>. Furthermore, it will empower many data users to directly work with data by asking plain English questions. I have personally seen many different teams have this need and devoted sizable engineering resources to fulfill that need. These teams have a lot of unstructured data would are cumbersome to use with existing out-of-the-box solutions.</p>
 <hr>
-<h4 id="footnotes">Footnotes</h4>
+<h4 id="footnotes">Footnotes<a class="headerlink" href="#footnotes" title="Permanent link">¶</a></h4>
 <!--
 
 - [Iceberg](https://www.dremio.com/resources/guides/apache-iceberg-an-architectural-look-under-the-covers/) under the covers
@@ -233,11 +236,11 @@ Databricks Data Intelligence Platform
 <section>
     <h2>Related Posts</h2>
 <ul class="related-posts-list">
-<li><a href="/2023-04-04-document-search" title="Pretrained LLMs and Text Search - A practitioner&#39;s perspective">Pretrained LLMs and Text Search <small>A practitioner's perspective</small></a></li>
 <li><a href="/2023-04-27-open-source-llm" title="Open Source LLMs">Open Source LLMs</a></li>
 <li><a href="/2023-06-04-domain-specific-ai-assistant" title="Domain Specific AI Assistants">Domain Specific AI Assistants</a></li>
 <li><a href="/2023-10-17-gen-models" title="The Role of Neural Networks in Generative Models">The Role of Neural Networks in Generative Models</a></li>
 <li><a href="/2024-08-01-vision-dataset" title="Open Source Vision Datasets">Open Source Vision Datasets</a></li>
+<li><a href="/2024-11-02-video-models" title="Video Models - Explain two models and review the video generation products">Video Models <small>Explain two models and review the video generation products</small></a></li>
 </ul>
 <hr />
 </section>
@@ -245,7 +248,7 @@ Databricks Data Intelligence Platform
             <nav>
             <ul class="articles-timeline">
                 <li class="previous-article">« <a href="/2024-08-01-vision-dataset" title="Previous: Open Source Vision Datasets">Open Source Vision Datasets</a></li>
-                <li class="next-article"><a href="/2024-11-11-flat-water-paddle-up" title="Next: My Journey: Flat Water Foiling Paddle Up">My Journey: Flat Water Foiling Paddle Up</a> »</li>
+                <li class="next-article"><a href="/2024-11-02-video-models" title="Next: Video Models - Explain two models and review the video generation products">Video Models <small class="subtitle">Explain two models and review the video generation products</small></a> »</li>
             </ul>
             </nav>
             </aside>
@@ -259,7 +262,7 @@ Databricks Data Intelligence Platform
             <h4>Tags</h4>
             <ul class="list-of-tags tags-in-article">
                 <li><a href="/tags#ai-ref">ai
-                    <span class="superscript">6</span>
+                    <span class="superscript">7</span>
 </a></li>
             </ul>
 <h4>Contact</h4>

@@ -119,11 +119,11 @@
             
 <p>I have not written Java in more than three years. I started working on Java applications earlier this year. This post documents some of the Java quirks, tooling, and best practices that caught my eyes in the first 3 months of meeting Java again. It is intended to be useful for others (and my future self) who experience some gap years with Java. The items and references mentioned here are not comprehensive. They are meant to be entry points for the interested readers. I might write detailed posts about specific topics in the future.</p>
 <p><br/> </p>
-<h4 id="java-quirks">Java Quirks</h4>
+<h4 id="java-quirks">Java Quirks<a class="headerlink" href="#java-quirks" title="Permanent link">¶</a></h4>
 <ul>
 <li>
 <p>Effective Java (<a href='#bloch2018' id='ref-bloch2018-1'>
-    5
+    Blo18
 </a>). This is the best refresher. After many years, this is still the best book on the best practices of Java programming. This updated version offers guidelines on the functional features on Lamda and Streams. This had been a must-read, and it still is. </p>
 </li>
 <li>
@@ -131,9 +131,9 @@
 </li>
 <li>
 <p>Check Exceptions. See <a href='#checkedexception2014' id='ref-checkedexception2014-1'>
-    2
+    che14
 </a>, <a href='#bloch2018' id='ref-bloch2018-2'>
-    5
+    Blo18
 </a></p>
 <p>I still do not have a strong opinion on this feature. In many code bases, it feels pretty random on how folks are passing up and down the chain of checked exception. In rare cases when I am writing a small library, it makes sense to indicate expected issues through checked exception. This features feels awkward. Everyone has an opinion on it in code reviews and uses up a lot of back and forths. I am not convinced one way or the other. I recommend minimize its usage as much as possible. I would not object to a style guide and linting tool that warn against all checked exceptions.</p>
 </li>
@@ -154,15 +154,15 @@
 </li>
 <li>
 <p><a href="https://github.com/AdoptOpenJDK/openjdk-jdk11/blob/master/src/java.base/share/classes/java/util/concurrent/atomic/AtomicInteger.java">AtomicInteger</a> is lock free, using compare-and-swap (<span class="caps">CAS</span>) hardware instruction in x86. <code>synchronize</code> is lock based. However, <code>synchronize</code> only uses <span class="caps">CAS</span> and work similarly as a lock-free algorithm when there is no contention. If contended, it uses spin locking and then fall back to system calls (e.g. futex). See <a href='#thompson2011' id='ref-thompson2011-1'>
-    11
+    Tho11
 </a>, <a href='#thompson2011_2' id='ref-thompson2011_2-1'>
-    1
+    tho11
 </a>, <a href='#dice2006' id='ref-dice2006-1'>
-    6
+    Dic06
 </a>, <a href='#goetz2004' id='ref-goetz2004-1'>
-    7
+    Goe04
 </a>, <a href='#atomicinteger2014' id='ref-atomicinteger2014-1'>
-    3
+    ato14
 </a></p>
 </li>
 <li>
@@ -176,12 +176,12 @@
 </li>
 <li>
 <p>Java Concurrency in Practice (<a href='#goetz2006' id='ref-goetz2006-1'>
-    8
+    Goe06
 </a>). Going through this book, even just the table of contents, is a good use of time to get a good download on most of the core concurrent concepts in Java. This does not include actor model made popular by Scala and Akka.</p>
 </li>
 </ul>
 <p><br/></p>
-<h4 id="library-choices">Library Choices</h4>
+<h4 id="library-choices">Library Choices<a class="headerlink" href="#library-choices" title="Permanent link">¶</a></h4>
 <ul>
 <li>
 <p><a href="https://github.com/google/guava/wiki">Google Guava</a>: Its collection idioms are still the best.</p>
@@ -213,12 +213,12 @@
 </li>
 </ul>
 <p><br/></p>
-<h4 id="dependency">Dependency</h4>
+<h4 id="dependency">Dependency<a class="headerlink" href="#dependency" title="Permanent link">¶</a></h4>
 <p>The <a href="https://well-typed.com/blog/2008/04/the-dreaded-diamond-dependency-problem/">diamond dependency problem</a> will show up one way or the other. Regardless if it is a monorepo or multi-repo setup, dependency issues cause significant headaches and time spent on trouble shooting. The problem will show up unexpectedly when there are attempts to upgrade Java version, introduce a new computing framework, use a new build tool, upgrade old libraries, or add features to legacy applications.     </p>
 <p>The worst offenders are also the most popular libraries and frameworks: Guava, Jackson, Jetty, Jersey, Dropwizard, Spring, etc. Issues on libraries such Guava or Jackson are usually easy to resolve. Issues caused by Jetty and Jersey are still manageable. When it comes to Spring, it requires a healthy dosage of mental fortitude as much as debugging experiences. It speaks volume to the importance of choosing technologies with a long view.</p>
 <p>The most common strategy is to specify a fixed version of the conflicting library. However, that is easier said than done. In all likely scenarios, the dependency graph is generated through walking down transitive dependencies. There are likely too many conflicting libraries to manually inspect by hand. The hard part is to identify a smallest set that works for the application in question. It is an art. </p>
 <p><br/></p>
-<h4 id="tooling">Tooling</h4>
+<h4 id="tooling">Tooling<a class="headerlink" href="#tooling" title="Permanent link">¶</a></h4>
 <p>For dependency management, I would only consider <a href="https://ant.apache.org/ivy/m2comparison.html">Maven and Ivy</a>. Both work well enough, and most build tools will be able to work pull and push dependencies from both type of repositories. However, each build tool has a strong preference over one or the other. </p>
 <ul>
 <li>
@@ -238,7 +238,7 @@
 </li>
 </ul>
 <p><br/></p>
-<h4 id="application-setup">Application Setup</h4>
+<h4 id="application-setup">Application Setup<a class="headerlink" href="#application-setup" title="Permanent link">¶</a></h4>
 <ul>
 <li>
 <p>Spring Framework: <span class="caps">NO</span>! I would avoid using Spring for dependency injection, configuration, bean life cycle, task scheduling, datasources mapping, etc.</p>
@@ -258,7 +258,7 @@
 </li>
 </ul>
 <p><br/></p>
-<h4 id="style">Style</h4>
+<h4 id="style">Style<a class="headerlink" href="#style" title="Permanent link">¶</a></h4>
 <p>I prefer to choose a style and setup a formatter. Debating how to line break while reviewing a feature release is counter-productive, but I totally get it that there are indents and long lines could lead to compulsively typing “ugly”. I would pick <a href="https://google.github.io/styleguide/javaguide.html">Google java style guide</a> and integrates the <a href="https://github.com/google/google-java-format">formatter</a> into the build tool. The formatter could be run automatically. <a href="https://blog.golang.org/gofmt">go-fmt</a> says it the best. Formatted code is:</p>
 <ul>
 <li>easier to <strong>write</strong>: never worry about minor formatting concerns while hacking away,</li>
@@ -267,18 +267,18 @@
 <li><strong>uncontroversial</strong>: never have a debate about spacing or brace position ever again!</li>
 </ul>
 <p><br/></p>
-<h4 id="fun-reads-in-java">Fun reads in Java</h4>
+<h4 id="fun-reads-in-java">Fun reads in Java<a class="headerlink" href="#fun-reads-in-java" title="Permanent link">¶</a></h4>
 <ul>
 <li><a href='#zerocopy2016' id='ref-zerocopy2016-1'>
-    4
+    zer16
 </a>, <a href='#nagaraja2008' id='ref-nagaraja2008-1'>
-    10
+    PN08
 </a></li>
 <li><a href='#kreps2013' id='ref-kreps2013-1'>
-    9
+    Jcs13
 </a></li>
 <li><a href='#sor2013' id='ref-sor2013-1'>
-    12
+    Sor13
 </a>, <a href="https://stackoverflow.com/questions/38597965/difference-between-resident-set-size-rss-and-java-total-committed-memory-nmt">Java memory usage in docker</a></li>
 </ul>
 

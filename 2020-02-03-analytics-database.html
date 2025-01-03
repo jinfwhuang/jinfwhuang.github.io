@@ -118,7 +118,7 @@
 <p>When I am evaluating database technologies, at a minimum I will do my best to understand the architecture <em>query engine</em> and <em>storage engine</em>. To understand the query engine, I review the in-memory data mode and how worker nodes coordinate smaller computing tasks. To understand the storage engine, I review the file format and storage backends. Examples of file formats are <span class="caps">ORC</span>, parquet, and custom-built format; examples of storage backends are apache Kudu, apache Bookeeper, object store such as S3, and custom-built storage layers that are collocated with compute workers.</p>
 <p>I distinguish between two types of requirements. The first type is for batch processing, and the other is to serve user-facing, realtime queries.</p>
 <p><br/></p>
-<h4 id="batch">Batch</h4>
+<h4 id="batch">Batch<a class="headerlink" href="#batch" title="Permanent link">¶</a></h4>
 <p>Queries for batch processing could take anywhere from seconds to hours to days. The query engines are used to generate reports and ad-hoc analysis. Some data workloads could bypass the query engines and access the data directly.</p>
 <p>The majority of the hyped-up databases fall into this category. Most of these solutions work well enough. Query performances are generally acceptable. Using <span class="caps">SQL</span> query is likely to be the easiest way to slice and dice the data. Once I figure out that a particular solution is sufficient for my query patterns and performance requirements, the other questions that I would ask are:</p>
 <ul>
@@ -136,7 +136,7 @@
 <li>Snowflake</li>
 </ul>
 <p>Snowflake stands out because it is a fully managed solution. It does not expose its storage backends for other tools to connect to. It usually means that the data platform needs to keep another copy of the raw data in an object store (e.g. S3) before the data is loaded into Snowflake.</p>
-<h4 id="realtime">Realtime</h4>
+<h4 id="realtime">Realtime<a class="headerlink" href="#realtime" title="Permanent link">¶</a></h4>
 <p>Realtime analytics queries need to be completed in seconds, if not less. All of the query engines listed in the previous section are not designed to serve user-facing queries. Even if we tune those engines to have reasonable realtime results, they are usually expensive and deliver horrendous tail latency, which will take years to learn and optimize.</p>
 <p>Realtime analytics should take advantage of as many of the following features as possible:</p>
 <ul>
@@ -149,31 +149,31 @@
 <p>My top choices are:</p>
 <ul>
 <li>Druid(<a href='#druid2020' id='ref-druid2020-1'>
-    3
+    dru20
 </a>)</li>
 <li>Pinot(<a href='#pinot2020' id='ref-pinot2020-1'>
-    5
+    pin20
 </a>)</li>
 <li>Elasticsearch</li>
 </ul>
 <p>Both Druid and Pinot are designed to be realtime analytics engines (<a href='#leventov2018' id='ref-leventov2018-1'>
-    4
+    Lev18
 </a>). One can read their documentation for details. I have to mention Elasticsearch as a valid option here even though it is designed for full-text document search. Elasticsearch has a simple design that horizontally scales out its search and aggregation to each of its shards. Data collocation, horizontal scaling, aggressive in-memory processing, and flexible aggregation semantics are sufficient to make it a passable realtime analytics engine for basic aggregation and bucketing that are typical of user-facing dashboards. </p>
-<h4 id="data-storage">Data Storage</h4>
+<h4 id="data-storage">Data Storage<a class="headerlink" href="#data-storage" title="Permanent link">¶</a></h4>
 <p>I would consider data storage backends after I identify the query engine most appropriate for the query patterns. Sometimes I do not have a choice. For example, Elasticsearch has built-in storage layer. Druid’s storage format in the form of Druid segments and metadata is fixed. However, if the engine of choice is Presto, we would have to choose the storage backend and file formats.</p>
 <p>My personal preference is leverage on an object storage as much as I can. S3 is dead simple. I tend to prefer Parquet if I have a choice. For example, one of my favorites is to organize data as partition datasets on S3 as Parquet files. </p>
 <div class="highlight"><pre><span></span>table_name/partition_key1/partition_key2/partition_key3
 </pre></div>
 <p>These data could be used by Preso, Hive, Dremio, and Spark <span class="caps">SQL</span> directly. Besides using <span class="caps">SQL</span>, I can easily write Spark or Flink jobs to process them. I can write background batch jobs on the data without any frameworks. This style of storage engine is flexible and supports high throughput on a batch mode.</p>
-<h4 id="realtime-data-and-realtime-analytics">Realtime Data and Realtime Analytics</h4>
+<h4 id="realtime-data-and-realtime-analytics">Realtime Data and Realtime Analytics<a class="headerlink" href="#realtime-data-and-realtime-analytics" title="Permanent link">¶</a></h4>
 <p>One of the most desirable features of an analytics system is have realtime query performances on realtime data. This is hard, and there should be an impossibility theorem out there to sound the alarms for the uninitialized. The perfect solution does not exist, it is a matter of tradeoffs. </p>
 <p>Achieving realtime analytics is hard enough. That is, even if we can assume that the data format and storage are fixed and could be optimized for answering queries, fast realtime queries are still difficult. In the best case scenario when we have data collocating, data model compatible with memory-mapping, and optimized in-memory data representation, we might still have to rely on pre-aggregation to have reasonable query performances. When a query need to scan through large amount of data, there is a theoretical limit on time needed to complete based on the compute resources. All a perfect query engine could do is to get close to that limit.</p>
 <p>Allowing for real time data loading invariably degrades the ability the query engine could optimize compute. For example, if we want data to show up more quickly, we could build more but smaller files. A large number of small file leads to query slow down. We could update the existing files, but the query engine have to swap out those files. We could stream the realtime data points into the query engine, but those data points would have to be limited otherwise the query engine could spent all of its compute cycle acting as a stream processor. </p>
 <p>It does not mean that we cannot improve on the existing solutions to have both better realtime data and query. One promising data storage engine is Kudu (<a href='#kudu2020' id='ref-kudu2020-1'>
-    2
+    kud20
 </a>). It looks like that it has good integration with some query engines (e.g. Presto) and processing framework (e.g. Flink). However, none of the query engine that connects to Kudu are designed for realtime. In a way, Kudu could not be a storage engine for a best in-class realtime query engine because it is not designed to be memory-mapped and not designed to be collated with compute nodes. </p>
 <p>Another way to achieve realtime query results is to think about how to optimize some of the more popular batch query engines. Take Dremio as an example. If it is computing on Parquet on S3, there is already too much time spent on network and converting data into Arrow in-memory representation. A more realtime “Dremio” can get around those two bottlenecks. It needs to introduce stickness between data and compute nodes. It would need to use a file format that could be memory map onto Arrow layout, e.g. Arrow <span class="caps">IPC</span> file format (<a href='#arrow2020' id='ref-arrow2020-1'>
-    1
+    arr20
 </a>).</p>
 <p>Given the tradeoffs between storage engine and realtime query engines, the best strategy to deliver realtime queries is probably pre-computation, building aggregated tables that comes as close to your query patterns as possible.</p>
 <!-- 

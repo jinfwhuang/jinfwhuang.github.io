@@ -118,26 +118,26 @@
             
 <p>ChatGPT has become one of the most popular <span class="caps">AI</span> assistants. It is a fixed, general purpose model. That is by design because it learns from mostly texts in the public domain. This applies to open source LLMs as well, e.g. <a href="https://huggingface.co/docs/transformers/model_doc/flan-t5">T5</a>, <a href="https://huggingface.co/docs/transformers/main/model_doc/llama">LLaMA</a>, and <a href="https://huggingface.co/tiiuae/falcon-40b">falcon</a>. However, there are many reasons to build <span class="caps">AI</span> assistants that specialize in limited knowledge domains. For example, I might want to talk an <span class="caps">AI</span> assistant specific to home purchasing, an assistant is limited by a company’s private corpus of documents, or a personal assistant that has access to my private emails, texts, and calendar. In this post, I will discuss the techniques relevant to building a domain-specific <span class="caps">AI</span> assistant.</p>
 <p>An <span class="caps">LLM</span> accesses private information in one of two ways. The information could be baked into model parameters, and then the chatbot retrieves relevant information through prompting. This requires the <span class="caps">LLM</span> to be trained on private data after it acquires its general comprehension capabilities. The other way is to provide the domain specific knowledge as input context. The information retrieval step is performed outside of the language model. It could be calls to external APIs or searches of a document store.</p>
-<h4 id="knowledge-infusion-through-model-training">Knowledge Infusion Through Model Training</h4>
+<h4 id="knowledge-infusion-through-model-training">Knowledge Infusion Through Model Training<a class="headerlink" href="#knowledge-infusion-through-model-training" title="Permanent link">¶</a></h4>
 <p>LLMs could answer a wide range of common questions directly. Their breadth of knowledge could be comparable to a search engine. LLMs memorize information by applying some pretraining objectives to a large corpus of data. The data sources are usually a mixture of internet text, books, and other various public text corpus.</p>
 <p>It is important to note that an <span class="caps">LLM</span> only loosely absorbs information from the training corpus. There is no guarantee that any one piece of data will be 100% burned into model parameters. Even the largest neural model is not likely to incorporate information in any predictable or uniform way. There are estimates about those information retention rates. For example, <a href='#carlini2023quantifying' id='ref-carlini2023quantifying-1'>
-    2
+    CIJ+23
 </a> quantifies the some lower bound to be <code>1%</code>. It is impossible to exactly quantify this retention rate. The memorization mechanism is hard to know for sure. We only know that a large neural model could learn from simple pretraining objectives. <a href='#porada2021does' id='ref-porada2021does-1'>
-    5
+    PSC21
 </a> discusses the limit of knowledge acquisition through masked language pretraining objectives. We are still early in our understanding of how LLMs work and how to properly perform precise memory infusion, extraction, or modification.</p>
 <p>There are many unsupervised training techniques to infuse knowledge and capabilities to LLMs. The most common is the various forms of masking spans. For example, next token prediction, next sentence, and random masked spans are the most popular and common pretraining objectives. 
 <figure>
 <img src="images/2023-06-training-span-corruption.png"/>
 <figcaption align="center">
 Pretraining objectives: different span corruption strategies (<a href='#tay2023ul2' id='ref-tay2023ul2-1'>
-    10
+    TDT+23
 </a>)
 </figcaption>
 </figure></p>
 <p>If the private domain contains structured knowledge, e.g. knowledge triplets, one could devise a masking strategy that focuses on key concepts and relationships (<a href='#sun2021ernie' id='ref-sun2021ernie-1'>
-    8
+    SWF+21
 </a> and <a href='#moiseev2022skill' id='ref-moiseev2022skill-1'>
-    3
+    MDAJ22
 </a>). 
 <figure>
 <img src="images/2023-06-training-knowledge-triplet-objective.png" width="80%"/>
@@ -152,25 +152,25 @@ Pretraining objectives: different span corruption strategies (<a href='#tay2023u
 <img align="middle" src="images/2023-06-training-synthetic-fine-tune-data.png" width="50%"/>
 <figcaption align="center">
  Fine-tuning on synthetic labeled data (<a href='#saadfalcon2023udapdr' id='ref-saadfalcon2023udapdr-1'>
-    6
+    SFKS+23
 </a>)
 </figcaption>
 </figure></p>
-<h4 id="llm-information-extraction-techniques"><span class="caps">LLM</span> Information Extraction Techniques</h4>
+<h4 id="llm-information-extraction-techniques"><span class="caps">LLM</span> Information Extraction Techniques<a class="headerlink" href="#llm-information-extraction-techniques" title="Permanent link">¶</a></h4>
 <p>There are different techniques to extract information from model parameters. The most obvious approach is through prompt engineering. The most well-known prompt techniques are few-shot learning and chain-of-throught prompting. </p>
 <figure>
 <img align="left" src="images/2023-06-prompt-few-shots.png" width="50%"/>
 <img src="images/2023-06-prompt-chain-of-thought.png" width="50%"/>
 <figcaption align="center">
  Prompting: few-shot (<a href='#brown2020language' id='ref-brown2020language-1'>
-    1
+    BMR+20
 </a>) and chain of thought (<a href='#wei2023chainofthought' id='ref-wei2023chainofthought-1'>
-    12
+    WWS+23b
 </a>)
 </figcaption>
 </figure>
 <p>There are additional variations. For example, the few-shot could be combined with synthetic example generation. The few examples could be modified to be a recitation-augmented prompt, as proposed by <a href='#sun2023recitationaugmented' id='ref-sun2023recitationaugmented-1'>
-    9
+    SWT+23
 </a>.
 <figure>
 <img src="images/2023-06-prompt-recitation.png" width="50%"/>
@@ -179,33 +179,33 @@ Pretraining objectives: different span corruption strategies (<a href='#tay2023u
 </figcaption>
 </figure></p>
 <p>Other than better prompts, there are other ways to improve information extraction from model parameters. <a href='#wang2023selfconsistency' id='ref-wang2023selfconsistency-1'>
-    11
+    WWS+23a
 </a> proposes sampling multiple outputs and choosing the most consistent answer from the set. One could also ask the <span class="caps">LLM</span> to produce multiple relevant recitations about the queries and use those recitations as context for the <span class="caps">LLM</span> to make a final output.
 <figure>
 <img src="images/2023-06-prompt-sampling.png" width="80%"/>
 <figcaption align="center">
  Sampling multiple outputs <a href='#wang2023selfconsistency' id='ref-wang2023selfconsistency-2'>
-    11
+    WWS+23a
 </a>
 </figcaption>
 </figure></p>
 <p>The sampling and prompting techniques could be combined in any permuted order. For example, one could prompt the <span class="caps">LLM</span> to sample multiple recitations and keywords that describe the input query. The recitation passages could be deduplicated by or combined keywords before being used as examples in the final prompt fed to the <span class="caps">LLM</span>. In many ways, once an <span class="caps">LLM</span> completes learning what it could through its training stages. We can use prompt engineering techniques or modify the last layers to direct the <span class="caps">LLM</span> to squeeze information from its parameters and explore different outputs.</p>
-<h4 id="retrieval-augmentation">Retrieval-Augmentation</h4>
+<h4 id="retrieval-augmentation">Retrieval-Augmentation<a class="headerlink" href="#retrieval-augmentation" title="Permanent link">¶</a></h4>
 <p>The easiest way to create a domain specific <span class="caps">AI</span> assistant is using a retrieval step to add a context to the prompt. This approach is commonly described as retriever-reader in the open book question-answering literature. This framework works well for <span class="caps">AI</span> assistants as well. The foundational model provides general reasoning and comprehension capabilities, and the information required to answer user queries is provided in the context. The key advantage of this approach is the retrieval step is very predictable and explicit. It is a much more efficient and reliable information retrieval procedure than prompting an <span class="caps">LLM</span> to find information stored in its parameters. However, the context window could become a limiting factor. The responses is likely to be superficial and read like a summary of the provided context. The <span class="caps">LLM</span> could not draw patterns, nor could it synthesize data from the entire corpus relevant to the query. The enterprise knowledge chatbot created by <a href="https://www.glean.com/blog/glean-chat-launch-announcement">Glean</a> follows this pattern.</p>
 <p>The retrieval step is text search, which could use semantic embeddings powered by LLMs or vanilla lexical search. See my previous post on <a href="2023-04-04-document-search">document search</a>. There are additional ways to modify this setup. For example, <a href='#zhou2022ultron' id='ref-zhou2022ultron-1'>
-    13
+    ZYD+22
 </a> proposes appending synthetic data to be indexed with the raw document to improve retrieval effectiveness.</p>
-<h4 id="external-tools">External Tools</h4>
+<h4 id="external-tools">External Tools<a class="headerlink" href="#external-tools" title="Permanent link">¶</a></h4>
 <p>The retrieval step is an example of using external tools to complement the knowledge implicitly stored by the <span class="caps">LLM</span>. OpenAI’s plugin and function calling <span class="caps">API</span> is another example of piecing together external tools to be part of an <span class="caps">AI</span> assistant. The basic framework is simple. Before the <span class="caps">LLM</span> produces the response, it determines whether it should perform external <span class="caps">API</span> queries. The set of available APIs could vary from application to application. The <span class="caps">LLM</span> can turn the original query into inputs to external APIs, and the <span class="caps">API</span>’s responses are converted into context as part of the final prompt. <a href='#schick2023toolformer' id='ref-schick2023toolformer-1'>
-    7
+    SDYD+23
 </a> and <a href='#peng2023check' id='ref-peng2023check-1'>
-    4
+    PGH+23
 </a> test similar schemes to validate zero-shot performance across a variety of <span class="caps">NLP</span> tasks. </p>
 <p>Such a component could be built and patched to any open-source LLMs. There are two key <span class="caps">NLP</span> tasks that this component requires. One is a classification task on whether the <span class="caps">LLM</span> needs to use the external <span class="caps">API</span> given a query. The other task is transforming the query into compatible <span class="caps">API</span> inputs. This framework extends the <span class="caps">AI</span> assistant’s ability to both retrieve relevant data and perform actions on behalf of the <span class="caps">AI</span> user.</p>
-<h4 id="final-thoughts">Final Thoughts</h4>
+<h4 id="final-thoughts">Final Thoughts<a class="headerlink" href="#final-thoughts" title="Permanent link">¶</a></h4>
 <p><span class="caps">AI</span> assistants had not been very useful until the recent progress in LLMs. However, ChatGPT is just the beginning. I expect that more and more applications will enable meaningful and easy-to-use assistant user interface. These assistants won’t be general-purpose the same way that web search or ChatGPT are. These assistants will be limited in scope and domain-specific to the application. Chatbot style interaction is a natural extension to an search box, which has been a standard feature for the past decade. The next generation of applications will use chatbot as the interface for both information retrieval as well as performing actions.</p>
 <hr/>
-<h4 id="footnotes">Footnotes</h4>
+<h4 id="footnotes">Footnotes<a class="headerlink" href="#footnotes" title="Permanent link">¶</a></h4>
 <!-- 
 more notes
 
@@ -466,9 +466,9 @@ Check your facts and try again: improving large language models with external kn
 <ul class="related-posts-list">
 <li><a href="/2023-04-04-document-search" title="Pretrained LLMs and Text Search - A practitioner&#39;s perspective">Pretrained LLMs and Text Search <small>A practitioner's perspective</small></a></li>
 <li><a href="/2023-04-27-open-source-llm" title="Open Source LLMs">Open Source LLMs</a></li>
-<li><a href="/2023-10-17-gen-models" title="The Role of Neural Networks in Generative Models">The Role of Neural Networks in Generative Models</a></li>
 <li><a href="/2024-08-01-vision-dataset" title="Open Source Vision Datasets">Open Source Vision Datasets</a></li>
-<li><a href="/2024-10-28-binary-storage-engine" title="Analytics for Binary Blobs">Analytics for Binary Blobs</a></li>
+<li><a href="/2024-10-28-binary-storage-engine" title="Analytics for Binary Blobs - AI Database">Analytics for Binary Blobs <small>AI Database</small></a></li>
+<li><a href="/2024-11-02-video-models" title="Video Models - Explain two models and review the video generation products">Video Models <small>Explain two models and review the video generation products</small></a></li>
 </ul>
 <hr />
 </section>
@@ -490,7 +490,7 @@ Check your facts and try again: improving large language models with external kn
             <h4>Tags</h4>
             <ul class="list-of-tags tags-in-article">
                 <li><a href="/tags#ai-ref">ai
-                    <span class="superscript">6</span>
+                    <span class="superscript">7</span>
 </a></li>
                 <li><a href="/tags#llm-ref">LLM
                     <span class="superscript">3</span>

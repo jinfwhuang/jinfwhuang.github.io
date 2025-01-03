@@ -120,9 +120,9 @@
 <p>Merkle tree is a form of vector commitment. The sequence of values are the leave nodes. The commitment is the root hash. The revealing strategy is by way of a Merkle proof. One of the limitation of a Merkle proof is the proof size is <span class="math">\(O(k \log_k n)\)</span>.</p>
 <p>A polynomial commitment is a strictly more expressive scheme than a vector commitment. A polynomial scheme could be used as a vector commitment.</p>
 <p>Let’s make the setup more concrete. We have a sequence of values that we want to commit, <span class="math">\(\{x_i\}_{i=0}^n\)</span>. We want a construction where we have a constant size <span class="math">\(C\)</span> to represent these values, and we also want a constant size <span class="math">\(\pi\)</span> as a proof to the authenticity of a value <span class="math">\(y=x_i\)</span>. The following scheme is the <span class="caps">KZG</span> polynomial commitment.</p>
-<h4 id="preliminary">Preliminary</h4>
+<h4 id="preliminary">Preliminary<a class="headerlink" href="#preliminary" title="Permanent link">¶</a></h4>
 <p>The construction depends on pairing based cryptography primitives. I am not going into the technical details. You can find some a simple introduction to one such construction in my <a href="2021-09-25-bls-12-381-basics"><span class="caps">BLS</span> post</a>. The basics is that there are three groups, <span class="math">\(\mathbb{G}_1\)</span>, <span class="math">\(\mathbb{G}_2\)</span>, and <span class="math">\(\mathbb{G}_T\)</span> constructed on the prime field <span class="math">\(\mathcal{F}_r\)</span>. <span class="math">\(r\)</span> is the prime field order. Let <span class="math">\(G_1\)</span> and <span class="math">\(G_2\)</span> be the group generator of <span class="math">\(\mathbb{G}_1\)</span> and <span class="math">\(\mathbb{G}_2\)</span> respectively. There is a bilinear map <span class="math">\(e: \mathbb{G}_1 \times \mathbb{G}_2 \mapsto \mathbb{G}_T\)</span>. There are also arbitrary many of these values known by everyone, <span class="math">\(t^k G_1\)</span> and <span class="math">\(t^k G_2\)</span>, where <span class="math">\(k= 1, 2, ...\)</span> The trapdoor value <span class="math">\(t\in \mathcal{F}_r\)</span> is discarded and not known by anyone. We just need as many of these parameters as the size of the sequence we want to commit to.</p>
-<h4 id="commitment">Commitment</h4>
+<h4 id="commitment">Commitment<a class="headerlink" href="#commitment" title="Permanent link">¶</a></h4>
 <ol>
 <li>Create a polynomial from the value sequence <span class="math">\(\{x_i\}\)</span>. This is straight forward, and could be accomplished by <a href="https://en.wikipedia.org/wiki/Lagrange_polynomial">lagrange polynomial</a>. The idea is simple. The polynomial could be just set to be as high degree as possible so all the values could be encoded in the polynomial. The polynomial <span class="math">\(p\)</span> is such that <span class="math">\(p(i) = x_i\)</span>. We write this polynomial in terms of its coefficients,</li>
 </ol>
@@ -137,7 +137,7 @@ C = \sum_{i=0}^{n-1} p_i t^k G_1
 </li>
 </ol>
 <p>Note that the commitment <span class="math">\(C\)</span> is a curve point in <span class="math">\(\mathbb{G}_1\)</span>. It is a curve point regardless of the size of the original sequence. </p>
-<h4 id="proof">Proof</h4>
+<h4 id="proof">Proof<a class="headerlink" href="#proof" title="Permanent link">¶</a></h4>
 <p>We want to construct a proof of a single value, <span class="math">\(y=x_i\)</span>. Because we convert the value sequence into a polynomial <span class="math">\(p\)</span>, we want to prove <span class="math">\(p(i) = y\)</span>. Let’s define another polynomial,
 </p>
 <div class="math">\begin{equation}
@@ -155,20 +155,20 @@ q(z) = \sum_{k=0}^{n-1} q_k z^k.
 \pi = \sum_{i=0}^{n-1} q_i t^k G_1
 \end{equation}</div>
 <p>Note that the proof <span class="math">\(\pi\)</span> is a curve point in <span class="math">\(\mathbb{G}_1\)</span>.</p>
-<h4 id="verification">Verification</h4>
+<h4 id="verification">Verification<a class="headerlink" href="#verification" title="Permanent link">¶</a></h4>
 <p>We only need to verify the following relation.
 </p>
 <div class="math">\begin{equation}
 e(\pi, tG_2 - iG_2) = e(C-yG_1, G_2)
 \end{equation}</div>
 <p>The commitment is <span class="math">\(C\)</span>. The claim is <span class="math">\(y = x_i\)</span>. The proof is <span class="math">\(\pi\)</span>. All of these are public information. <span class="math">\(tG_2\)</span> are public as well.</p>
-<h4 id="notes">Notes</h4>
+<h4 id="notes">Notes<a class="headerlink" href="#notes" title="Permanent link">¶</a></h4>
 <ul>
 <li>The single point proof could be extended to a multiproof. The proof size remains to be a single curve point, hence constant size.</li>
 <li>We could use the polynomial commitment scheme instead of the Merkle tree vector commitment scheme to represent a trie. The proof of a k-ary Merkle tree requires each path to contain <span class="math">\(k-1\)</span> many hash values, the number of hash values of the interested node’s siblings. The proof size is <span class="math">\(k \log_k n\)</span>. However, the polynomial commitment proof would allow us to use a single curve point to represent the proof at each level. It reduce the needs to list out sibling’s hash values. Hence the overall proof size is <span class="math">\( \log_k n\)</span>.</li>
 <li>This could actually be one better. Because the revelation proofs are curve points, they are additive. We could use a single curve point to prove all parent-child relationship for each of the level. The overall proof size could be reduce to constant size.</li>
 </ul>
-<h2 id="references">References:</h2>
+<h2 id="references">References:<a class="headerlink" href="#references" title="Permanent link">¶</a></h2>
 <ol>
 <li>Vitalik’s description of <a href="https://vitalik.ca/general/2021/06/18/verkle.html">Verkle tree</a></li>
 <li>Dankrad Feist’s description of <a href="https://www.youtube.com/watch?v=RGJOQHzg3UQ">Verkle trie</a></li>

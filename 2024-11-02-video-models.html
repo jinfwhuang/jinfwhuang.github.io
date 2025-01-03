@@ -1,0 +1,1191 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="/theme/css/elegant.prod.9e9d5ce754.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="/theme/css/custom.css" media="screen">
+
+        <link rel="dns-prefetch" href="//fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+
+        <meta name="author" content="jin" />
+
+        <meta name="description" content="Language and vision models are the two frontiers of AI research and product engineering. Language models are mature enough to be many people’s first stop for information. The early products powered by LLMs have changed how many search and learn. For example, I have used ChatGPT and Perplexity more …
+" />
+        <meta name="twitter:creator" content="@jinfwhuang">
+        <meta property="og:type" content="article" />
+        <meta name="twitter:card" content="summary">
+
+<meta name="keywords" content="ai, misc, " />
+
+<meta property="og:title" content="Video Models  - Explain two models and review the video generation products "/>
+<meta property="og:url" content="/2024-11-02-video-models" />
+<meta property="og:description" content="Language and vision models are the two frontiers of AI research and product engineering. Language models are mature enough to be many people’s first stop for information. The early products powered by LLMs have changed how many search and learn. For example, I have used ChatGPT and Perplexity more …" />
+<meta property="og:site_name" content="Jin&#39;s Notes" />
+<meta property="og:article:author" content="jin" />
+<meta property="og:article:published_time" content="2024-11-02T00:00:00-07:00" />
+<meta name="twitter:title" content="Video Models  - Explain two models and review the video generation products ">
+<meta name="twitter:description" content="Language and vision models are the two frontiers of AI research and product engineering. Language models are mature enough to be many people’s first stop for information. The early products powered by LLMs have changed how many search and learn. For example, I have used ChatGPT and Perplexity more …">
+<meta property="og:image" content="/images/android-chrome-192x192.png" />
+<meta name="twitter:image" content="/images/android-chrome-192x192.png" >
+
+        <title>Video Models  - Explain two models and review the video generation products  · Jin&#39;s Notes
+</title>
+        <link rel="shortcut icon" href="/theme/images/favicon.ico" type="image/x-icon" />
+        <link rel="icon" href="/theme/images/apple-touch-icon-152x152.png" type="image/png" />
+        <link rel="apple-touch-icon" href="/theme/images/apple-touch-icon.png"  type="image/png" />
+        <link rel="apple-touch-icon" sizes="57x57" href="/theme/images/apple-touch-icon-57x57.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="/theme/images/apple-touch-icon-72x72.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="76x76" href="/theme/images/apple-touch-icon-76x76.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="/theme/images/apple-touch-icon-114x114.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="120x120" href="/theme/images/apple-touch-icon-120x120.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="144x144" href="/theme/images/apple-touch-icon-144x144.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="152x152" href="/theme/images/apple-touch-icon-152x152.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="152x152" href="/theme/images/apple-touch-icon-180x180.png" type="image/png" />
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+     m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+     })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-207279664-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+
+    </head>
+    <body>
+        <div id="content">
+            <div class="navbar navbar-static-top">
+                <div class="navbar-inner">
+                    <div class="container-fluid">
+                        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </a>
+                        <a class="brand" href="/"><span class=site-name><span style="color:black;">Jin's Notes</span></span></a>
+                        <div class="nav-collapse collapse">
+                            <ul class="nav pull-right top-menu">
+                                <li >
+                                    <a href=
+                                       "/"
+                                    >Home</a>
+                                </li>
+<!--                                <li ><a href="/categories">Categories</a></li>-->
+                                <li ><a href="/tags">Tags</a></li>
+                                <li ><a href="/archives">Archives</a></li>
+                                <li><form class="navbar-search" action="/search" onsubmit="return validateForm(this.elements['q'].value);"> <input type="text" class="search-query" placeholder="Search" name="q" id="tipue_search_input"></form></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid">
+                <div class="row-fluid">
+                    <div class="span1"></div>
+                    <div class="span10">
+<article itemscope>
+<div class="row-fluid">
+    <header class="page-header span10 offset2">
+        <h1>
+            <a href="/2024-11-02-video-models">
+                Video Models<br/>
+                <small class="subtitle">
+                    Explain two models and review the video generation products
+                </small>
+            </a>
+        </h1>
+    </header>
+</div>
+
+<div class="row-fluid">
+    <div class="span2 table-of-content">
+        <nav>
+        <h4>Contents</h4>
+        <div class="toc">
+<ul>
+<li><a href="#model-1-movie-gen">Model 1: Movie Gen</a><ul>
+<li><a href="#the-temporal-autoencoder-tae">The Temporal autoencoder (<span class="caps">TAE</span>)</a></li>
+<li><a href="#patchify">Patchify</a></li>
+<li><a href="#classifier-free-guidance-cfg">Classifier Free Guidance (<span class="caps">CFG</span>)</a></li>
+<li><a href="#flow-matching-objectives">Flow Matching Objectives</a></li>
+</ul>
+</li>
+<li><a href="#model-2-videopoet">Model 2: VideoPoet</a><ul>
+<li><a href="#tokenizers">Tokenizers</a></li>
+<li><a href="#autoregressive-objective">Autoregressive Objective</a></li>
+</ul>
+</li>
+<li><a href="#design-space-of-video-models">Design Space of Video Models</a><ul>
+<li><a href="#dit-and-architecture">DiT and Architecture</a></li>
+<li><a href="#encoders">Encoders</a><ul>
+<li><a href="#scaling-estimate">Scaling Estimate</a></li>
+<li><a href="#vision-data">Vision Data</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li><a href="#models-comparison">Models Comparison</a></li>
+<li><a href="#footnotes">Footnotes</a></li>
+</ul>
+</div>
+        </nav>
+    </div>
+    <div class="span8 article-content">
+            
+            <p>Language and vision models are the two frontiers of <span class="caps">AI</span> research and product engineering. Language models are mature enough to be many people’s first stop for information. The early products powered by LLMs have changed how many search and learn.  For example, I have used ChatGPT and Perplexity more than Google Search in the past 3 months. Image models also power useful products. For example, the most popular photo or social medial editing tools incorporate elements powered by image foundation models, e.g. Photoshop Firefly and Midjourney. Chatting and image editing products have already achieved mainstream adoption, demonstrating that they are both futuristic and practical.</p>
+<p>Video models are still experimental. Since the unveiling of Sora in February this year, video models have been one of the competitive frontiers for top industrial <span class="caps">AI</span> labs<sup id="sf-2024-11-02-video-models-1-back"><a href="#sf-2024-11-02-video-models-1" class="simple-footnote" title=" I would say that the two frontiers in the year of 2024 have been LLMs and video generation. Industrial AI labs are AI teams within large tech corporations or extremely well-funded startup companies. Examples are Google, Facebook, Bytedance, OpenAI, and Anthropic.">1</a></sup>. Many of these teams put enormous resources and focus on video generation. Numerous companies release their models, some in the form of paid trials and some in the form of just announcements and sample prompt-video pairs. They are still not packaged as useful products yet. The products are just a thin proxy to the underlying models. <span class="caps">AI</span> powered video editing is still not available.</p>
+<p>In this blog post, I am going to use two examples to draw out the basics of what video models look like today. This minimum technical background will allow us to understand how most video generation model is constructed, trained, and used for inference. It would give us the ability to think through its relationship to the its adjacent cousins of language and image models. We could also better understand how video models might evolve in the coming 6-18 months.</p>
+<p>I picked MovieGen ([polyak2024moviegencastmedia]) and VideoPoet (<a href='#kondratyuk2024videopoetlargelanguagemodel' id='ref-kondratyuk2024videopoetlargelanguagemodel-1'>
+    KYG+24
+</a>) as the two representative models for a deep dive. MovieGen is a good case study because it is one of the current state-of-the-arts, and the only leading project that releases substantial details about its data, engineering, and design space. Its design choices should be representative of the approaches that everyone else is fast copying. VideoPoet represents the best of open-source models before Sora turned video generation into a completely closed-source field. VideoPoet was also interesting because it crucially does not use DiT. Its technology illustrates alternative design choices that the video model community has more or less abandoned in the last year.</p>
+<p><br></p>
+<h4 id="model-1-movie-gen">Model 1: Movie Gen<a class="headerlink" href="#model-1-movie-gen" title="Permanent link">¶</a></h4>
+<p>Movie Gen is a suite of models that provides vision, audio, and editing capabilities. This post only looks at its video foundation model. I aim to explain model as an illustrative example of most of the contemporary video foundation models. I break the model down into a few key ingredients to make it easier to digest: vision encoder, patchify, classifier free guidance, and flow matching objective. I wrote a previous <a href="/2023-10-17-gen-models">post</a> about how neural networks are used in generative models. This model can be seen as another example within that framework.</p>
+<p>The encoded videos are then patchified to produce a 1D vector, analogous to a sequence of text tokens in the <span class="caps">LLM</span> world. The “tokens” are fed into a neural network. The conditional information (i.e. the prompt) is tokenized and fed into the same network. The neural network crunches these inputs, i.e the video and the text, and outputs a video of bounded length.</p>
+<figure>
+<img src="images/2024-11-02/movie-gen-model.png" style="display: block; margin-left: auto; margin-right: auto;" width="80%">
+<figcaption align="center">
+Movie Gen Model
+</figcaption>
+</figure>
+<h6 id="the-temporal-autoencoder-tae">The Temporal autoencoder (<span class="caps">TAE</span>)<a class="headerlink" href="#the-temporal-autoencoder-tae" title="Permanent link">¶</a></h6>
+<p><span class="caps">TAE</span> is a variation of <span class="caps">VQ</span>-<span class="caps">VAE</span> even though its input is video data. Let <span class="math">\(X_0\)</span> be the pure noise video data. <span class="math">\(X_T\)</span> is the uncorrupted video. It has the shape of <span class="math">\(T' \times H' \times W' \times 3\)</span>. <span class="math">\(T'\)</span> is the temporal dimension, represented the length of the video in number of frames. Each frame is <span class="math">\(H' \times W'\)</span>. The purpose of <span class="caps">TAE</span> is to compress the input into something more manageable and computationally feasible, say <span class="math">\(T \times H \times W \times C\)</span>, where <span class="math">\(C\)</span> is a convenient number, for example <span class="math">\(16\)</span>. The encoder first convolutes temporally and then convolute spatially. This reduces the overall dimensionality. Each “frame” goes through an attention block, and then temporal attention is applied. At this point, there are <span class="math">\(T \times H \times W \times C\)</span> embeddings. Because of the convolution and attention, each embedding contains local and global information in both the temporal and spatial direction. After applying quantization, the video is represented by an element in <span class="math">\(\{1, ... K\}^{T \times H \times W \times C}\)</span>, where <span class="math">\(K\)</span> is the size of the discrete latent space. Both reducing the size of <span class="math">\(T, H, W\)</span> and dropping the embedding dimension greatly reduce the dimensionality. See my previous <a href="/2023-10-17-gen-models#vq-vae">post</a> and <a href='#oord2018neuraldiscreterepresentationlearning' id='ref-oord2018neuraldiscreterepresentationlearning-1'>
+    vdOVK18
+</a> for more details, and these concepts in the image space. The video space adds the time component. It is fundamentally the same, it just adds more accounting.</p>
+<h6 id="patchify">Patchify<a class="headerlink" href="#patchify" title="Permanent link">¶</a></h6>
+<p>Patchify is a deterministic operation that re-arranges the input into a 1D vector. A patch could be considered as a sub-video both in the temporal and spatial dimension. For example, one patch represent 5 frames, each frame is only the upper right corder. Say we use patch numbers <span class="math">\(P_t\)</span> and <span class="math">\(P_s\)</span>. A patch would be a video that has <span class="math">\(P_t\)</span> frames with each frame only has <span class="math">\(P_s \times P_s\)</span> pixels. In our latent space, each patch <span class="math">\(p \in K^{P_t \times P_s \times P_s \times C}\)</span>. We treat each patch as a “token”. That is, each token has a dimensionality of <span class="math">\(P_t \times P_s \times P_s \times C\)</span>. At this point, the input video becomes a 1D vector. Because everything is flatten, we add the position embedding to retains its positional information. This vector is analogous to the text tokens in LLMs. This paper <a href='#dosovitskiy2021imageworth16x16words' id='ref-dosovitskiy2021imageworth16x16words-1'>
+    DBK+21
+</a> first uses this technique.</p>
+<h6 id="classifier-free-guidance-cfg">Classifier Free Guidance (<span class="caps">CFG</span>)<a class="headerlink" href="#classifier-free-guidance-cfg" title="Permanent link">¶</a></h6>
+<p>Another key component is how to guide the video generation based on some text prompts. It has become standard practice to use the approach of classifier free guidance. The text is tokenized by a pre-trained tokenizer. The tokens are fed through transformers and combined with the video input coming from the patchified vector. The key difference is that the prompt tokens is controlled by a conditioning variable that probabilistic turning on and off during training. There is also a guidance scale that controls how much this input weighs in the inference stage. See <a href='#ho2022classifierfreediffusionguidance' id='ref-ho2022classifierfreediffusionguidance-1'>
+    HS22
+</a>.</p>
+<h6 id="flow-matching-objectives">Flow Matching Objectives<a class="headerlink" href="#flow-matching-objectives" title="Permanent link">¶</a></h6>
+<p>The neural network is trained with a flow matching objective. The combination of <span class="caps">TAE</span>, patchify, <span class="caps">CFG</span>, and other minor techniques largely describe how to convert the input (video + text) and feed them into a transformer base neural network. There are two key decisions to make about the neural network. One is the internal architecture and the other is the loss objective. As of the writing of this blog, all the top video models uses DiT, where the network backbone uses transformers and the loss objective is diffusion<sup id="sf-2024-11-02-video-models-2-back"><a href="#sf-2024-11-02-video-models-2" class="simple-footnote" title="Alternative to transformer is CNN or LSTM. Alternatives to diffusion is an autoregressive objective or direct density estimation.">2</a></sup>. The flow matching objective is a generalization of diffusion. This sounds really fancy, but we just have to notes that the neural network crunches all the input as we described, and outputs a generated video <span class="math">\(X\)</span>. We calculate the loss,
+</p>
+<div class="math">\begin{equation}
+\mathscr{L}(X, t; \theta) = \mathbb{E}_{t, X_0, P} ||u_t(X, P, \theta) - V_t(X|X_0)||^2
+\end{equation}</div>
+<p>
+where <span class="math">\(P\)</span> is the conditioning information from the text prompt, and <span class="math">\(\theta\)</span> represents all the trainable parameters. It is key that <span class="math">\(V_t(X|X_0)\)</span> is directly calculated given a specific probability path description. For the example of gaussian diffusion, <span class="math">\(p_t(X|X_{t-1}) = \mathscr{N}(X|\mu_{t}(X_0), \sigma_{t}(X_0))\)</span>. We can get an analytical form
+</p>
+<div class="math">\begin{equation}
+V_t(X|X_0)= \frac{\sigma'_t(X_0)}{\sigma_t(X_0)}\left[ X - \mu_t(X_0) \right] + \mu'_t (X_0) 
+\end{equation}</div>
+<p>Note that <span class="math">\(u_t\)</span> is the output of the neural network. <span class="math">\(\mathscr{L}\)</span> is easily calculated and we could train on data and update <span class="math">\(\theta\)</span>.</p>
+<p>Inference starts with a video of pure white noise, <span class="math">\(X_0\)</span>. It is encoded by <span class="caps">TAE</span>. Using <span class="math">\(u_t(\theta)\)</span> and solving a <span class="caps">ODE</span> giving us a probability distribution like description in that we could sample <span class="math">\(X_t\)</span> from <span class="math">\(X_{t-1}\)</span>. For each time step, the noisy <span class="math">\(X_t\)</span> get more details through this transformation. The probability path description coming from the flow objective is the same as diffusion. Note that the <span class="caps">ODE</span> is not written out here. See my previous <a href="/2023-10-17-gen-models#diffusion-via-continuous-normalizing-flows-cnfs">post</a> or <a href='#lipman2023flowmatchinggenerativemodeling' id='ref-lipman2023flowmatchinggenerativemodeling-1'>
+    LCBH+23
+</a> for more details. </p>
+<p><br></p>
+<h4 id="model-2-videopoet">Model 2: VideoPoet<a class="headerlink" href="#model-2-videopoet" title="Permanent link">¶</a></h4>
+<p>I am doing a deep dive into VideoPoet here because this model was state-of-the-art just two years ago. It contrasts the recent models in crucial ways. It was pre-<span class="caps">SORA</span>. At the time of its release, video generation was mostly just research. VideoPoet was not DiT. It uses an autoregressive objective instead of diffusion. This contrast is important to keep in mind because even the most recent models still feel immature. More likely than not, we will see a few more breakthrough moments before visual models reach a similar level of maturity compared to language models.</p>
+<p>Having explained MovieGen, understanding VideoPoet is a lot easier. The model converts text, visual, and audio into a single token vector. Each modality has its dedicated tokenizer. The token sequence is fed into a language model, which is trained to predict the next token. The sampling process autoregressively generates a visual token sequence given any partial input sequence. The model decodes the sequence into a video.</p>
+<h6 id="tokenizers">Tokenizers<a class="headerlink" href="#tokenizers" title="Permanent link">¶</a></h6>
+<p>The inputs are broken down into text, visual, and sound tokenizer. There are 256 special tokens. These special tokens allow the text, visual, and sound tokens to be delimited. The text tokens are generated by the T5 encoder. MagvitV2 (<a href='#yu2023magvitmaskedgenerativevideo' id='ref-yu2023magvitmaskedgenerativevideo-1'>
+    YCS+23
+</a>, <a href='#yu2024languagemodelbeatsdiffusion' id='ref-yu2024languagemodelbeatsdiffusion-1'>
+    YLG+24
+</a>) is the visual encoder, having a vocab size of 262,144 tokens. The audio tokenizer is SoundsStream (<a href='#zeghidour2021soundstreamendtoendneuralaudio' id='ref-zeghidour2021soundstreamendtoendneuralaudio-1'>
+    ZLO+21
+</a>). All the tokens are concatenated into a single sequence. </p>
+<figure>
+<img src="images/2024-11-02/videopoet_seq_layout.png" style="display: block; margin-left: auto; margin-right: auto;" width="80%">
+<figcaption align="center">
+VideoPoet Sequence Layout 
+</figcaption>
+</figure>
+<p>We focus on a bit more details about its visual encoders MagvitV2. It is similar to <span class="caps">VQ</span>-<span class="caps">VAE</span>. It is different in two key aspects. First is that it aims for a joint image-video tokenization, and second it uses a lookup-free quantization (<span class="caps">LFQ</span>) technique to allows the quantization parameter to grow in size. To include temporal information, the encoder primarily use a causal 3D convolution technique. Causal relationship is maintained to ensure that future frame information do not leak. This is important because the encoder are designed to be used for an autoregressive objective.</p>
+<p>In <span class="caps">VQ</span>-<span class="caps">VAE</span>, each embedding <span class="math">\(z \in \mathbb{R}^{d}\)</span> is replaced with <span class="math">\(z \in \{1, ..., K\}\)</span>. That is, each embedding is quantized and mapped into a single integer. One critical flaw is that as <span class="math">\(K\)</span> increases, the encoder does not increase in performance. MagvitV2 encoder improves on this by introduce another mapping. It first maps an element in <span class="math">\(\mathbb{R}^{d}\)</span> into <span class="math">\(\{-1, 1\}^{d}\)</span>. For each of the dimension, it just retains its signed information. The values gets summed up geometrically to obtain a single number
+</p>
+<div class="math">\begin{equation}
+q(z) = \sum_{i=1} ^{d} 2^{i-1} \mathbf{1}_{\{ z_i &gt; 0\}}.
+\end{equation}</div>
+<h6 id="autoregressive-objective">Autoregressive Objective<a class="headerlink" href="#autoregressive-objective" title="Permanent link">¶</a></h6>
+<p>The model is trained with the objective of predicting the next token. The token sequence uses a shared multimodal vocabulary to represent all the input information (text, audio, and visual). The input is fed through a transformer base language model. The model generates a token sequence in autoregressively. This resembles a prefix, decoder only language model almost exactly. The key difference is the token vocabulary. </p>
+<p><br></p>
+<h4 id="design-space-of-video-models">Design Space of Video Models<a class="headerlink" href="#design-space-of-video-models" title="Permanent link">¶</a></h4>
+<p>Now that we have taken a close look at two of the representative video models. We are equipped with enough background knowledge to discuss what all these <span class="caps">AI</span> labs are experimenting and competing on.</p>
+<h5 id="dit-and-architecture">DiT and Architecture<a class="headerlink" href="#dit-and-architecture" title="Permanent link">¶</a></h5>
+<p>The most striking fact is that everyone settles on DiT. DiT means that the neural network uses transformers backbone and is trained on a diffusion objective. Before this year, U-Net base on CNNs has the architecture of choice of most image and video diffusion models. The primary reason is that transformers requires quadratic memory relative to input sequence length. But the work of scaling transformers benefit greatly from the research results in language modeling. The memory requirement issue is addressed through more compute resources, more efficient attention mechanisms (e.g. flash attention or windowed attention), and better compressions through encoders. Intuitively, transformers have proven to such a breakthrough architecture in the world <span class="caps">LLM</span>, it only makes sense that it should be a key ingredient for visual models, especially as these models scale up.</p>
+<p>The choice of diffusion over autoregressive objective is more peculiar. Autoregressive modeling is highly successful in language, but diffusion works better for visual. There are a few things I would like to observe. First, language is intuitive causal. Language is an artificial way to encode information that works well for human. We speak one word after another. Whether intentional or not, autoregressive language model captures this behavior well. However, a visual image is not inherently causal. All the pixels kind of just simultaneously exist. The process of breaking an image down into different sub-images and then piecing them together does not really make sense. I would think about how to realize an image if I were to open my eyes from a deep sleep. First, I just notice a vague outline of the world, and then more details fill in. I start to make sense of the key details that are relevant orient myself in the physical world. My brain does not create visual token after visual token to realize the full image. Furthermore, I actually do not notice all the details, but yet I have a global sense of the what is in front of me. This resembles the diffusion process. In some ways, both autoregression and diffusion are about starting from nothing to building and building more details to complete a bigger objective. In the case of language, it is word after word. In the case of visualization, it is overall details. This <a href="https://sander.ai/2024/09/02/spectral-autoregression.html">blog</a> also makes the connection between autoregression and diffusion. It breaks visual content into a spectral space, and shows that each diffusion step, it is adding more details in different spectra. That is, next token is autoregressive on tokens, and diffusion is autoregressive on spectra.</p>
+<p>It is interesting to notice that video does not benefit from a causal rendering that similar to language. For each of the frame or adjacent frame, I suspect it is diffusion is a superior generating process compared to causal rendering like autoregressive. But between scenes, I kind of suspect that some kind of causal objective is more appropriate. Is there a way build a video model that allows visual rendering to be mostly coming from diffusion but temporal content to be driven by some kind of causal objective. Someone would have to make this breakthrough. We might see this in the future. I don’t think diffusion objective is sufficient for generating high fidelity, longer form videos.</p>
+<h5 id="encoders">Encoders<a class="headerlink" href="#encoders" title="Permanent link">¶</a></h5>
+<p><span class="caps">VQ</span>-<span class="caps">VAE</span> was a key development demonstrating the power of learned visual representation. It is not surprising that tokenizing text is a more or less a solved problem because text itself is already a well formed abstraction of the physical world. For the example of Byte Pair Encoding, it merely just learns a fixed number, say 30,000, vocabulary from a corpus. That is, its algorithm essentially picks 30,000 subwords. Any new text will be converted into those subwords. On the other hand, visual data is much more raw. An image is composed of pixels, which could be roughly presented by 3 small integer. There just isn’t any natural way to turn them into discrete variables. In order to convert visual information into low dimensional, discrete chunk, the encoder has to be highly intelligent. That means the conversion process itself must be powered by a large neural network.</p>
+<p>Every video model actively experiments with the encoder design. The key characteristics is compression rate and representation power. Compression is important because video input consumes a lot of memory. Even a 10 second with a frame rate of 16 fps is too much to feed directly into a DiT network. Representation power could be understood as reconstruction loss. There is a natural tradeoff between compression and representation power. This is a classic problem in information theory. In the ideal world where we have limitless computing power and memory, we would not need to throw away information through lossy encoding. But visual information is still too much to be handled directly in its entirety by large deep network. Encoder design is likely to be an unsolved problem.</p>
+<p>Encoders architecture choices are relatively well known. Visual data are usually convoluted in the spatial and temporal dimension to reduce dimensionality. They are further fed into some attention system. We can also add any other neural network structure to the embedding afterward. Dimensionality could be further reduced through some of quantization. These architectural choices are somewhat similar to feature engineering. For each of these components, they have learnable parameters. The vast majority of the intelligence of the encoders is learned from data.</p>
+<p>Most of the encoders are still relatively small compared to the main diffusion component. The choice of encoders still has a large impacts on overall model performance. I have not seen anyone really pushes scaling boundary of encoders. Encoders are still less than 1 billion parameters. It might be worthwhile to build a 10 to 50 billion model just for encoding and decoding. The key reason is that the most advanced video models are only in the 10-50 billion parameters range. Visual models haven’t demonstrated the same commercial value compared to language models. Visual models are still early in the product development cycle.</p>
+<h6 id="scaling-estimate">Scaling Estimate<a class="headerlink" href="#scaling-estimate" title="Permanent link">¶</a></h6>
+<p>The state of the art video models are about 50 billion parameters. <span class="caps">GPT4</span> was already reported in the trillion-parameters range, and that was a year ago. The most advanced LLMs are probably in the 10 trillion range. I take the position that visual system is more complex than language system. A video communicates more information about the physical or abstract concept than language model. Furthermore, if a visual system also generates audio, it is without a doubt that visual system is strictly more capable than language system.</p>
+<p>Visual model is more computationally demanding than LLMs. Even a relatively low quality, encoded, 60 seconds video will be 20 <span class="caps">MB</span>. An averaged news article is about 1000 words. 1 <span class="caps">MB</span> is probably enough to encode 50 articles. One 60 seconds is equivalent to a thousand articles. It is not possible apply self attention naive to a video input. Video model requires a lot more clever techniques to reduce its computation complexity, but it is also fundamentally much more constrained compared to language model.</p>
+<p>The two facts that visual model is fundamentally more complex and it is 2 orders of magnitude smaller than language model do not add up. It means only one thing. Visual system is no where near in maturity compared to LLMs. If we rate LLMs as having the reasoning ability of an undergraduate, visual model is more like elementary school. Even if the generated models might look impressive, its internal model of the world is not nearly as sophisticated.</p>
+<h6 id="vision-data">Vision Data<a class="headerlink" href="#vision-data" title="Permanent link">¶</a></h6>
+<p>Movie Gen uses billions of images and 100s of millions of video clips. Let’s be more concrete. <span class="caps">LAION</span> 2B dataset is roughly <span class="caps">500TB</span>. Merlot reserve is about <span class="caps">500TB</span> of data and could be roughly cut into 500 million clips. Just as a point of comparison, gpt4 is reported trained on roughly 15 billion tokens, which is roughly 50 <span class="caps">TB</span> of text data. I am sure that Movie Gen uses some of these datasets in additional to other datasets. The combination of <span class="caps">LAION</span> 2B and Merlot Reserve are quite representative and in the right order of magnitude in terms of training data for the best of the video foundation models today. I have written my previous post of open source <a href="/2024-08-01-vision-dataset#video-datasets">vision dataset</a> that <span class="caps">LAION</span> and CommonPool dataset probably already reach the upper limit of what image data the internet can provides. We have much more video data than the typical billion clips range. We should be able to see much better video models in the coming years even just on the expectation that there is a lot of room to grow on video training data.</p>
+<p>We could even estimate what is required to create a clean, training-ready video dataset that is in the 10 billion clip range. Say the data team is given 10,000 <span class="caps">GPU</span>. It still takes 10 days to just do one pass on the data that just do a simple encoding/decoding. It might sound hard, but with good enough engineering, this compute infrastructure should be enough. While the <span class="caps">GPU</span> could be amortized over the years to do ther work, roughly speaking, it is still a 50 million if we assume <span class="caps">GPU</span> unit cost of $500. Other infra cost includes data storage, <span class="caps">CPU</span> server, and data transfer. Data acquisition will likely incur direct payments in the million range, if not 10s of millions. We can say we have a 10 person engineering team; while expensive, it is not as much as infra. I would estimate the total cost of that dataset in the range of 100 million dollars. That is expensive! But a lot of teams will pay that kind of cost to develop these models. It should be noted that this cost is just for creating one next-generation video dataset. Training will cost much more.</p>
+<p>Judging the details different teams have release, it seems that youtube videos are still make up of the majority of the training data. All the research projects are working hard to get alternative sources. Their focus is likely to be dependent on what they want their models to focus on. Video datasets are more challenging to work with compared to text and even images. They are much bigger. They are not just expensive but also much more demanding on the engineering system to do data transfer and process. They have to be encoded at rest because raw frames are simply too large to store. They require GPUs to to speed up even basic processing such scene cutting, filtering, and captioning. A lot of video data are better protected and less generally available on the internet. Even if some research teams want to be loosey-goosey with compliance, it is still hard for them to get their hands on the vast majority of content from YouTube, movie archives, sports recordings, broadcast studios, and game replays. Texts and images datasets are much easier to create, and at this point, almost all the major industry <span class="caps">AI</span> research labs probably end up with more or less the same datasets. It will be interesting to see how video datasets play out in the next few years.</p>
+<p><br></p>
+<h4 id="models-comparison">Models Comparison<a class="headerlink" href="#models-comparison" title="Permanent link">¶</a></h4>
+<!-- ###### Product Attributes -->
+<p>I compiled key metrics about some well-known models<sup id="sf-2024-11-02-video-models-3-back"><a href="#sf-2024-11-02-video-models-3" class="simple-footnote" title="An update on 2024-12. This field is moving very fast. In just two months, my tables are already outdated. There are more models to be considered: Pika, Luma, Hunyuan, Haiper, Sora with public access, and Veo 2. Even though some people have asked me to update, I probably won’t. The goal of my notes is only to document a snapshot of my thinking.">3</a></sup>.</p>
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Announced</th>
+<th>Org</th>
+<th>Openness</th>
+<th>Product Trial</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://imagen.research.google/video/">Imagen Video</a></td>
+<td>2022-10</td>
+<td>Google</td>
+<td>paper</td>
+<td>no</td>
+</tr>
+<tr>
+<td>Runway Gen-2</td>
+<td>2023-04</td>
+<td>Runway</td>
+<td>closed</td>
+<td>paid</td>
+</tr>
+<tr>
+<td><a href="https://www.animatediff.org/">AnimateDiff</a></td>
+<td>2023-06</td>
+<td>Tsinghua</td>
+<td>open</td>
+<td>public</td>
+</tr>
+<tr>
+<td><a href="https://lumiere-video.github.io/">Lumiere</a></td>
+<td>2023-08</td>
+<td>Google</td>
+<td>paper</td>
+<td>invite only</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/2308.06571">ModelScope</a></td>
+<td>2023-08</td>
+<td>Alibaba</td>
+<td>open</td>
+<td>public</td>
+</tr>
+<tr>
+<td><a href="https://stability.ai/news/stable-video-diffusion-open-ai-video-model">Stable Video</a></td>
+<td>2023-11</td>
+<td>Stability <span class="caps">AI</span></td>
+<td>paper</td>
+<td>yes</td>
+</tr>
+<tr>
+<td>Emu Video</td>
+<td>2023-11</td>
+<td>Meta</td>
+<td>paper</td>
+<td>no</td>
+</tr>
+<tr>
+<td>VideoPoet</td>
+<td>2023-12</td>
+<td>Google</td>
+<td>paper</td>
+<td>no</td>
+</tr>
+<tr>
+<td><span class="caps">WALT</span></td>
+<td>2023-12</td>
+<td>Google</td>
+<td>paper</td>
+<td>no</td>
+</tr>
+<tr>
+<td>Sora</td>
+<td>2024-02</td>
+<td>OpenAI</td>
+<td>technical report</td>
+<td>no</td>
+</tr>
+<tr>
+<td><a href="https://blog.google/technology/ai/google-generative-ai-veo-imagen-3/?utm_source=chatgpt.com">Veo</a></td>
+<td>2024-05</td>
+<td>Google</td>
+<td>closed</td>
+<td>invite only</td>
+</tr>
+<tr>
+<td>Runway Gen-3</td>
+<td>2024-06</td>
+<td>Runway</td>
+<td>closed</td>
+<td>paid</td>
+</tr>
+<tr>
+<td><a href="https://github.com/hpcaitech/Open-Sora/tree/main?tab=readme-ov-file">Open-Sora</a></td>
+<td>2024-06</td>
+<td><span class="caps">HPCAI</span> Tech</td>
+<td>open</td>
+<td>public</td>
+</tr>
+<tr>
+<td><a href="https://klingai.com/">Kling</a></td>
+<td>2024-06</td>
+<td>Kuaishou</td>
+<td>closed</td>
+<td>paid</td>
+</tr>
+<tr>
+<td>PixelDance</td>
+<td>2024-09</td>
+<td>Bytedance</td>
+<td>closed</td>
+<td>invite only</td>
+</tr>
+<tr>
+<td>Seaweed</td>
+<td>2024-09</td>
+<td>Bytedance</td>
+<td>closed</td>
+<td>invite only</td>
+</tr>
+<tr>
+<td>CogVideo</td>
+<td>2024-09</td>
+<td>Tsinghua</td>
+<td>open</td>
+<td>public</td>
+</tr>
+<tr>
+<td>Movie Gen</td>
+<td>2024-10</td>
+<td>Meta</td>
+<td>paper</td>
+<td>no</td>
+</tr>
+</tbody>
+</table>
+<figure>
+<figcaption align="center">
+<strong>Product Attributes</strong>
+</figcaption>
+</figure>
+<p><br></p>
+<!-- ###### Model Attributes -->
+<table>
+<thead>
+<tr>
+<th>Model</th>
+<th>Size</th>
+<th>Data</th>
+<th>Architecture</th>
+<th>Training Objective</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://imagen.research.google/video/">Imagen Video</a></td>
+<td>5.7 billion</td>
+<td>60M image<br>14M video</td>
+<td>U-Net</td>
+<td>diffusion</td>
+</tr>
+<tr>
+<td>Runway Gen-2</td>
+<td>unknown</td>
+<td>unknown</td>
+<td>unknown</td>
+<td>unknown</td>
+</tr>
+<tr>
+<td><a href="https://www.animatediff.org/">AnimateDiff</a></td>
+<td>1 billion</td>
+<td>10M video</td>
+<td>adapters</td>
+<td>diffusion</td>
+</tr>
+<tr>
+<td><a href="https://lumiere-video.github.io/">Lumiere</a></td>
+<td>unknown</td>
+<td>30M video</td>
+<td>U-Net</td>
+<td>diffusion</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/2308.06571">ModelScope</a></td>
+<td>1.7 billion</td>
+<td>2B image<br>10M video</td>
+<td>U-Net</td>
+<td>diffusion</td>
+</tr>
+<tr>
+<td><a href="https://stability.ai/news/stable-video-diffusion-open-ai-video-model">Stable Video</a></td>
+<td>1.5 billion</td>
+<td>600M video</td>
+<td>transformer</td>
+<td>diffusion</td>
+</tr>
+<tr>
+<td>Emu Video</td>
+<td>4.4 billion</td>
+<td>34M video</td>
+<td>U-Net</td>
+<td>image diffusion<br>next frame</td>
+</tr>
+<tr>
+<td>VideoPoet</td>
+<td>8 billion</td>
+<td>1B image<br>270M vidoes</td>
+<td><span class="caps">MAGVIT</span>-v2<br>transformer</td>
+<td>next token</td>
+</tr>
+<tr>
+<td><span class="caps">WALT</span></td>
+<td>0.5 billion</td>
+<td>970M image<br>89M video</td>
+<td><span class="caps">MAGVIT</span>-v2<br>transformer</td>
+<td>diffusion</td>
+</tr>
+<tr>
+<td>Sora</td>
+<td>unknown</td>
+<td>unkonwn</td>
+<td>transformer</td>
+<td>diffusion</td>
+</tr>
+<tr>
+<td><a href="https://blog.google/technology/ai/google-generative-ai-veo-imagen-3/?utm_source=chatgpt.com">Veo</a></td>
+<td>unknown</td>
+<td>unknown</td>
+<td>unknown</td>
+<td>unknown</td>
+</tr>
+<tr>
+<td>Runway Gen-3</td>
+<td>unknown</td>
+<td>unknown</td>
+<td>unknown</td>
+<td>unknown</td>
+</tr>
+<tr>
+<td><a href="https://github.com/hpcaitech/Open-Sora/tree/main?tab=readme-ov-file">Open-Sora</a></td>
+<td>1.5 billion</td>
+<td>90M videos</td>
+<td><span class="caps">VAE</span><br>transformer</td>
+<td>diffusion</td>
+</tr>
+<tr>
+<td><a href="https://klingai.com/">Kling</a></td>
+<td>unknown</td>
+<td>unknown</td>
+<td>unknown</td>
+<td>unknown</td>
+</tr>
+<tr>
+<td>PixelDance</td>
+<td>unknown</td>
+<td>unknown</td>
+<td>unknown</td>
+<td>unknown</td>
+</tr>
+<tr>
+<td>Seaweed</td>
+<td>unknown</td>
+<td>unknown</td>
+<td>unknown</td>
+<td>unknown</td>
+</tr>
+<tr>
+<td>CogVideo</td>
+<td>5 billion</td>
+<td>2B image<br>35M video</td>
+<td><span class="caps">VAE</span><br>expert transformer</td>
+<td>diffusion</td>
+</tr>
+<tr>
+<td>Movie Gen</td>
+<td>30 billion</td>
+<td>O(1)B image<br>O(100)M video</td>
+<td><span class="caps">TAE</span><br>transformer</td>
+<td>diffusion</td>
+</tr>
+</tbody>
+</table>
+<figure>
+<figcaption align="center">
+<strong>Model Attributes</strong>
+</figcaption>
+</figure>
+<p>The announcement of Sora was a watershed moment. Before Sora, video models were driven mostly by the research community. When Sora was made public in February, it only released minimal technical details and a limited set of selected prompt-video pairs. Still, it showed the world its enormous commercial potential.</p>
+<p>Sora set the trend of being closed source. It was released with limited details, and all subsequent models from industrial labs followed suit, releasing even fewer technical details. For example, there is no public information about the internals of video models such as Kling, Bytedance Seaweed, or Google’s Veo, which are considered competitive with Sora and MovieGen. The only exception is Meta’s MovieGen foundation model. We have to give the Meta team their flowers.</p>
+<p>Despite limited public information, we can summarize some major trends of all the cutting-edge models in terms of design choices, model scale, and data. DiT (transformer backbone + diffusion objective) has become dominant after Sora’s technical report. The model scale ranges between 5 to 50 billion parameters. The image data focuses heavily on internet datasets that more or less resembles DataComp and iis in the order of billions of text-image pairs. The video dataset focuses on YouTube and movie clips and ranges between 100 million to 1 billion of 5-20 second clips. These characteristics are typical in all the latest models<sup id="sf-2024-11-02-video-models-4-back"><a href="#sf-2024-11-02-video-models-4" class="simple-footnote" title=". All the major teams are secretive about their effort. But small tidbits of information leaked in various public reportings.">4</a></sup>. Given the similarity in architecture, data, and model scale, the models’ similar capabilities are not surprising.</p>
+<p>Different models have different focuses. For example, some focus on generating movie-quality clips, demonstrating close-up shots, rack focusing, zoom shots, etc. Some focus on consistency in scene changes, and some on motions. In my opinion, all the output videos feel similar. Pre-Sora generated videos look a certain way. They are mostly animated pictures with a low frame rate. The post-Sora videos are similarly recognizable. They are 5-10 seconds long and feel sci-fi and staged. It could not easily generate realistic, real-life clips similar to what I could capture with my phone. Each model tends to do well in some areas but not all. To me, this is evidence that video models are still early in their development cycle. There are still a lot of low-hanging fruits. For each deficient area from one model, other models have already shown it is feasible to overcome that deficiency. Each model focuses on a particular set of data, but no single project team is an order of magnitude better than others. The same could be said about model scale. I would say that if a team possesses sufficient resources, comparable to those used in training <span class="caps">GPT4</span> (in terms of hardware, data, and engineering talent), they should be able to build a model that is significantly superior to the current generation.</p>
+<p>The latest video models are mostly closed to the public. I suspect a few reasons. First, inference cost is high. The models are built as research models that are not optimized for production to serve tens or hundreds of millions of users. I tested running a CogVideo 5B model on an 80G A100 <span class="caps">GPU</span> in <span class="caps">AWS</span>. To generate a reasonable video from a prompt, it took about 3-5 minutes. The cost is about $0.1 per video. That is assuming full <span class="caps">GPU</span> utilization over the course I rent the <span class="caps">GPU</span>. In practice, the cost per generation is much higher<sup id="sf-2024-11-02-video-models-5-back"><a href="#sf-2024-11-02-video-models-5" class="simple-footnote" title="Overall utilization is going to be much lower than 80-90%. Ten cents is just the GPU cost. Each interaction with the video model feels a lot like posting an Ethereum transaction. A service is not going to be able to make money from a $20 per month subscription if the product has high engagement.">5</a></sup>. Inference will likely require additional optimization both at the model and distributed system level to push inference time from minutes to seconds to provide a reasonable user experience. Second, the models still produce a lot of unrealistic videos. The released prompt-videos pairs are heavily filtered to show their potential. Third, productization is hard. Each <span class="caps">AI</span> lab has gotten enormous resources to speed up their foundation model development. Optimizing models for millions of users takes time. Turning foundation models into product features, such as video editing, or multimedia content-creating tools, takes a different set of people and skillsets. High-quality user experiences will take time to emerge.</p>
+<hr>
+<h4 id="footnotes">Footnotes<a class="headerlink" href="#footnotes" title="Permanent link">¶</a></h4>
+<!--
+
+https://www.youtube.com/watch?v=cPVGs0_fu1U&t=277s
+
+- DiT <a href='#peebles2023scalablediffusionmodelstransformers' id='ref-peebles2023scalablediffusionmodelstransformers-1'>
+    PX23
+</a>
+  - replace U-Net with transformers
+  - keep the diffusion training objective
+
+- WALT <a href='#gupta2023photorealisticvideogenerationdiffusion' id='ref-gupta2023photorealisticvideogenerationdiffusion-1'>
+    GYS+23
+</a>
+  - video, latent space, next frame objective (autoregressive)
+  - patchify visual inputs 
+  - add spatial and temporal position embedding
+  - encode the inputs into a latent space. Simiarlar to VQ-VAE; See magvit2 for more details
+  - Go through a transformers block
+
+- viT <a href='#dosovitskiy2021imageworth16x16words' id='ref-dosovitskiy2021imageworth16x16words-2'>
+    DBK+21
+</a>
+  - ViT showed that reliance on CNNs for image processing is not necessary. 
+
+
+
+
+
+- blog: https://lilianweng.github.io/posts/2024-04-12-diffusion-video/
+  https://lilianweng.github.io/
+
+- video diffusion review: https://github.com/ChenHsing/Awesome-Video-Diffusion-Models?tab=readme-ov-file
+
+- Runway
+  - 200 million in funding
+- Pika AI
+  - about 100 million in funding
+- Luma AI
+  - about 100 million in funding
+- 混元 Hunyuan Video
+  - tencent
+  - fully released model weights
+- Haiper
+  - https://haiper.ai/onboarding
+
+
+https://aivideo.hunyuan.tencent.com/
+https://github.com/Tencent/HunyuanVideo
+https://huggingface.co/tencent/HunyuanVideo  -->
+<!-- Vision models
+- VQ-VAE, 
+  - <a href='#oord2018neuraldiscreterepresentationlearning' id='ref-oord2018neuraldiscreterepresentationlearning-2'>
+    vdOVK18
+</a>
+  - <a href='#razavi2019generating' id='ref-razavi2019generating-1'>
+    RvdOV19
+</a>
+
+- VQ-GAN
+  - <a href='#esser2021tamingtransformershighresolutionimage' id='ref-esser2021tamingtransformershighresolutionimage-1'>
+    ERO21
+</a>
+
+- Diffusion, see 
+  - diffusion and score matching <a href='#ho2020denoising' id='ref-ho2020denoising-1'>
+    HJA20
+</a>
+  - stable diffusion <a href='#rombach2022highresolutionimagesynthesislatent' id='ref-rombach2022highresolutionimagesynthesislatent-1'>
+    RBL+22
+</a> 
+  - diffusion via SDE <a href='#song2021scorebasedgenerativemodelingstochastic' id='ref-song2021scorebasedgenerativemodelingstochastic-1'>
+    SSDK+21
+</a>
+  - diffusion via CNF <a href='#bengio2013generalizeddenoisingautoencodersgenerative' id='ref-bengio2013generalizeddenoisingautoencodersgenerative-1'>
+    BYAV13
+</a>. <a href='#song2021scorebasedgenerativemodelingstochastic' id='ref-song2021scorebasedgenerativemodelingstochastic-2'>
+    SSDK+21
+</a>
+
+
+- GAN
+  - <a href='#goodfellow2014generativeadversarialnetworks' id='ref-goodfellow2014generativeadversarialnetworks-1'>
+    GPAM+14
+</a> -->
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%&#64;#$&#64;#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%&#64;#$&#64;#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=default';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        // "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'auto' } }," +
+        "    jax: ['input/TeX','input/MathML','output/SVG']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['TeX', 'STIX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+
+</script><ol class="simple-footnotes"><li id="sf-2024-11-02-video-models-1"> I would say that the two frontiers in the year of 2024 have been LLMs and video generation. Industrial <span class="caps">AI</span> labs are <span class="caps">AI</span> teams within large tech corporations or extremely well-funded startup companies. Examples are Google, Facebook, Bytedance, OpenAI, and Anthropic. <a href="#sf-2024-11-02-video-models-1-back" class="simple-footnote-back">↩</a></li><li id="sf-2024-11-02-video-models-2">Alternative to transformer is <span class="caps">CNN</span> or <span class="caps">LSTM</span>. Alternatives to diffusion is an autoregressive objective or direct density estimation. <a href="#sf-2024-11-02-video-models-2-back" class="simple-footnote-back">↩</a></li><li id="sf-2024-11-02-video-models-3">An update on 2024-12. This field is moving very fast. In just two months, my tables are already outdated. There are more models to be considered: Pika, Luma, Hunyuan, Haiper, Sora with public access, and Veo 2. Even though some people have asked me to update, I probably won’t. The goal of my notes is only to document a snapshot of my thinking. <a href="#sf-2024-11-02-video-models-3-back" class="simple-footnote-back">↩</a></li><li id="sf-2024-11-02-video-models-4">. All the major teams are secretive about their effort. But small tidbits of information leaked in various public reportings. <a href="#sf-2024-11-02-video-models-4-back" class="simple-footnote-back">↩</a></li><li id="sf-2024-11-02-video-models-5">Overall utilization is going to be much lower than 80-90%. Ten cents is just the <span class="caps">GPU</span> cost. Each interaction with the video model feels a lot like posting an Ethereum transaction. A service is not going to be able to make money from a $20 per month subscription if the product has high engagement. <a href="#sf-2024-11-02-video-models-5-back" class="simple-footnote-back">↩</a></li></ol>
+
+
+            <div id="citations">
+    <hr>
+    <h3>Citations</h3>
+    <ol class="references">
+            <li id="kondratyuk2024videopoetlargelanguagemodel">
+                <span class="reference-text">Kondratyuk, Dan, Yu, Lijun, Gu, Xiuye, Lezama, José, Huang, Jonathan, Schindler, Grant, Hornung, Rachel, Birodkar, Vighnesh, Yan, Jimmy, Chiu, Ming-Chang, Somandepalli, Krishna, Akbari, Hassan, Alon, Yair, Cheng, Yong, Dillon, Josh, Gupta, Agrim, Hahn, Meera, Hauth, Anja, Hendon, David, Martinez, Alonso, Minnen, David, Sirotenko, Mikhail, Sohn, Kihyuk, Yang, Xuan, Adam, Hartwig, Yang, Ming-Hsuan, Essa, Irfan, Wang, Huisheng, Ross, David&nbsp;A., Seybold, Bryan, and Jiang, Lu.
+Videopoet: a large language model for zero-shot video generation.
+2024.
+URL: <a href="https://arxiv.org/abs/2312.14125">https://arxiv.org/abs/2312.14125</a>, <a href="https://arxiv.org/abs/2312.14125">arXiv:2312.14125</a>.</span>
+                    <a class="cite-backref" href="#ref-kondratyuk2024videopoetlargelanguagemodel-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="oord2018neuraldiscreterepresentationlearning">
+                <span class="reference-text">van&nbsp;den Oord, Aaron, Vinyals, Oriol, and Kavukcuoglu, Koray.
+Neural discrete representation learning.
+2018.
+URL: <a href="https://arxiv.org/abs/1711.00937">https://arxiv.org/abs/1711.00937</a>, <a href="https://arxiv.org/abs/1711.00937">arXiv:1711.00937</a>.</span>
+                    <a class="cite-backref" href="#ref-oord2018neuraldiscreterepresentationlearning-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+                    <a class="cite-backref" href="#ref-oord2018neuraldiscreterepresentationlearning-2"
+                       title="Jump back to reference 2">
+                        <sup>
+                            <i>
+                                <b>
+                                    2
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="dosovitskiy2021imageworth16x16words">
+                <span class="reference-text">Dosovitskiy, Alexey, Beyer, Lucas, Kolesnikov, Alexander, Weissenborn, Dirk, Zhai, Xiaohua, Unterthiner, Thomas, Dehghani, Mostafa, Minderer, Matthias, Heigold, Georg, Gelly, Sylvain, Uszkoreit, Jakob, and Houlsby, Neil.
+An image is worth 16x16 words: transformers for image recognition at scale.
+2021.
+URL: <a href="https://arxiv.org/abs/2010.11929">https://arxiv.org/abs/2010.11929</a>, <a href="https://arxiv.org/abs/2010.11929">arXiv:2010.11929</a>.</span>
+                    <a class="cite-backref" href="#ref-dosovitskiy2021imageworth16x16words-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+                    <a class="cite-backref" href="#ref-dosovitskiy2021imageworth16x16words-2"
+                       title="Jump back to reference 2">
+                        <sup>
+                            <i>
+                                <b>
+                                    2
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="ho2022classifierfreediffusionguidance">
+                <span class="reference-text">Ho, Jonathan and Salimans, Tim.
+Classifier-free diffusion guidance.
+2022.
+URL: <a href="https://arxiv.org/abs/2207.12598">https://arxiv.org/abs/2207.12598</a>, <a href="https://arxiv.org/abs/2207.12598">arXiv:2207.12598</a>.</span>
+                    <a class="cite-backref" href="#ref-ho2022classifierfreediffusionguidance-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="lipman2023flowmatchinggenerativemodeling">
+                <span class="reference-text">Lipman, Yaron, Chen, Ricky T.&nbsp;Q., Ben-Hamu, Heli, Nickel, Maximilian, and Le, Matt.
+Flow matching for generative modeling.
+2023.
+URL: <a href="https://arxiv.org/abs/2210.02747">https://arxiv.org/abs/2210.02747</a>, <a href="https://arxiv.org/abs/2210.02747">arXiv:2210.02747</a>.</span>
+                    <a class="cite-backref" href="#ref-lipman2023flowmatchinggenerativemodeling-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="yu2023magvitmaskedgenerativevideo">
+                <span class="reference-text">Yu, Lijun, Cheng, Yong, Sohn, Kihyuk, Lezama, José, Zhang, Han, Chang, Huiwen, Hauptmann, Alexander&nbsp;G., Yang, Ming-Hsuan, Hao, Yuan, Essa, Irfan, and Jiang, Lu.
+Magvit: masked generative video transformer.
+2023.
+URL: <a href="https://arxiv.org/abs/2212.05199">https://arxiv.org/abs/2212.05199</a>, <a href="https://arxiv.org/abs/2212.05199">arXiv:2212.05199</a>.</span>
+                    <a class="cite-backref" href="#ref-yu2023magvitmaskedgenerativevideo-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="yu2024languagemodelbeatsdiffusion">
+                <span class="reference-text">Yu, Lijun, Lezama, José, Gundavarapu, Nitesh&nbsp;B., Versari, Luca, Sohn, Kihyuk, Minnen, David, Cheng, Yong, Birodkar, Vighnesh, Gupta, Agrim, Gu, Xiuye, Hauptmann, Alexander&nbsp;G., Gong, Boqing, Yang, Ming-Hsuan, Essa, Irfan, Ross, David&nbsp;A., and Jiang, Lu.
+Language model beats diffusion – tokenizer is key to visual generation.
+2024.
+URL: <a href="https://arxiv.org/abs/2310.05737">https://arxiv.org/abs/2310.05737</a>, <a href="https://arxiv.org/abs/2310.05737">arXiv:2310.05737</a>.</span>
+                    <a class="cite-backref" href="#ref-yu2024languagemodelbeatsdiffusion-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="zeghidour2021soundstreamendtoendneuralaudio">
+                <span class="reference-text">Zeghidour, Neil, Luebs, Alejandro, Omran, Ahmed, Skoglund, Jan, and Tagliasacchi, Marco.
+Soundstream: an end-to-end neural audio codec.
+2021.
+URL: <a href="https://arxiv.org/abs/2107.03312">https://arxiv.org/abs/2107.03312</a>, <a href="https://arxiv.org/abs/2107.03312">arXiv:2107.03312</a>.</span>
+                    <a class="cite-backref" href="#ref-zeghidour2021soundstreamendtoendneuralaudio-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="peebles2023scalablediffusionmodelstransformers">
+                <span class="reference-text">Peebles, William and Xie, Saining.
+Scalable diffusion models with transformers.
+2023.
+URL: <a href="https://arxiv.org/abs/2212.09748">https://arxiv.org/abs/2212.09748</a>, <a href="https://arxiv.org/abs/2212.09748">arXiv:2212.09748</a>.</span>
+                    <a class="cite-backref" href="#ref-peebles2023scalablediffusionmodelstransformers-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="gupta2023photorealisticvideogenerationdiffusion">
+                <span class="reference-text">Gupta, Agrim, Yu, Lijun, Sohn, Kihyuk, Gu, Xiuye, Hahn, Meera, Fei-Fei, Li, Essa, Irfan, Jiang, Lu, and Lezama, José.
+Photorealistic video generation with diffusion models.
+2023.
+URL: <a href="https://arxiv.org/abs/2312.06662">https://arxiv.org/abs/2312.06662</a>, <a href="https://arxiv.org/abs/2312.06662">arXiv:2312.06662</a>.</span>
+                    <a class="cite-backref" href="#ref-gupta2023photorealisticvideogenerationdiffusion-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="razavi2019generating">
+                <span class="reference-text">Razavi, Ali, van&nbsp;den Oord, Aaron, and Vinyals, Oriol.
+Generating diverse high-fidelity images with vq-vae-2.
+2019.
+<a href="https://arxiv.org/abs/1906.00446">arXiv:1906.00446</a>.</span>
+                    <a class="cite-backref" href="#ref-razavi2019generating-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="esser2021tamingtransformershighresolutionimage">
+                <span class="reference-text">Esser, Patrick, Rombach, Robin, and Ommer, Björn.
+Taming transformers for high-resolution image synthesis.
+2021.
+URL: <a href="https://arxiv.org/abs/2012.09841">https://arxiv.org/abs/2012.09841</a>, <a href="https://arxiv.org/abs/2012.09841">arXiv:2012.09841</a>.</span>
+                    <a class="cite-backref" href="#ref-esser2021tamingtransformershighresolutionimage-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="ho2020denoising">
+                <span class="reference-text">Ho, Jonathan, Jain, Ajay, and Abbeel, Pieter.
+Denoising diffusion probabilistic models.
+2020.
+<a href="https://arxiv.org/abs/2006.11239">arXiv:2006.11239</a>.</span>
+                    <a class="cite-backref" href="#ref-ho2020denoising-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="rombach2022highresolutionimagesynthesislatent">
+                <span class="reference-text">Rombach, Robin, Blattmann, Andreas, Lorenz, Dominik, Esser, Patrick, and Ommer, Björn.
+High-resolution image synthesis with latent diffusion models.
+2022.
+URL: <a href="https://arxiv.org/abs/2112.10752">https://arxiv.org/abs/2112.10752</a>, <a href="https://arxiv.org/abs/2112.10752">arXiv:2112.10752</a>.</span>
+                    <a class="cite-backref" href="#ref-rombach2022highresolutionimagesynthesislatent-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="song2021scorebasedgenerativemodelingstochastic">
+                <span class="reference-text">Song, Yang, Sohl-Dickstein, Jascha, Kingma, Diederik&nbsp;P., Kumar, Abhishek, Ermon, Stefano, and Poole, Ben.
+Score-based generative modeling through stochastic differential equations.
+2021.
+URL: <a href="https://arxiv.org/abs/2011.13456">https://arxiv.org/abs/2011.13456</a>, <a href="https://arxiv.org/abs/2011.13456">arXiv:2011.13456</a>.</span>
+                    <a class="cite-backref" href="#ref-song2021scorebasedgenerativemodelingstochastic-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+                    <a class="cite-backref" href="#ref-song2021scorebasedgenerativemodelingstochastic-2"
+                       title="Jump back to reference 2">
+                        <sup>
+                            <i>
+                                <b>
+                                    2
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="bengio2013generalizeddenoisingautoencodersgenerative">
+                <span class="reference-text">Bengio, Yoshua, Yao, Li, Alain, Guillaume, and Vincent, Pascal.
+Generalized denoising auto-encoders as generative models.
+2013.
+URL: <a href="https://arxiv.org/abs/1305.6663">https://arxiv.org/abs/1305.6663</a>, <a href="https://arxiv.org/abs/1305.6663">arXiv:1305.6663</a>.</span>
+                    <a class="cite-backref" href="#ref-bengio2013generalizeddenoisingautoencodersgenerative-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="goodfellow2014generativeadversarialnetworks">
+                <span class="reference-text">Goodfellow, Ian&nbsp;J., Pouget-Abadie, Jean, Mirza, Mehdi, Xu, Bing, Warde-Farley, David, Ozair, Sherjil, Courville, Aaron, and Bengio, Yoshua.
+Generative adversarial networks.
+2014.
+URL: <a href="https://arxiv.org/abs/1406.2661">https://arxiv.org/abs/1406.2661</a>, <a href="https://arxiv.org/abs/1406.2661">arXiv:1406.2661</a>.</span>
+                    <a class="cite-backref" href="#ref-goodfellow2014generativeadversarialnetworks-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+    </ol>
+</div>
+
+             
+ 
+            
+            
+            
+
+
+
+
+
+
+
+
+            <hr/>
+            <script src="https://utteranc.es/client.js"
+                    repo="jinfwhuang/jinfwhuang.github.io"
+                    issue-term="pathname"
+                    label="user-comments"
+                    theme="github-light"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+
+            <hr/>
+<section>
+    <h2>Related Posts</h2>
+<ul class="related-posts-list">
+<li><a href="/2023-04-27-open-source-llm" title="Open Source LLMs">Open Source LLMs</a></li>
+<li><a href="/2023-06-04-domain-specific-ai-assistant" title="Domain Specific AI Assistants">Domain Specific AI Assistants</a></li>
+<li><a href="/2023-10-17-gen-models" title="The Role of Neural Networks in Generative Models">The Role of Neural Networks in Generative Models</a></li>
+<li><a href="/2024-08-01-vision-dataset" title="Open Source Vision Datasets">Open Source Vision Datasets</a></li>
+<li><a href="/2024-10-28-binary-storage-engine" title="Analytics for Binary Blobs - AI Database">Analytics for Binary Blobs <small>AI Database</small></a></li>
+</ul>
+<hr />
+</section>
+            <aside>
+            <nav>
+            <ul class="articles-timeline">
+                <li class="previous-article">« <a href="/2024-10-28-binary-storage-engine" title="Previous: Analytics for Binary Blobs - AI Database">Analytics for Binary Blobs <small class="subtitle">AI Database</small></a></li>
+                <li class="next-article"><a href="/2024-11-11-flat-water-paddle-up" title="Next: My Journey: Flat Water Foiling Paddle Up - All pain, No fun">My Journey: Flat Water Foiling Paddle Up <small class="subtitle">All pain, No fun</small></a> »</li>
+            </ul>
+            </nav>
+            </aside>
+        </div>
+        <section id="article-sidebar" class="span2">
+            <h4>Published</h4>
+            <time itemprop="dateCreated" datetime="2024-11-02T00:00:00-07:00">Sat 02 November 2024</time>
+            <!--             <h4>Category</h4>
+            <a class="category-link" href="/categories#misc-ref">misc</a>
+ -->
+            <h4>Tags</h4>
+            <ul class="list-of-tags tags-in-article">
+                <li><a href="/tags#ai-ref">ai
+                    <span class="superscript">7</span>
+</a></li>
+            </ul>
+<h4>Contact</h4>
+<div id="sidebar-social-link">
+    <a href="https://twitter.com/jinfwhuang" title="Twiiter" target="_blank" rel="nofollow noopener noreferrer">
+        <svg xmlns="http://www.w3.org/2000/svg" aria-label="Twitter" role="img" viewBox="0 0 512 512"><rect width="512" height="512" rx="15%" fill="#1da1f3"/><path fill="#fff" d="M437 152a72 72 0 0 1-40 12 72 72 0 0 0 32-40 72 72 0 0 1-45 17 72 72 0 0 0-122 65 200 200 0 0 1-145-74 72 72 0 0 0 22 94 72 72 0 0 1-32-7 72 72 0 0 0 56 69 72 72 0 0 1-32 1 72 72 0 0 0 67 50 200 200 0 0 1-105 29 200 200 0 0 0 309-179 200 200 0 0 0 35-37"/></svg>
+    </a>
+    <a href="https://www.linkedin.com/in/jinfwhuang" title="LinkedIn" target="_blank" rel="nofollow noopener noreferrer">
+        <svg xmlns="http://www.w3.org/2000/svg" aria-label="LinkedIn" role="img" viewBox="0 0 512 512" fill="#fff"><rect width="512" height="512" rx="15%" fill="#0077b5"/><circle cx="142" cy="138" r="37"/><path stroke="#fff" stroke-width="66" d="M244 194v198M142 194v198"/><path d="M276 282c0-20 13-40 36-40 24 0 33 18 33 45v105h66V279c0-61-32-89-76-89-34 0-51 19-59 32"/></svg>
+    </a>
+</div>
+            
+
+
+
+
+
+            
+
+
+
+
+
+        </section>
+</div>
+</article>
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe.
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides.
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo https://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>                    </div>
+                    <div class="span1"></div>
+                </div>
+            </div>
+        </div>
+<!--        <footer>
+
+    <div>
+        <span class="site-name"><span style="color:black;">Jin's Notes</span></span> - the hardest part is taking the first step
+    </div>
+
+
+
+    <div id="fpowered">
+        Powered by: <a href="http://getpelican.com/" title="Pelican Home Page" target="_blank" rel="nofollow noopener noreferrer">Pelican</a>
+        Theme: <a href="https://elegant.oncrashreboot.com/" title="Theme Elegant Home Page" target="_blank" rel="nofollow noopener noreferrer">Elegant</a>
+    </div>
+</footer>-->
+            <script src="//code.jquery.com/jquery.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+        <script src="/theme/js/elegant.prod.9e9d5ce754.js"></script>
+        <script>
+            function validateForm(query)
+            {
+                return (query.length > 0);
+            }
+        </script>
+
+
+
+
+    <script>
+    (function () {
+        if (window.location.hash.match(/^#comment-\d+$/)) {
+            $('#comment_thread').collapse('show');
+        }
+    })();
+    window.onhashchange=function(){
+        if (window.location.hash.match(/^#comment-\d+$/))
+            window.location.reload(true);
+    }
+    $('#comment_thread').on('shown', function () {
+        var link = document.getElementById('comment-accordion-toggle');
+        var old_innerHTML = link.innerHTML;
+        $(link).fadeOut(200, function() {
+            $(this).text('Click here to hide comments').fadeIn(200);
+        });
+        $('#comment_thread').on('hidden', function () {
+            $(link).fadeOut(200, function() {
+                $(this).text(old_innerHTML).fadeIn(200);
+            });
+        })
+    })
+</script>
+
+    </body>
+    <!-- Theme: Elegant built for Pelican
+        License : MIT -->
+
+</html>

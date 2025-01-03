@@ -117,15 +117,15 @@
             <p>Large language models (<span class="caps">LLM</span>) are becoming an increasingly requisite component for modern applications. The text generation capability has crossed a threshold to perform many well-defined <span class="caps">NLP</span> tasks as well as human workers could. Many of the recent applications in the past year, in 2022-2023, leveraged close-source, privately hosted LLMs. Many of the best, largest state-of-the-art models are close-source and controlled by private companies such as OpenAI, Cohere, Adept, Anthropic, and Google.</p>
 <p>There is also rapid progress in the open-source community. At it stands today, open-source models are not likely to be able to match the capabilities of private LLMs due to training data, compute costs, and engineering resources. However, the open-source models could be sufficiently powerful for most applications. Open-source models have their advantages as well. For example, developers could choose a specific model size to match the application requirements to reduce compute waste. The open models could be further modified and trained for specific domains or <span class="caps">NLP</span> tasks.</p>
 <p>In this post, I am sharing my thoughts on how to get started on choosing an open-source <span class="caps">LLM</span>.</p>
-<h4 id="ingredients-of-llm">Ingredients of <span class="caps">LLM</span></h4>
+<h4 id="ingredients-of-llm">Ingredients of <span class="caps">LLM</span><a class="headerlink" href="#ingredients-of-llm" title="Permanent link">¶</a></h4>
 <p>I am going to describe the key factors that differentiate LLMs. The best way to gain a decent understanding of <span class="caps">LLM</span> is to read a few of the classic papers on the topic. I would recommend the original transformer paper(<a href='#vaswani2017attention' id='ref-vaswani2017attention-1'>
-    10
+    VSP+17
 </a>), the <span class="caps">BERT</span> (Bert <a href='#devlin2019bert' id='ref-devlin2019bert-1'>
-    2
+    DCLT19
 </a>), and <span class="caps">UL2</span> <a href='#tay2023ul2' id='ref-tay2023ul2-1'>
-    8
+    TDT+23
 </a>, and the instruct-gpt paper(<a href='#ouyang2022training' id='ref-ouyang2022training-1'>
-    4
+    OWJ+22
 </a>). </p>
 <p>The first thing to notice about an <span class="caps">LLM</span> is its model architecture. All the recently published, relevant LLMs are transformers-based. That is, the key building block is transformer. Here are two excellent tutorials that describe this building block: <a href="https://nlp.seas.harvard.edu/2018/04/03/attention.html">1</a> and <a href="https://jalammar.github.io/illustrated-transformer/">2</a>. A transformer could be loosely understood as building a cross-attention, <code>n</code>-by-<code>n</code> matrix with the size <code>n</code> equal to the input length. The matrix tells the model how to represent each token based on the entire context. The full model has many layers, with each layer having many different multiple heads of these transformer units. One could perceive a transformer unit as a unique logical way to evaluate the input. For example, one unit is to evaluate the input’s language structure, the other unit is to evaluate the input’s historical context, etc.</p>
 <p>There are two major variants of transformer-based <span class="caps">LLM</span> that are popular: decoder-only and encoder-decoder. Encoder-only could be subsumed by the encoder-decoder model because the decoder part could be discarded for specific downstream tasks. However, from the perspective of <span class="caps">LLM</span> users, we don’t have to worry too much about the pros and cons of the different variants. The only key distinction is that the decoder-only model concatenates inputs and targets to process them together. This would make decoder-only models less appropriate for applications that require text embeddings.</p>
@@ -135,33 +135,33 @@
 <p>Another ingredient is the training data. Pretraining data is unlabelled text. Fine-tuning data is labelled dataset, and is much smaller than the pretraining dataset. It is important to understand what data have been used for the pretrained checkpoints. This allows us to understand what domain the model could perform well, what knowledge the parameters could contain, and how to further improve the model.</p>
 <p>Another ingredient is input representation. The input representation is learned from the text corpus. We need to consider if the application domain has similar vocabularies. It is usually not a problem for LLMs that are trained on large, sufficiently diverse corpus.</p>
 <p>Lastly, we have to consider if the models are trained by reinforcement learning through some reward models. The technique of furthering training fine-tuned models to have more human-preferred outputs is known as reinforcement learning from human feedback (<span class="caps">RLHF</span>). It is different from fine-tuning with human-labeled data. <span class="caps">RLHF</span> takes labeled data to train a completely independent reward model. The reward model is used to evaluate outputs generated by the fine-tuned model. See <a href='#stiennon2022learning' id='ref-stiennon2022learning-1'>
-    6
+    SOW+22
 </a> for more details. This step has been shown to limit hallucination and optimize outputs for human preferences. However, this step also restricts the model’s variance and makes it more likely to generate similar, mundane outputs. <span class="caps">RLHF</span>-trained models are hard to further fine-tuned or modify for specific tasks.</p>
-<h4 id="start-with-a-pretrained-llm">Start with a Pretrained <span class="caps">LLM</span></h4>
+<h4 id="start-with-a-pretrained-llm">Start with a Pretrained <span class="caps">LLM</span><a class="headerlink" href="#start-with-a-pretrained-llm" title="Permanent link">¶</a></h4>
 <p>The practical way of using an open-source <span class="caps">LLM</span> is to choose a pretrained checkpoint from well-known models. There are many overviews and surveys about LLMs. For example, <a href='#yang2023harnessing' id='ref-yang2023harnessing-1'>
-    11
+    YJT+23
 </a> provides a good overview of the history and the latest <span class="caps">LLM</span> models. As of the writing of this blog, I would consider one of these as a starting point: t5 (<a href='#raffel2020exploring' id='ref-raffel2020exploring-1'>
-    5
+    RSR+20
 </a>), long-t5 (<a href='#guo2022longt5' id='ref-guo2022longt5-1'>
-    3
+    GAU+22
 </a>), <a href="https://huggingface.co/docs/transformers/model_doc/flan-t5">flan-t5</a>, <a href="https://huggingface.co/google/flan-ul2">flan-ul2</a>, <a href="https://huggingface.co/EleutherAI/pythia-12b">pythia</a> (<a href='#biderman2023pythia' id='ref-biderman2023pythia-1'>
-    1
+    BSA+23
 </a>), <a href="https://huggingface.co/databricks/dolly-v2-12b">dolly</a>, instructor (<a href='#su2023embedder' id='ref-su2023embedder-1'>
-    7
+    SSK+23
 </a>), <a href="https://huggingface.co/docs/transformers/main/model_doc/llama">LLaMA</a> (<a href='#touvron2023llama' id='ref-touvron2023llama-1'>
-    9
+    TLI+23
 </a>), <a href="https://huggingface.co/tiiuae/falcon-7b">falcon</a>.</p>
 <p>I would also consult various well-known benchmark leaderboards on <span class="caps">LLM</span> and specific <span class="caps">NLP</span> tasks. For example, 
 <a href="https://huggingface.co/spaces/HuggingFaceH4/open_llm_leaderboard">open <span class="caps">LLM</span> leaderboard</a>, <a href="https://huggingface.co/spaces/mteb/leaderboard"><span class="caps">MTEB</span></a>, <a href="https://crfm.stanford.edu/helm/latest/"><span class="caps">HELM</span></a>, and <a href="https://lmsys.org/blog/2023-05-03-arena/">Chatbot Arena</a></p>
 <p>There is no one-size-fits-all step-by-step guide on how to choose a foundation model. I would start by understanding my application’s requirements. I would consider the application’s expected input and output. For example, I would ask some of these questions: what are the typical lengths of the application’s queries, do queries require supplementary contexts, are the outputs long form answers, etc. These questions would guide me to find a foundation model that best matches the characteristics of the application. I would also consider the desired <span class="caps">NLP</span> tasks and the model’s strengths and weaknesses. For example, depending on if it is a text search application or an <span class="caps">AI</span> assistant, I would choose an encoder or a decoder-only <span class="caps">LLM</span>.</p>
-<h4 id="customizing-models">Customizing Models</h4>
+<h4 id="customizing-models">Customizing Models<a class="headerlink" href="#customizing-models" title="Permanent link">¶</a></h4>
 <p>Once I choose pretrained checkpoint, I would consider how to further modify the model to fit my application. I could modify the last layers to target a classification task. I could modify the token search algorithm to allow for an output distribution as opposed to always selecting the output with the highest probability. I could discard the decoder component and only use the encoder to generate text embedding.</p>
 <p>If the application domain is very different from the text corpus used for pretraining, it could be appropriate to train the model from scratch. This might be viable for small models, but for models that cross the billion parameters threshold, both the <span class="caps">GPU</span> compute and engineering resources would be prohibitively expensive for most small teams.</p>
 <p>An <span class="caps">LLM</span> could be further customized by fine-tuning with high-quality datasets, e.g. <a href="https://huggingface.co/databricks/dolly-v2-12b">dolly-15k</a> or <a href="https://github.com/google-research/FLAN">flan</a>, that were not used to train the model. I could fine-tune the model with private data. I could set up a reinforcement learning loop to instruct the model to have more human-preferred outputs.<sup id="sf-2023-04-27-open-source-llm-1-back"><a href="#sf-2023-04-27-open-source-llm-1" class="simple-footnote" title="This could be brittle and should only be taken when there are sufficient resources to collect human feedback, set up the experiment, and evaluate the model.">1</a></sup> I could further train the model on its pretraining objective on a private corpus for domain adaptation. The model could also acquire additional knowledge from processing large amounts of domain-specific text, allowing the model to answer queries with information that might not be explicitly included in the context window.</p>
-<h4 id="model-deployment">Model Deployment</h4>
+<h4 id="model-deployment">Model Deployment<a class="headerlink" href="#model-deployment" title="Permanent link">¶</a></h4>
 <p>Training LLMs is very expensive, but even model inference is not cheap. Every prediction requires a forward pass. That passthrough needs to touch every parameter. For a 100 billion parameter model, that is 100 billion floating point operations at a minimum. A sentence response is as many passes as the length of the sentence. For latency reasons, the parameters need to be pre-loaded into memory, which is likely to be in the 10s <span class="caps">GB</span> range. While operations could be performed by the <span class="caps">CPU</span>, the matrix computation should ideally be performed in the <span class="caps">GPU</span>. Even for a moderate-size <span class="caps">LLM</span>, the inference model needs to be supported by a <span class="caps">GPU</span> with 10s <span class="caps">GB</span> of memory.<sup id="sf-2023-04-27-open-source-llm-2-back"><a href="#sf-2023-04-27-open-source-llm-2" class="simple-footnote" title=" I am not going to discuss model sharding at this post. It might be a topic for future post.">2</a></sup></p>
 <hr>
-<h4 id="footnotes">Footnotes</h4>
+<h4 id="footnotes">Footnotes<a class="headerlink" href="#footnotes" title="Permanent link">¶</a></h4>
 <!-- # random notes
 https://www.youtube.com/watch?v=bZQun8Y4L2
 
@@ -409,9 +409,9 @@ Llama: open and efficient foundation language models.
 <ul class="related-posts-list">
 <li><a href="/2023-04-04-document-search" title="Pretrained LLMs and Text Search - A practitioner&#39;s perspective">Pretrained LLMs and Text Search <small>A practitioner's perspective</small></a></li>
 <li><a href="/2023-06-04-domain-specific-ai-assistant" title="Domain Specific AI Assistants">Domain Specific AI Assistants</a></li>
-<li><a href="/2023-10-17-gen-models" title="The Role of Neural Networks in Generative Models">The Role of Neural Networks in Generative Models</a></li>
 <li><a href="/2024-08-01-vision-dataset" title="Open Source Vision Datasets">Open Source Vision Datasets</a></li>
-<li><a href="/2024-10-28-binary-storage-engine" title="Analytics for Binary Blobs">Analytics for Binary Blobs</a></li>
+<li><a href="/2024-10-28-binary-storage-engine" title="Analytics for Binary Blobs - AI Database">Analytics for Binary Blobs <small>AI Database</small></a></li>
+<li><a href="/2024-11-02-video-models" title="Video Models - Explain two models and review the video generation products">Video Models <small>Explain two models and review the video generation products</small></a></li>
 </ul>
 <hr />
 </section>
@@ -433,7 +433,7 @@ Llama: open and efficient foundation language models.
             <h4>Tags</h4>
             <ul class="list-of-tags tags-in-article">
                 <li><a href="/tags#ai-ref">ai
-                    <span class="superscript">6</span>
+                    <span class="superscript">7</span>
 </a></li>
                 <li><a href="/tags#llm-ref">LLM
                     <span class="superscript">3</span>

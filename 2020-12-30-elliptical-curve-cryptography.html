@@ -162,7 +162,7 @@ W_t^A &=& U(C_T) + \int_t^T \Big( u(P_sD_s) - h(A_s) + \rho Z_s A_s\Big)ds - \in
 <li>A <a href="#signing">digital signature</a> is as simple as calculating one number and sending it along with message: <span class="math">\(s = \frac{1}{k} (h + P_x \rho)\)</span></li>
 </ul>
 <p><br/></p>
-<h4 id="a-first-look-at-curve-secp256k1">A First Look at Curve Secp256k1</h4>
+<h4 id="a-first-look-at-curve-secp256k1">A First Look at Curve Secp256k1<a class="headerlink" href="#a-first-look-at-curve-secp256k1" title="Permanent link">¶</a></h4>
 <p>An elliptical curve is defined by the equation
 </p>
 <div class="math">\begin{equation}
@@ -177,10 +177,10 @@ h = 1
 </pre></div>
 <p><span class="math">\(p\)</span> defines field of integers modulo <span class="math">\(p\)</span>. <span class="math">\(G\)</span> is the base point of the subgroup that I will describe shortly. <span class="math">\(n\)</span> is the subgroup order and <span class="math">\(h\)</span> the cofactor. See this <a href="https://en.bitcoin.it/wiki/Secp256k1">page</a> for more details. Because I am working with the special case of Secp256k1 curve in this post, I ignore the discussions on many potential vulnerabilities due to singularities, non-prime order, etc. Not all elliptical curves are secure choices.</p>
 <p><br/></p>
-<h4 id="group-construction-from-the-elliptical-curve">Group Construction from the Elliptical Curve</h4>
+<h4 id="group-construction-from-the-elliptical-curve">Group Construction from the Elliptical Curve<a class="headerlink" href="#group-construction-from-the-elliptical-curve" title="Permanent link">¶</a></h4>
 <p>We want to use the curve equation and constants to define a cyclic abelian group that we can used for cryptography computations.</p>
 <p>I don’t think it is necessary, but if you want to, here is a good <a href="https://www.jmilne.org/math/CourseNotes/GT.pdf">reference</a> to refresh your group theory basics.</p>
-<h6 id="group-elements">Group elements</h6>
+<h6 id="group-elements">Group elements<a class="headerlink" href="#group-elements" title="Permanent link">¶</a></h6>
 <ul>
 <li>
 <p>Every (x, y) pair is an element in the group if the point is on the curve, and x and y are integer modulo p. That is,
@@ -201,7 +201,7 @@ where <span class="math">\(\mathbb{F}_p\)</span> is the set of integers modulo <
 Geometrically, <span class="math">\(-P\)</span> is the mirror point across the x-axis.</p>
 </li>
 </ul>
-<h6 id="group-operation">Group operation</h6>
+<h6 id="group-operation">Group operation<a class="headerlink" href="#group-operation" title="Permanent link">¶</a></h6>
 <p>I will use <span class="math">\(+\)</span> to denote the binary operation, which we will call addition. The rule of addition is <span class="math">\(P + Q + R = 0\)</span> if all three points are aligned. That is, if we draw a line on the graph, the three points that it touches add up to zero. Note that an inverse element, i.e. <span class="math">\(-R\)</span>, is already defined. We can turn this geometric rule into algebraic form. Let <span class="math">\(T = P + Q\)</span>. Let <span class="math">\(m\)</span> be the slope of the line formed by <span class="math">\(P\)</span> and <span class="math">\(Q\)</span>. We have
 </p>
 <div class="math">\begin{equation}
@@ -215,7 +215,7 @@ m = \frac{3P_x^2}{2P_y}.
 <p>
 The point <span class="math">\(T = (T_x, T_y) = (m^2 - P_x - Q_x, m(P_x - T_x) - P_y)\)</span>. These calculations are much easier to visualize if you draw a straight line on an curve. You can use <a href="https://www.wolframalpha.com/input/?i=graph+y%5E2+%3D+x%5E3+%2B++7">Wolfram Alpha</a> if you are lazy.</p>
 <p>The rule of multiplication rule is a notation convenience, where <span class="math">\(nP := P + ... + P\)</span> with <span class="math">\(n\)</span>-many repetitions. The straightforward way of multiplying through pointwise addition is not computationally efficient. There are alternatives such as <a href="https://en.wikipedia.org/wiki/Elliptic_curve_point_multiplication#Double-and-add">double-and-add</a> and windowed method.</p>
-<h6 id="subgroup">Subgroup</h6>
+<h6 id="subgroup">Subgroup<a class="headerlink" href="#subgroup" title="Permanent link">¶</a></h6>
 <p>I did not show why the set <span class="math">\(B\)</span> and the binary operation addition forms an abelian group. One could check the group laws easily. I am not going to show how the following base point is chosen, but note that the base point is chosen so that the cofactor is <code>1</code>. The base point <span class="math">\(G = (G_x, G_y)\)</span> is </p>
 <div class="highlight"><pre><span></span>G_x = 0x79be667e f9dcbbac 55a06295 ce870b07 029bfcdb 2dce28d9 59f2815b 16f81798
 G_y = 0x483ada77 26a3c465 5da4fbfc 0e1108a8 fd17b448 a6855419 9c47d08f fb10d4b8
@@ -223,14 +223,14 @@ G_y = 0x483ada77 26a3c465 5da4fbfc 0e1108a8 fd17b448 a6855419 9c47d08f fb10d4b8
 <p>I abuse notation and use <span class="math">\(G\)</span> to denote the cyclic subgroup generated by G. Note that <span class="math">\(nG = 0\)</span> and <span class="math">\((n+1) G = G\)</span>. The subgroup contains all the point of the parent group. The group order is <code>n = 0xffffffff ffffffff ffffffff fffffffe baaedce6 af48a03b bfd25e8c d0364141</code>.</p>
 <p>So far, I have defined the group and the binary operation. We are set to do cryptography computation. This group is special because the for any <span class="math">\(\rho \in \{ 0, 1, \cdots, n - 1 \}\)</span> and <span class="math">\(H = \rho G\)</span>. The discrete log problem of recovering <span class="math">\(\rho\)</span> when <span class="math">\(H\)</span> is known to be computationally hard.</p>
 <p><br/></p>
-<h4 id="public-key-encryption-through-diffie-hellman-ecdh">Public Key Encryption through Diffie-Hellman (<span class="caps">ECDH</span>)</h4>
-<h6 id="keys">Keys</h6>
+<h4 id="public-key-encryption-through-diffie-hellman-ecdh">Public Key Encryption through Diffie-Hellman (<span class="caps">ECDH</span>)<a class="headerlink" href="#public-key-encryption-through-diffie-hellman-ecdh" title="Permanent link">¶</a></h4>
+<h6 id="keys">Keys<a class="headerlink" href="#keys" title="Permanent link">¶</a></h6>
 <ul>
 <li>A <strong>private key</strong> is random integer, <span class="math">\(\rho \in \{ 0, 1, \cdots , n - 1 \}\)</span>. It is 32 bytes in length.</li>
 <li>The associated <strong>public key</strong> (<span class="math">\(H\)</span>) is the curve point associated with <span class="math">\(\rho\)</span>. That is, <span class="math">\(H = \rho G\)</span>. A public key could be written in two coordinates, each with 32 bytes. It could also convenient encoded with 32 bytes + 1 bit, or roughly 33 bytes. Note that one coordinate could be derived from another using the curve equation, and the extra bit denotes the quadrant. </li>
 </ul>
 <p><a name="keyexchange"></a></p>
-<h6 id="key-exchange">Key exchange</h6>
+<h6 id="key-exchange">Key exchange<a class="headerlink" href="#key-exchange" title="Permanent link">¶</a></h6>
 <ul>
 <li>
 <p>Alice see <span class="math">\(\rho_a\)</span>, <span class="math">\(H_a\)</span>, and <span class="math">\(H_b\)</span>. The shared secret is
@@ -251,9 +251,9 @@ S = \rho_b  H_a =  \rho_b (\rho_a G).
 </li>
 </ul>
 <p><br/></p>
-<h4 id="digital-signature-algorithm-ecdsa">Digital Signature Algorithm (<span class="caps">ECDSA</span>)</h4>
+<h4 id="digital-signature-algorithm-ecdsa">Digital Signature Algorithm (<span class="caps">ECDSA</span>)<a class="headerlink" href="#digital-signature-algorithm-ecdsa" title="Permanent link">¶</a></h4>
 <p><a name="signing2"></a></p>
-<h6 id="signing">Signing</h6>
+<h6 id="signing">Signing<a class="headerlink" href="#signing" title="Permanent link">¶</a></h6>
 <p>Alice has the private key <span class="math">\(\rho\)</span>, publishes the public key <span class="math">\(H = \rho G\)</span>, and she wants to signs the message <span class="math">\(m\)</span>. Let <span class="math">\(h = hash(m)\)</span> be the hahs of the message. The hash function does not need to be cryptographically strong. The purpose of the hash is to uniquely represent the message as an integer. The hash function is common knowledge.</p>
 <p>Alice generates a random <span class="math">\(k \in \{ 0, 1, \cdots, n - 1 \}\)</span>. Let <span class="math">\((P_x, P_y) := kG\)</span>. Alice calculates the signature as
 </p>
@@ -261,7 +261,7 @@ S = \rho_b  H_a =  \rho_b (\rho_a G).
 s = \frac{1}{k} (h + P_x \rho)
 \end{equation}</div>
 <p>Alice sends the signed message as <strong><span class="math">\((m, s, P)\)</span></strong>. Note that <span class="math">\(P\)</span> is 33 bytes, and <span class="math">\(s\)</span> is 32 bytes. The signature part is about 65 bytes long.</p>
-<h6 id="verification">Verification</h6>
+<h6 id="verification">Verification<a class="headerlink" href="#verification" title="Permanent link">¶</a></h6>
 <p>Bob receives the signed message <span class="math">\((m, s, P)\)</span>. It is worth noting that it must be established a priori as common knowledge that <span class="math">\(H\)</span> is Alice’s public key. If <span class="math">\(H\)</span> is part of the signed message, then anyone could act as a man in the middle and fake any signed message one prefers.</p>
 <p>Bob calculates <span class="math">\(Q = \frac{1}{s} (h G + P_x H)\)</span>. The message is verified if and only if <span class="math">\(Q = P\)</span>. </p>
 <p>Here is a short proof of the verification requirement.
@@ -277,7 +277,7 @@ Q &amp;=&amp; \frac{1}{s} ( h G + P_x  H ) \\
 <p>
 Note that we could just send <span class="math">\(P_x\)</span> instead of <span class="math">\(P\)</span> and only verified <span class="math">\(P_x=Q_x\)</span>.</p>
 <p><br/></p>
-<h4 id="security-and-key-length">Security and Key Length</h4>
+<h4 id="security-and-key-length">Security and Key Length<a class="headerlink" href="#security-and-key-length" title="Permanent link">¶</a></h4>
 <p>Given the public key <span class="math">\(H\)</span>, how hard is it to brute force search for <span class="math">\(\rho\)</span>, where <span class="math">\(H = \rho G\)</span>?</p>
 <p>The private key is any number less than <span class="math">\(n\)</span>, <span class="math">\(0 &lt; \rho &lt; n\)</span>, where </p>
 <div class="highlight"><pre><span></span>n = FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFE BAAEDCE6 AF48A03B BFD25E8C D0364141
@@ -285,11 +285,11 @@ Note that we could just send <span class="math">\(P_x\)</span> instead of <span 
 </pre></div>
 <p>Ignoring some technicalities that there are some invalid number less than <span class="math">\(2^{256}\)</span>, a private key has bit length of 256 bit long. Here is an <a href="https://crypto.stackexchange.com/questions/1145/how-much-would-it-cost-in-u-s-dollars-to-brute-force-a-256-bit-key-in-a-year">cost estimation</a> of brute forcing a 256 bit key. It costs much more than any nation’s <span class="caps">GDP</span>.</p>
 <p>However, there are more efficient algorithms to solve the discrete log problem than the brute force search. For examples, <a href="https://en.wikipedia.org/wiki/Baby-step_giant-step">baby-step giant-step</a>, <a href="https://en.wikipedia.org/wiki/Index_calculus_algorithm">index calculus</a>, or <a href="https://en.wikipedia.org/wiki/Pollard%27s_rho_algorithm">Pollard’s rho</a>. The computation complexity of elliptic curve discrete logarithm problem (<span class="caps">ECDLP</span>) is an active area of research. See <a href='#galbraith2016' id='ref-galbraith2016-1'>
-    1
+    GG16
 </a> for a recent literature review.</p>
 <p>The <a href="https://en.wikipedia.org/wiki/Discrete_logarithm_records#Elliptic_curves">best record</a> have been based on variants of Pollard’s rho algorithm, in the order of <span class="math">\(\sqrt{n}\)</span>. The security of a 256 key <span class="caps">EC</span> private key is roughly equivalent to a 128 bit key that does not have any special structure to exploit. This <a href="https://www.keylength.com/en/4/">keylength</a> site compiles tables on the security strength of the popular encryption schemes. </p>
 <p>The <a href="https://en.wikipedia.org/wiki/Shor%27s_algorithm">Shor’s algorithm</a> using quantum qubits could be used to break elliptical curve’s discrete log problem. See <a href='#kaye2007' id='ref-kaye2007-1'>
-    2
+    KLM07
 </a> for a fun introduction to quantum computing.</p>
 <!-- n = FFFFFFFF FFFFFFFF FFFFFFFF FFFFFFFE BAAEDCE6 AF48A03B BFD25E8C D0364141
 - 64 base16 digit; 16^64 

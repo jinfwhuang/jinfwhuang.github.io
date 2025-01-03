@@ -114,7 +114,7 @@
     <div class="span8 article-content">
             
             <p>In the past year I have worked with a few projects that use vision datasets. People might give them fancy names, but in simple terms, they are just datasets with images and videos that are annotated with text descriptions. For the purpose of training large models, projects almost always start with open source datasets. They are the most accessible, and more likely than not, they will make a large contribution to the full training datasets. There are two common additional sources, commerical (e.g. iStock, Shutterstock, <a href="https://lfi-online.de/en/gallery/">Leixa</a>, <a href="https://www.alamy.com/">Alamy</a>, <a href="https://www.artstation.com/">Artistation</a>, Adobe Stock) and internal datasets (e.g. <span class="caps">JFT</span>-300M, <span class="caps">JFT</span>-3B, <span class="caps">IG</span>-1B). I am compiling most of the well known open source datasets into a few tables to showcase how vision datasets have evolve over time.</p>
-<h4 id="image-dataset-before-imagenet">Image Dataset before ImageNet</h4>
+<h4 id="image-dataset-before-imagenet">Image Dataset before ImageNet<a class="headerlink" href="#image-dataset-before-imagenet" title="Permanent link">¶</a></h4>
 <table>
 <thead>
 <tr>
@@ -227,7 +227,7 @@
 </table>
 <p style="text-align:center;"><strong>Table 1: Early Image Datasets</strong></p>
 <p>ImageNet kick started the revolution of training large, deep neural net model using large amount of image. While image datasets existed before ImageNet, they were much smaller in scale. They tend to cover a narrow, specific purpose. They all involve human curation and annotations. ImageNet’s key differentiator was its size. It was considerably larger than previous dataset. Its labels were still annotated by humans, maintaining its accuracy. There was a curious case of TinyImages because it also had scale, but it did not have nearly the impact that ImageNet had. The key differentiator was that ImageNet retained the image’s full resolution, it used human annotation, and it hosted a very popular benchmark competition.</p>
-<h4 id="image-datasets">Image Datasets</h4>
+<h4 id="image-datasets">Image Datasets<a class="headerlink" href="#image-datasets" title="Permanent link">¶</a></h4>
 <table>
 <thead>
 <tr>
@@ -605,7 +605,7 @@
 <p>The latest dataset is the 12B dataset Common-Pool. We are probably reaching the limit through scraping the common crawl archive. It is possible that we get to 100 billion, but in my opinion, that is the upper bound of the public domain. There are other data sources that could break this scaling limit. Social media platform such as Instagram has 100s of billion of posts. The total image counts in personal photo archive (e.g. Google photos, Apple photos) should be well into the trillion level, and they contain much higher quality photos. For example, <span class="caps">DOCCI</span> is an example where one researcher is able to curate more than 10,000 high quality images in a few years. IoT devices could be a rich source of image data as well.</p>
 <p>The quality and the diversity of the images in these datasets resembles the content of <span class="caps">LAION</span>-400m. This is evidenced by how similar generated images look and feel across different the latest models and products. The content of the datasets such as yfcc100m, <span class="caps">LAION</span>-2B, Common-Pool, and Coyo are remarkably similar. One could extract similar subsets from those datasets. For example, if one were to extract a subset of images that filters for humans, aesthetic, size, aspect ratio, and text-image alignment, the filtered subset have very similar images. I suspect that is just the nature of images in public digital domain. It is a reflection of the evolution of digital media. More likely than not, the Google and Facebook private datasets look similar to the open source, web-scraped versions.</p>
 <p>The text descriptions are still in the middle of active development. We have a few varieties. The first generation of text is merely for classification. They are objects and concetps. Examples are TinyImages, ImageNet, and <span class="caps">SUN</span>. The second variety is description scraped from the <code>alt</code> attribute in html <code>img</code> tag. This description tends to be short, noisy, and could contain irrelevant texts. The third variety is typified by <span class="caps">DCI</span>, <span class="caps">IIW</span>, and <span class="caps">DOCCI</span>. In the last couple of years, it is all about vision-language models. That means the text is desired to be general and contain as much details as possible. The descriptions in <span class="caps">DCI</span>, <span class="caps">IIW</span>, and <span class="caps">DOCCI</span> are human annotated through multiple rounds. They are impossibly detailed. They are purposely and painstakingly annotated to include a lot of details. They are time consuming to create. These datasets are rare and small, in the 10k range<sup id="sf-2024-08-01-vision-dataset-1-back"><a href="#sf-2024-08-01-vision-dataset-1" class="simple-footnote" title="It would be interesting to see a team to devote a lot of human resources to create a 500k dataset with such detailed description and use that to train a captioning model. That is one experimental design that no one has attempted to push the limit of language-vision models.">1</a></sup>. Fourth type is recaptioning. This is a big trend. Most of the synthetic data focuses on recaptioning. A lot of the image, video, and multimodal model training dataset choose to use recaptioned descriptions over raw texts <sup id="sf-2024-08-01-vision-dataset-2-back"><a href="#sf-2024-08-01-vision-dataset-2" class="simple-footnote" title="Model interdependence is a fascinating phenomenon that is not widely discussed yet. Most generated outputs look remarkably similar. Their architectures are similar. Their training data are similar. They also use a lot of the same underlying models to process data or create synthetic data. Recaptioning is the most common such examples. From a information theoretical standpoint, the models all contain knowledge. It is not surprising their results are similar. It is almost tempting that they will invariably converge as models get larger and become more capable, unless they contain different starting information.">2</a></sup>.</p>
-<h4 id="video-datasets">Video Datasets</h4>
+<h4 id="video-datasets">Video Datasets<a class="headerlink" href="#video-datasets" title="Permanent link">¶</a></h4>
 <table>
 <thead>
 <tr>
@@ -736,7 +736,7 @@
 <p>Almost all of the open source video dataset use Youtube as the data source. All the significant datasets are of this variety. Their creation process is simple. They scrape youtube ids based on some criteria. For example, celebv-hq focuses on celebrity. How-to-100m focuses how-to videos. <span class="caps">HD</span>-Vila and Merlot datasets attempt to cover diverse topics. These youtube videos are cut to 5 to 20 seconds short clips, usually cut on the scene changing boundaries. Different dataset might apply additional filtering, processing of metadata, and recaptioning. Youtube is the singularly important data source for video dataset. If Google were to pursue serious law suits against major <span class="caps">AI</span> model developers and open source researchers in the near future, it could impact many research projects and video <span class="caps">AI</span> products. There are alternative sources of videos, such as movies, broadcast studio archives, short video platforms, and alternative video platforms. Still, youtube is king.</p>
 <p>In theory, video datasets should be orders of magnitude larger than image datasets. In practice, open source video datasets are comparable to image dataset, or slightly smaller. Each youtube video is roughly <span class="caps">30MB</span>. The largest video dataset is about <span class="caps">500TB</span> (Merlot Reserve). This comparable to <span class="caps">LAION</span> 2B. This is partly due to the compute resources those dataset creation teams have access to. Large industrial labs such as OpenAI are certainly working to create datasets an order of magnitude larger than these. It also indicates that video dataset is still in its early stages. Unlike image datasets, I expect video datasets to dramatically increase its scale in the coming years, if not the coming months. Video models should still have a lot of room to grow. It is exciting to see what kind of video editing will be enabled by the next generation of video models in the next few years.</p>
 <hr>
-<h4 id="footnotes">Footnotes</h4>
+<h4 id="footnotes">Footnotes<a class="headerlink" href="#footnotes" title="Permanent link">¶</a></h4>
 <!-- # Tooling
 
 - phash
@@ -776,11 +776,11 @@
 <section>
     <h2>Related Posts</h2>
 <ul class="related-posts-list">
-<li><a href="/2023-04-04-document-search" title="Pretrained LLMs and Text Search - A practitioner&#39;s perspective">Pretrained LLMs and Text Search <small>A practitioner's perspective</small></a></li>
 <li><a href="/2023-04-27-open-source-llm" title="Open Source LLMs">Open Source LLMs</a></li>
 <li><a href="/2023-06-04-domain-specific-ai-assistant" title="Domain Specific AI Assistants">Domain Specific AI Assistants</a></li>
 <li><a href="/2023-10-17-gen-models" title="The Role of Neural Networks in Generative Models">The Role of Neural Networks in Generative Models</a></li>
-<li><a href="/2024-10-28-binary-storage-engine" title="Analytics for Binary Blobs">Analytics for Binary Blobs</a></li>
+<li><a href="/2024-10-28-binary-storage-engine" title="Analytics for Binary Blobs - AI Database">Analytics for Binary Blobs <small>AI Database</small></a></li>
+<li><a href="/2024-11-02-video-models" title="Video Models - Explain two models and review the video generation products">Video Models <small>Explain two models and review the video generation products</small></a></li>
 </ul>
 <hr />
 </section>
@@ -788,7 +788,7 @@
             <nav>
             <ul class="articles-timeline">
                 <li class="previous-article">« <a href="/2023-10-17-gen-models" title="Previous: The Role of Neural Networks in Generative Models">The Role of Neural Networks in Generative Models</a></li>
-                <li class="next-article"><a href="/2024-10-28-binary-storage-engine" title="Next: Analytics for Binary Blobs">Analytics for Binary Blobs</a> »</li>
+                <li class="next-article"><a href="/2024-10-28-binary-storage-engine" title="Next: Analytics for Binary Blobs - AI Database">Analytics for Binary Blobs <small class="subtitle">AI Database</small></a> »</li>
             </ul>
             </nav>
             </aside>
@@ -802,7 +802,7 @@
             <h4>Tags</h4>
             <ul class="list-of-tags tags-in-article">
                 <li><a href="/tags#ai-ref">ai
-                    <span class="superscript">6</span>
+                    <span class="superscript">7</span>
 </a></li>
             </ul>
 <h4>Contact</h4>

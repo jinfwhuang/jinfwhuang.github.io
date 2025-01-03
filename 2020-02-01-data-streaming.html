@@ -117,17 +117,17 @@
             
             
 <p>I have been building streaming data platforms in the past decade. Streaming data platform has many benefits (<a href='#kreps2013' id='ref-kreps2013-1'>
-    13
+    Jcs13
 </a>, <a href='#fowler2006' id='ref-fowler2006-1'>
-    9
+    Fow06
 </a>, <a href='#fowler2017' id='ref-fowler2017-1'>
-    10
+    Fow17
 </a>, <a href='#akidau2015' id='ref-akidau2015-1'>
-    8
+    Aki15
 </a>), and often, they are the most natural choice to organize data pipelines.</p>
 <p>I will describe the basic structure of a streaming data platform, technology choices, and common challenges. I am only writing down short opinions to explain my personal preferences. Please refer to original documentations for more details.</p>
 <p>A streaming data platform has two basic parts: data pipe and processor. Data pipe could be called message queue, event bus, distributed log, etc. It is the part of the system that stores the event data. Processors sit between different instances of the data pipe, connecting the pipes to form the topology of the streaming platform. </p>
-<h4 id="data-pipe">Data Pipe</h4>
+<h4 id="data-pipe">Data Pipe<a class="headerlink" href="#data-pipe" title="Permanent link">¶</a></h4>
 <p>The data pipe has to be rock solid. Any issues with this component cause the whole system to alert, and potentially lead to irreversible data losses. In my experiences, interacting with the data pipe’s APIs are straight forward, the most common challenges centered on cluster administrations. Here are some questions to ask:</p>
 <ul>
 <li>How do I maintain configurations of my cluster?</li>
@@ -140,46 +140,46 @@
 <ul>
 <li>Kafka: It is by far the most popular and most mature solution.</li>
 <li>Pulsar: It could be an alternative. One of the most compelling features is the existence of a Presto connector that works with the Pulsar’s storage backend. One can set up Presto to query the streaming data directly (<a href='#pulsarsql2020' id='ref-pulsarsql2020-1'>
-    4
+    pul20
 </a>).</li>
 <li>Kinesis: It is a managed solution.</li>
 </ul>
 <p>It should be noted that once the clusters and usage grow. Data center failures will become a legitimate  concern. Federation is one way to add flexibility to cluster administrations. For example, see <a href='#dong2019' id='ref-dong2019-1'>
-    11
+    FD19
 </a>. However, it is an effort to add that capability, likely requiring a whole team to build and maintain that feature.</p>
 <p>Deploying data pipe clusters on Kubernetes could have many operational benefits. It could unify data-heavy clusters configurations and application deployments, reducing the complexity of the team’s overall devops process. The operator approach on k8s is increasingly popular. I have good experiences using <a href='#banzaicloud2020' id='ref-banzaicloud2020-1'>
-    1
+    ban20
 </a> for medium size Kafka clusters. But the hesitation on going all-in with k8s Kafka is about administration, again! One would have to think through the potential possibilities of cluster migration and cluster federation. K8s operators might not be flexible enough.</p>
-<h4 id="processor">Processor</h4>
+<h4 id="processor">Processor<a class="headerlink" href="#processor" title="Permanent link">¶</a></h4>
 <p>The core of a streaming data platform is data processors. Processors roughly fall into three categories: source, internal processor, and sink. The hardest processor features to design properly are exactly once processing, state management, and system level monitoring.</p>
 <p>Achieving exactly once is hard because the applications have to be able to recover from a variety of failure scenarios. Kafka features such as idempotent producer and transaction have made building exactly-once semantics a lot easier (see <a href='#kafkaexactlyonce2019' id='ref-kafkaexactlyonce2019-1'>
-    12
+    GJM+19
 </a>). When processors have states, the offset and state management would have to work together. Usually, the states have to be backed up whenever the offset is committed. </p>
 <p>There are a few approaches that I would go about building these processors in Kafka:</p>
 <ul>
 <li>Rely on Kafka primitives</li>
 <li>Build on top of Kafka stream, see <a href='#kafkaStream2020' id='ref-kafkaStream2020-1'>
-    3
+    kaf20b
 </a></li>
 <li>Build on top of Flink; see <a href='#flinkstateful2020' id='ref-flinkstateful2020-1'>
-    6
+    fli20a
 </a> and <a href='#flinktimely2020' id='ref-flinktimely2020-1'>
-    7
+    fli20b
 </a> </li>
 <li>Build on top of Spark Stream, see <a href='#sparkStream2020' id='ref-sparkStream2020-1'>
-    5
+    spa20
 </a></li>
 </ul>
 <p>Monitoring is often overlooked, and it is hard to generalize. The challenge is to be able to have a watermark system in place to inform the progress of the whole processing pipeline. This requirement varies from product to product. For example, a streaming system have stock ticker prices as input events. There are 5 processors, and the last processor output a real time signal about buy or sell. The monitoring questions we would ask could be: How timely is this signal? The definition of “timely” could vary a lot depending on how the signal is calculated. Watermark is a generic term to refer to whatever information that is needed to allow downstream applications to make timely decisions. In many cases, this information cannot be part burned into the messages itself. Examples of such information is the failure rates of internal processors, number of unprocessed events, late arrival events, etc. I have not seen any framework that addresses this need. One common pattern to building a system monitor is using yet another data streaming pipeline. This monitoring pipeline has to be dead simple and its failures be independent from what it is monitoring.</p>
-<h6 id="source-processor">Source Processor</h6>
+<h6 id="source-processor">Source Processor<a class="headerlink" href="#source-processor" title="Permanent link">¶</a></h6>
 <p>A ource processor could receive external traffic or process data from an object store (S3), and then write the data into the pipe. Source processor is different from internal and sink processor because it cannot use the offset marker in the data pipe to keep track of the progress to accomplish exactly-once-semantics. For example, if the data pipe is Kafka. The hard problem of periodic batch job producing into Kafka is defining job uniqueness and how to recover from job failures. The hard problem of edge servers persisting event into Kafka is coordinating the timing of Kafka receipt acknowledgement and responding to client requests.</p>
-<h6 id="sink-processor">Sink Processor</h6>
+<h6 id="sink-processor">Sink Processor<a class="headerlink" href="#sink-processor" title="Permanent link">¶</a></h6>
 <p>A sink processor takes data from the data pipe and load them into a storage engine. This component is not difficult to write, but it invariably feels like a painful step in building a data platform. It is partly because it is a common feature that every system needs, and yet we have to manually biuld this component from scratch. It is also partly because we have to write this component many times to target different storage engines based on how the data is used later on.</p>
 <p>In my experiences, this component is usually handcrafted on top of the same framework as the other internal processors. For example, if other internal processors use Kafka primitives directly, the sinks are built similarly. If the platform already uses Flink, the sinks are written using Flink.   </p>
 <p>I would definitely hope to see a mature solution targeting the most common storage engines. Kafka connect is a possibility (<a href='#kafkaconnect2020' id='ref-kafkaconnect2020-1'>
-    2
+    kaf20a
 </a>). It is tied into the Confluent platform, and it is not sufficiently flexible to be composable, and cannot be easily integrated into custom-built processors. </p>
-<h6 id="materializing-the-data-pipe">Materializing the Data Pipe</h6>
+<h6 id="materializing-the-data-pipe">Materializing the Data Pipe<a class="headerlink" href="#materializing-the-data-pipe" title="Permanent link">¶</a></h6>
 <p>One of the pain points of a streaming platform is getting insights on in-flight data. One common way is to build many sink processors targeting intermediate stages, loading the data into an analytics database. See my <a href="/2019-02-03-analytics-database.md">post</a> on analytics databases. This approach is tedious and lead to more applications to maintain.</p>
 <p>Another way is write a processor that exposes materialized views. In the past, we have to write the data models and processing logic for these views, but in recent years, we are lucky to have these frameworks to help us to write this component.</p>
 <ul>

@@ -120,7 +120,7 @@
             
             
 <p>This post lays out the bare minimal basics required to understand <span class="caps">BLS</span> signatures. Most of the hard work is about setting up cryptographic primitives. To make things concrete, I only use the details from the <span class="caps">BLS</span>-12-381 curve. The post on vanilla <a href="2020-12-30-elliptical-curve-cryptography">elliptical curve cryptography</a> contains some basics on how <span class="caps">EC</span> groups are defined.</p>
-<h4 id="preliminary">Preliminary</h4>
+<h4 id="preliminary">Preliminary<a class="headerlink" href="#preliminary" title="Permanent link">¶</a></h4>
 <p>Let’s define the following constants.</p>
 <div class="highlight"><pre><span></span>k = 12
 r = 0x73eda753299d7d483339d80809a1d80553bda402fffe5bfeffffffff00000001
@@ -133,7 +133,7 @@ u = -0xd201000000010000
 \mathcal{F}_{q^6} &amp;=&amp; \mathcal{F}_{q^2}[v]/(v^3 −ξ),  \xi \in \mathcal{F}_{q^2} \\
 \mathcal{F}_{q^{12}} &amp;=&amp; \mathcal{F}_{q^6}[w]/(w^2 −\gamma), \gamma \in \mathcal{F}_{q^6}.
 \end{eqnarray*}</div>
-<h4 id="first-group">First Group</h4>
+<h4 id="first-group">First Group<a class="headerlink" href="#first-group" title="Permanent link">¶</a></h4>
 <p>The first group is defined by the curve equation on the prime field <span class="math">\(\mathcal{F}_q\)</span>:
 </p>
 <div class="math">\begin{equation}
@@ -145,7 +145,7 @@ u = -0xd201000000010000
 <span class="n">y</span><span class="o">:</span>
 <span class="mh">0x0118</span><span class="w"> </span><span class="n">ea0460f7</span><span class="w"> </span><span class="n">f7abb82b</span><span class="w"> </span><span class="mi">33676</span><span class="n">a74</span><span class="w"> </span><span class="mi">32</span><span class="n">a490ee</span><span class="w"> </span><span class="n">da842ccc</span><span class="w"> </span><span class="n">fa7d788c</span><span class="w"> </span><span class="mi">65965042</span><span class="w"> </span><span class="mi">6</span><span class="n">e6af77d</span><span class="w"> </span><span class="n">f11b8ae4</span><span class="w"> </span><span class="mi">0</span><span class="n">eb80f47</span><span class="w"> </span><span class="mi">5432</span><span class="n">c666</span><span class="w"> </span><span class="mi">00622</span><span class="n">eca</span><span class="w"> </span><span class="n">a8a5734d</span><span class="w"> </span><span class="mi">36</span><span class="n">fb03de</span>
 </pre></div>
-<h4 id="second-group">Second Group</h4>
+<h4 id="second-group">Second Group<a class="headerlink" href="#second-group" title="Permanent link">¶</a></h4>
 <p>The second group is defined by the following curve equation on the quadratic field <span class="math">\(\mathcal{F}_{q^2}\)</span>.</p>
 <div class="math">\begin{equation}
 \mathbb{G_2} = \{ x, y \in \mathcal{F}_{q^2}: y^2 = x^3 + 4(i + 1)\}
@@ -164,7 +164,7 @@ y &amp;=&amp; y_0 + y_1 i
 <span class="n">y_1</span><span class="o">:</span>
 <span class="mh">0x606c4a0</span><span class="w"> </span><span class="mi">2</span><span class="n">ea734cc</span><span class="w"> </span><span class="mi">32</span><span class="n">acd2b0</span><span class="w"> </span><span class="mi">2</span><span class="n">bc28b99</span><span class="w"> </span><span class="n">cb3e287e</span><span class="w"> </span><span class="mi">85</span><span class="n">a763af</span><span class="w"> </span><span class="mi">267492</span><span class="n">ab</span><span class="w"> </span><span class="mi">572</span><span class="n">e99ab</span><span class="w"> </span><span class="mi">3</span><span class="n">f370d27</span><span class="w"> </span><span class="mi">5</span><span class="n">cec1da1</span><span class="w"> </span><span class="n">aaa9075f</span><span class="w"> </span><span class="n">f05f79be</span>
 </pre></div>
-<h4 id="third-group-and-bilinear-map">Third Group and Bilinear Map</h4>
+<h4 id="third-group-and-bilinear-map">Third Group and Bilinear Map<a class="headerlink" href="#third-group-and-bilinear-map" title="Permanent link">¶</a></h4>
 <p>The third group is <span class="math">\(G_T\)</span>, the <span class="math">\(r\)</span>-th roots of unity in <span class="math">\(\mathcal{F}_{q^{12}}\)</span>. It is a subgroup of <span class="math">\(\mathcal{F}_{q^{12}}\)</span>, with an subgroup order <span class="math">\(r\)</span>. The bilinear map <span class="math">\(e : \mathbb{G_1} \times \mathbb{G_2} \mapsto \mathbb{G_T}\)</span> is defined as the following. For any <span class="math">\(P\in \mathbb{G_1}\)</span> and <span class="math">\(Q \in \mathbb{G}_2\)</span>,
 </p>
 <div class="math">\begin{equation}
@@ -173,7 +173,7 @@ e(P, Q) = [f_{r, P}(Q) ] ^{(q^k - 1)/r}
 <p>
 Note that <span class="math">\(r\)</span> is the group order of <span class="math">\(\mathbb{G}_T\)</span>, <span class="math">\(k\)</span> is the embedding number <span class="math">\(12\)</span>, <span class="math">\(q\)</span> is the 381 bit prime. <span class="math">\(f_{r, P}\)</span> is a polynomial, the miller function. Miller function could be computed by Miller’s algorithm, which looks like a double-and-add technique.</p>
 <p>These parameter setup could be found in the <a href="https://tools.ietf.org/id/draft-yonezawa-pairing-friendly-curves-02.html#rfc.section.4.2.2"><span class="caps">IETF</span> specs</a>.</p>
-<h4 id="signing">Signing</h4>
+<h4 id="signing">Signing<a class="headerlink" href="#signing" title="Permanent link">¶</a></h4>
 <p>We could use either <span class="math">\(\mathbb{G}_1\)</span> or <span class="math">\(\mathbb{G}_2\)</span> as the public key space. To keep things simple, we use <span class="math">\(\mathbb{G}_1\)</span> as the public key space. Public keys are 48 bytes.</p>
 <p>A secret key is any number <span class="math">\(\rho \in \{1, 2, ... , r -1\}\)</span>. The associated public key is <span class="math">\(\rho g_1 \in \mathbb{G}_1\)</span>. Let the message be <span class="math">\(m\)</span>. Assume that we have a hash function, <span class="math">\(H: M \mapsto \mathbb{G}_2\)</span>, where <span class="math">\(M\)</span> is a the message space. The signature is calcuculated as 
 </p>
@@ -181,14 +181,14 @@ Note that <span class="math">\(r\)</span> is the group order of <span class="mat
 s = \rho H(m) \in \mathbb{G}_2.
 \end{equation}</div>
 <p>Note that the signature is a point in the group <span class="math">\(\mathbb{G}_2\)</span>. It is 96 bytes in length.</p>
-<h4 id="verification">Verification</h4>
+<h4 id="verification">Verification<a class="headerlink" href="#verification" title="Permanent link">¶</a></h4>
 <p>Verify the following relationship is sufficient,
 </p>
 <div class="math">\begin{equation}
 e(\rho g_1, H(m)) = e(g_1, s).
 \end{equation}</div>
 <p>Note that <span class="math">\(\rho g_1\)</span> is the public key of the signer.</p>
-<h4 id="aggregation">Aggregation</h4>
+<h4 id="aggregation">Aggregation<a class="headerlink" href="#aggregation" title="Permanent link">¶</a></h4>
 <p>Let say that the message is signed by many public keys, <span class="math">\(\rho_1 g_1,  \rho_2 g_1, ..., \rho_n g_1\)</span>. The signatures are <span class="math">\(s_1, s_2, ..., s_n\)</span>. The aggregate public key is then 
 </p>
 <div class="math">\begin{equation}
@@ -206,7 +206,7 @@ The verification critieria is more or less the same.
 <div class="math">\begin{equation}
 e(\rho_A g_1, H(m)) = e(g_1, s_A)
 \end{equation}</div>
-<h4 id="notes">Notes</h4>
+<h4 id="notes">Notes<a class="headerlink" href="#notes" title="Permanent link">¶</a></h4>
 <ul>
 <li>Using the <span class="caps">BLS</span>-12-381 curve is straight forward once all parameters are well setup.</li>
 <li>The name of <span class="caps">BLS</span>-12-381 comes from <span class="math">\(k=12\)</span>, which is the embedded degree. One way to interpret it is that <span class="math">\(12\)</span> is chosen so that <span class="math">\(\mathcal{F}_{q^{k}}\)</span> contains all the <span class="math">\(r\)</span>-th root of unity. <span class="math">\(381\)</span> is the bit length of of the prime number <span class="math">\(q\)</span> used to define the finite field, <span class="math">\(\mathcal{F}_q\)</span>.</li>
@@ -214,7 +214,7 @@ e(\rho_A g_1, H(m)) = e(g_1, s_A)
 <li>One signing party could tamper with the aggregate public key. It is sufficient to ask each public key holder to shows that they also has possession of the corresponding private key.</li>
 <li>For the sake of simplicity, I ignore most of the discussions about security. I will add those discussion in a later post if there are interests.</li>
 </ul>
-<h2 id="references">References</h2>
+<h2 id="references">References<a class="headerlink" href="#references" title="Permanent link">¶</a></h2>
 <ul>
 <li>
 <p>A gentle but verbose <a href="https://hackmd.io/@benjaminion/bls12-381#Subgroup-membership-checks">introduction</a> to <span class="caps">BLS12</span>-381: </p>
