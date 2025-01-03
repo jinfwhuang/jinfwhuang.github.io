@@ -107,10 +107,10 @@
         <div class="toc">
 <ul>
 <li><a href="#model-1-movie-gen">Model 1: Movie Gen</a><ul>
-<li><a href="#the-temporal-autoencoder-tae">The Temporal autoencoder (<span class="caps">TAE</span>)</a></li>
+<li><a href="#the-temporal-autoencoder-tae">The Temporal Autoencoder (<span class="caps">TAE</span>)</a></li>
 <li><a href="#patchify">Patchify</a></li>
 <li><a href="#classifier-free-guidance-cfg">Classifier Free Guidance (<span class="caps">CFG</span>)</a></li>
-<li><a href="#flow-matching-objectives">Flow Matching Objectives</a></li>
+<li><a href="#flow-matching-objective">Flow Matching Objective</a></li>
 </ul>
 </li>
 <li><a href="#model-2-videopoet">Model 2: VideoPoet</a><ul>
@@ -151,7 +151,7 @@
 Movie Gen Model
 </figcaption>
 </figure>
-<h6 id="the-temporal-autoencoder-tae">The Temporal autoencoder (<span class="caps">TAE</span>)<a class="headerlink" href="#the-temporal-autoencoder-tae" title="Permanent link">¶</a></h6>
+<h6 id="the-temporal-autoencoder-tae">The Temporal Autoencoder (<span class="caps">TAE</span>)<a class="headerlink" href="#the-temporal-autoencoder-tae" title="Permanent link">¶</a></h6>
 <p><span class="caps">TAE</span> is a variation of <span class="caps">VQ</span>-<span class="caps">VAE</span> even though its input is video data. Let <span class="math">\(X_0\)</span> be the pure noise video data. <span class="math">\(X_T\)</span> is the uncorrupted video. It has the shape of <span class="math">\(T' \times H' \times W' \times 3\)</span>. <span class="math">\(T'\)</span> is the temporal dimension, represented the length of the video in number of frames. Each frame is <span class="math">\(H' \times W'\)</span>. The purpose of <span class="caps">TAE</span> is to compress the input into something more manageable and computationally feasible, say <span class="math">\(T \times H \times W \times C\)</span>, where <span class="math">\(C\)</span> is a convenient number, for example <span class="math">\(16\)</span>. The encoder first convolutes temporally and then convolute spatially. This reduces the overall dimensionality. Each “frame” goes through an attention block, and then temporal attention is applied. At this point, there are <span class="math">\(T \times H \times W \times C\)</span> embeddings. Because of the convolution and attention, each embedding contains local and global information in both the temporal and spatial direction. After applying quantization, the video is represented by an element in <span class="math">\(\{1, ... K\}^{T \times H \times W \times C}\)</span>, where <span class="math">\(K\)</span> is the size of the discrete latent space. Both reducing the size of <span class="math">\(T, H, W\)</span> and dropping the embedding dimension greatly reduce the dimensionality. See my previous <a href="/2023-10-17-gen-models#vq-vae">post</a> and <a href='#oord2018neuraldiscreterepresentationlearning' id='ref-oord2018neuraldiscreterepresentationlearning-1'>
     vdOVK18
 </a> for more details, and these concepts in the image space. The video space adds the time component. It is fundamentally the same, it just adds more accounting.</p>
@@ -163,7 +163,7 @@ Movie Gen Model
 <p>Another key component is how to guide the video generation based on some text prompts. It has become standard practice to use the approach of classifier free guidance. The text is tokenized by a pre-trained tokenizer. The tokens are fed through transformers and combined with the video input coming from the patchified vector. The key difference is that the prompt tokens is controlled by a conditioning variable that probabilistic turning on and off during training. There is also a guidance scale that controls how much this input weighs in the inference stage. See <a href='#ho2022classifierfreediffusionguidance' id='ref-ho2022classifierfreediffusionguidance-1'>
     HS22
 </a>.</p>
-<h6 id="flow-matching-objectives">Flow Matching Objectives<a class="headerlink" href="#flow-matching-objectives" title="Permanent link">¶</a></h6>
+<h6 id="flow-matching-objective">Flow Matching Objective<a class="headerlink" href="#flow-matching-objective" title="Permanent link">¶</a></h6>
 <p>The neural network is trained with a flow matching objective. The combination of <span class="caps">TAE</span>, patchify, <span class="caps">CFG</span>, and other minor techniques largely describe how to convert the input (video + text) and feed them into a transformer base neural network. There are two key decisions to make about the neural network. One is the internal architecture and the other is the loss objective. As of the writing of this blog, all the top video models uses DiT, where the network backbone uses transformers and the loss objective is diffusion<sup id="sf-2024-11-02-video-models-2-back"><a href="#sf-2024-11-02-video-models-2" class="simple-footnote" title="Alternative to transformer is CNN or LSTM. Alternatives to diffusion is an autoregressive objective or direct density estimation.">2</a></sup>. The flow matching objective is a generalization of diffusion. This sounds really fancy, but we just have to notes that the neural network crunches all the input as we described, and outputs a generated video <span class="math">\(X\)</span>. We calculate the loss,
 </p>
 <div class="math">\begin{equation}
