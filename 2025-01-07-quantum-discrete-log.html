@@ -12,7 +12,7 @@
 
         <meta name="author" content="jin" />
 
-        <meta name="description" content="There has been some recent hype about quantum supremacy. There are talks about how there will be a commercial quantum system in the next 5 years. I have ot get myself educated on this topic. Unlike my other posts, I do not have any personal experience working on this topic …
+        <meta name="description" content="There has been some recent hype about quantum supremacy. There are talks about how there will be a commercial quantum system in the next 5 years. I have to get myself educated on this topic. Unlike my other posts, I do not have any personal experience working on this topic …
 " />
         <meta name="twitter:creator" content="@jinfwhuang">
         <meta property="og:type" content="article" />
@@ -22,12 +22,12 @@
 
 <meta property="og:title" content="From Zero to Cracking secp256k1  - A condense intro to Shor&#39;s "/>
 <meta property="og:url" content="/2025-01-07-quantum-discrete-log" />
-<meta property="og:description" content="There has been some recent hype about quantum supremacy. There are talks about how there will be a commercial quantum system in the next 5 years. I have ot get myself educated on this topic. Unlike my other posts, I do not have any personal experience working on this topic …" />
+<meta property="og:description" content="There has been some recent hype about quantum supremacy. There are talks about how there will be a commercial quantum system in the next 5 years. I have to get myself educated on this topic. Unlike my other posts, I do not have any personal experience working on this topic …" />
 <meta property="og:site_name" content="Jin&#39;s Notes" />
 <meta property="og:article:author" content="jin" />
 <meta property="og:article:published_time" content="2025-01-07T00:00:00-08:00" />
 <meta name="twitter:title" content="From Zero to Cracking secp256k1  - A condense intro to Shor&#39;s ">
-<meta name="twitter:description" content="There has been some recent hype about quantum supremacy. There are talks about how there will be a commercial quantum system in the next 5 years. I have ot get myself educated on this topic. Unlike my other posts, I do not have any personal experience working on this topic …">
+<meta name="twitter:description" content="There has been some recent hype about quantum supremacy. There are talks about how there will be a commercial quantum system in the next 5 years. I have to get myself educated on this topic. Unlike my other posts, I do not have any personal experience working on this topic …">
 <meta property="og:image" content="/images/android-chrome-192x192.png" />
 <meta name="twitter:image" content="/images/android-chrome-192x192.png" >
 
@@ -135,7 +135,7 @@
 <!-- https://excalidraw.com/#json=FIOccAvhwEAHpp6IG2XhN,uXKsJ66k5unJdR7HeAXRlg -->
 <!-- https://excalidraw.com/#json=7kqk16WizxgUuwDKMQpmE,xa0UacKzNu6SkacgC3vqtA -->
 <!-- Clean up my writing. Keep it as a single paragraph. don't change meaning. -->
-<p>There has been some recent hype about quantum supremacy. There are talks about how there will be a commercial quantum system in the next 5 years. I have ot get myself educated on this topic. Unlike my other posts, I do not have any personal experience working on this topic. This is mostly just a fun post for me to write. It forces me to spend time read, learn the basics, and think about the topic for a few weeks. I focus on answering the one question that interests me the most. How do I use quantum computing to crack secp256k1, the cryptographic system that underpins trillions of dollars of cryptocurrencies.</p>
+<p>There has been some recent hype about quantum supremacy. There are talks about how there will be a commercial quantum system in the next 5 years. I have to get myself educated on this topic. Unlike my other posts, I do not have any personal experience working on this topic. This is mostly just a fun post for me to write. It forces me to spend time on the subject. I focus on answering the one question that interests me the most. How do we use quantum computing to crack secp256k1, the cryptographic system that underpins trillions of dollars of cryptocurrencies.</p>
 <p><br/></p>
 <h4 id="preliminaries">Preliminaries<a class="headerlink" href="#preliminaries" title="Permanent link">¶</a></h4>
 <h6 id="notation">Notation<a class="headerlink" href="#notation" title="Permanent link">¶</a></h6>
@@ -263,8 +263,9 @@ Phase Kickback
 </figcaption>
 </figure>
 The final state is an entangled state <span class="math">\(\frac{1}{\sqrt{2}} ( |0 1\rangle - |1 1\rangle )\)</span>. We can look at the control qubit marginally, and it is <span class="math">\(\frac{1}{\sqrt{2}} (| 0\rangle - |1\rangle )\)</span>, which is just a phase shift of the initial control register. This is the magic of entanglement. It allows the phase information to be kicked back to the control register even though the action is intended to be on the target. The main algorithm will make use of this idea to encode key information in the frequency domain, and use phase kick back to extract the phase information.</p>
+<p><br/></p>
 <h4 id="first-look-at-the-discrete-log-circuit">First Look at the Discrete Log Circuit<a class="headerlink" href="#first-look-at-the-discrete-log-circuit" title="Permanent link">¶</a></h4>
-<p>We focus on the special case of the elliptical curve secp256k1. My previous post on the elliptical curve <a href="https://sander.ai/2024/09/02/spectral-autoregression.html">secp256k1</a>. The elements <span class="math">\(a, b\)</span> are group points as defined by the elliptical curve,
+<p>We focus on the special case of the elliptical curve secp256k1, which I wrote about some years back in this <a href="/2020-12-30-elliptical-curve-cryptography">post</a>. The elements <span class="math">\(a, b\)</span> are group points as defined by the elliptical curve,
 </p>
 <div class="math">\begin{align*}
 B := \{ (x, y) \: | \: &amp; y^2 = x^3 + 7 \; (mod \; p), \text{where } x,y \in \mathbb{F}_p  \}
@@ -297,6 +298,7 @@ $$</div>
 <p>
 This <span class="math">\(\tilde{t}\)</span> has a good probability (<span class="math">\( \left[ \frac{8}{\pi^2} \right]^2 \approx 0.657\)</span>) to be the correct <span class="math">\(t\)</span> that solves the discrete log problem. </p>
 <p>Notes that the circuit is tractable. The number of qubits required is in the order of <span class="math">\(n=256\)</span>. The initiated quantum states are in the pure computational basis. We will unpack all these quantum operators <span class="math">\(\mathrm{QFT}\)</span>, <span class="math">\(\mathrm{QFT}^{-1}\)</span>, <span class="math">\(\text{c-}U^y_b\)</span>, and <span class="math">\(\text{c-}U^x_a\)</span>. We will show that they could be efficiently implemented.</p>
+<p><br/></p>
 <h4 id="dissecting-the-discrete-log-circuit">Dissecting the Discrete Log Circuit<a class="headerlink" href="#dissecting-the-discrete-log-circuit" title="Permanent link">¶</a></h4>
 <p>We will look at each of the key component that allows us to build up to the discrete log algorithm.</p>
 <h6 id="step-1-qft">Step 1: <span class="caps">QFT</span><a class="headerlink" href="#step-1-qft" title="Permanent link">¶</a></h6>
@@ -428,11 +430,13 @@ Discrete Log Circuit
 </figcaption>
 </figure>
 We prepare two control registers in <span class="math">\(|0 \rangle\)</span> and the target register in <span class="math">\(|1 \rangle\)</span>. The <span class="math">\(U_a\)</span> and <span class="math">\(U_b\)</span> have the same eigenvector with slightly different eigenvalues. In fact, once we find out those eigenvalues, we can easily recover the secret key <span class="math">\(t\)</span>. We first use <span class="math">\(\mathrm{QFT}\)</span> to convert the controlled registers into superposition state in the frequency domain. We use the control operations to kickback the eigenvalue to the controlled registers. We use <span class="math">\(\mathrm{QFT}^{-1}\)</span> to extract the eigenvalues. Voila! We just cracked the key cryptographic system that powers Bitcoin and Ethereum.</p>
+<p><br/></p>
 <h4 id="not-there-yet">Not There Yet<a class="headerlink" href="#not-there-yet" title="Permanent link">¶</a></h4>
 <p>All the theories are in place to implement circuits that allow us to find the private key for a Bitcoin account. Why is it the case that Bitcoin is still perfectly safe for the foreseeable future?</p>
 <p>The most important quantum operation to implement is <span class="math">\(U_b\)</span>. At a minimum, it requires circuits that perform elliptical curve point binary operations. Assume that we only use the universal set <span class="math">\(\{H, T, CNOT\}\)</span>. All the modular arithmetic operations are on <span class="math">\(n=256\)</span> bit numbers. Implementing the group operation requires modular multiplication and inversion. One estimate is that <span class="math">\(10^7\)</span> gates are required for a single group point operation. Extrapolating this out in our circuit, we need at least <span class="math">\(10^{9}\)</span> quantum gates. </p>
 <p>The most powerful quantum computer could handle 1000s of qubits. However, the maximum gate depth is more like 100s of gates. We need billions of gates. A key blocker is that qubits lose information over time due to decoherence. If the gate depth exceeds the coherence time, qubits lose their quantum states before the computation finishes.</p>
 <p>The other key challenge to a feasible discrete log circuit is quantum error. Classical computing also has to deal with errors. However, the problem there is much less pronounced. For a typical consumer <span class="caps">CPU</span>, per bit-hour is probably <span class="math">\(10^{-10}\)</span> to <span class="math">\(10^{-18}\)</span>. Per operation would be more like <span class="math">\(10^{-25}\)</span>. On the other hand, quantum per-qubit gate error rate is estimated to be <span class="math">\(10^{-3}\)</span>. The comparison between the two systems is not just a problem of order of magnitude, it is order of order of magnitude. Even though our circuit only requires 1000 logical qubits, it requires at least millions of physical qubits if we were to implement any feasible error correction scheme.</p>
+<p><br/></p>
 <h4 id="intuition-behind-the-quantum-speedup">Intuition Behind the Quantum Speedup<a class="headerlink" href="#intuition-behind-the-quantum-speedup" title="Permanent link">¶</a></h4>
 <p>There are many interpretations that explain why quantum computers is able to lead to speed up that classical algorithms cannot. I will highlight a few reasons that make the most sense to me. </p>
 <p>Superposition offers the most basic yet intuitive explanation. We can compare <span class="math">\(n\)</span>-qubit to <span class="math">\(n\)</span> classical bit. Let us revisit the definition of a quantum state. A <span class="math">\(n\)</span>-qubit represents an element of Hilbert space with <span class="math">\(2^n\)</span> dimension. It is a <span class="math">\(2^n\)</span> dimensional vector. On the other hand, <span class="math">\(n\)</span> classical bit is only a <span class="math">\(n\)</span> dimensional vector. My favorite way to think about this is that a <span class="math">\(n\)</span>-qubit quantum state represents a random variable whose set of events is <span class="math">\(\Omega = \{ 0, 1\} ^n\)</span>. With the following quantum state,
