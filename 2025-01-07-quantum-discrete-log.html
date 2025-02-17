@@ -1,0 +1,784 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="/theme/css/elegant.prod.9e9d5ce754.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="/theme/css/custom.css" media="screen">
+
+        <link rel="dns-prefetch" href="//fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+
+        <meta name="author" content="jin" />
+
+        <meta name="description" content="There has been some recent hype about quantum supremacy. There are talks about how there will be a commercial quantum system in the next 5 years. I have ot get myself educated on this topic. Unlike my other posts, I do not have any personal experience working on this topic …
+" />
+        <meta name="twitter:creator" content="@jinfwhuang">
+        <meta property="og:type" content="article" />
+        <meta name="twitter:card" content="summary">
+
+<meta name="keywords" content=", misc, " />
+
+<meta property="og:title" content="From Zero to Cracking secp256k1  - A condense intro to Shor&#39;s "/>
+<meta property="og:url" content="/2025-01-07-quantum-discrete-log" />
+<meta property="og:description" content="There has been some recent hype about quantum supremacy. There are talks about how there will be a commercial quantum system in the next 5 years. I have ot get myself educated on this topic. Unlike my other posts, I do not have any personal experience working on this topic …" />
+<meta property="og:site_name" content="Jin&#39;s Notes" />
+<meta property="og:article:author" content="jin" />
+<meta property="og:article:published_time" content="2025-01-07T00:00:00-08:00" />
+<meta name="twitter:title" content="From Zero to Cracking secp256k1  - A condense intro to Shor&#39;s ">
+<meta name="twitter:description" content="There has been some recent hype about quantum supremacy. There are talks about how there will be a commercial quantum system in the next 5 years. I have ot get myself educated on this topic. Unlike my other posts, I do not have any personal experience working on this topic …">
+<meta property="og:image" content="/images/android-chrome-192x192.png" />
+<meta name="twitter:image" content="/images/android-chrome-192x192.png" >
+
+        <title>From Zero to Cracking secp256k1  - A condense intro to Shor&#39;s  · Jin&#39;s Notes
+</title>
+        <link rel="shortcut icon" href="/theme/images/favicon.ico" type="image/x-icon" />
+        <link rel="icon" href="/theme/images/apple-touch-icon-152x152.png" type="image/png" />
+        <link rel="apple-touch-icon" href="/theme/images/apple-touch-icon.png"  type="image/png" />
+        <link rel="apple-touch-icon" sizes="57x57" href="/theme/images/apple-touch-icon-57x57.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="/theme/images/apple-touch-icon-72x72.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="76x76" href="/theme/images/apple-touch-icon-76x76.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="/theme/images/apple-touch-icon-114x114.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="120x120" href="/theme/images/apple-touch-icon-120x120.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="144x144" href="/theme/images/apple-touch-icon-144x144.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="152x152" href="/theme/images/apple-touch-icon-152x152.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="152x152" href="/theme/images/apple-touch-icon-180x180.png" type="image/png" />
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+     m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+     })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-207279664-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+
+    </head>
+    <body>
+        <div id="content">
+            <div class="navbar navbar-static-top">
+                <div class="navbar-inner">
+                    <div class="container-fluid">
+                        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </a>
+                        <a class="brand" href="/"><span class=site-name><span style="color:black;">Jin's Notes</span></span></a>
+                        <div class="nav-collapse collapse">
+                            <ul class="nav pull-right top-menu">
+                                <li >
+                                    <a href=
+                                       "/"
+                                    >Home</a>
+                                </li>
+<!--                                <li ><a href="/categories">Categories</a></li>-->
+                                <li ><a href="/tags">Tags</a></li>
+                                <li ><a href="/archives">Archives</a></li>
+                                <li><form class="navbar-search" action="/search" onsubmit="return validateForm(this.elements['q'].value);"> <input type="text" class="search-query" placeholder="Search" name="q" id="tipue_search_input"></form></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid">
+                <div class="row-fluid">
+                    <div class="span1"></div>
+                    <div class="span10">
+<article itemscope>
+<div class="row-fluid">
+    <header class="page-header span10 offset2">
+        <h1>
+            <a href="/2025-01-07-quantum-discrete-log">
+                From Zero to Cracking secp256k1<br/>
+                <small class="subtitle">
+                    A condense intro to Shor's
+                </small>
+            </a>
+        </h1>
+    </header>
+</div>
+
+<div class="row-fluid">
+    <div class="span2 table-of-content">
+        <nav>
+        <h4>Contents</h4>
+        <div class="toc">
+<ul>
+<li><a href="#preliminaries">Preliminaries</a><ul>
+<li><a href="#notation">Notation</a></li>
+<li><a href="#quantum-states">Quantum States</a></li>
+<li><a href="#quantum-gates-and-circuit">Quantum Gates and Circuit</a></li>
+<li><a href="#quantum-measurement">Quantum Measurement</a></li>
+<li><a href="#controlled-gate-and-phase-kickback">Controlled Gate and Phase Kickback</a></li>
+</ul>
+</li>
+<li><a href="#first-look-at-the-discrete-log-circuit">First Look at the Discrete Log Circuit</a></li>
+<li><a href="#dissecting-the-discrete-log-circuit">Dissecting the Discrete Log Circuit</a><ul>
+<li><a href="#step-1-qft">Step 1: <span class="caps">QFT</span></a></li>
+<li><a href="#step-2-phase-estimation">Step 2: Phase Estimation</a></li>
+<li><a href="#step-3-eigenvalue-estimation">Step 3: Eigenvalue Estimation</a></li>
+<li><a href="#step-4-discrete-log-one-more-time">Step 4: Discrete Log One More Time</a></li>
+</ul>
+</li>
+<li><a href="#not-there-yet">Not There Yet</a></li>
+<li><a href="#intuition-behind-the-quantum-speedup">Intuition Behind the Quantum Speedup</a></li>
+<li><a href="#footnotes">Footnotes</a></li>
+</ul>
+</div>
+        </nav>
+    </div>
+    <div class="span8 article-content">
+            
+            
+<!-- https://excalidraw.com/#json=FIOccAvhwEAHpp6IG2XhN,uXKsJ66k5unJdR7HeAXRlg -->
+<!-- https://excalidraw.com/#json=7kqk16WizxgUuwDKMQpmE,xa0UacKzNu6SkacgC3vqtA -->
+<!-- Clean up my writing. Keep it as a single paragraph. don't change meaning. -->
+<p>There has been some recent hype about quantum supremacy. There are talks about how there will be a commercial quantum system in the next 5 years. I have ot get myself educated on this topic. Unlike my other posts, I do not have any personal experience working on this topic. This is mostly just a fun post for me to write. It forces me to spend time read, learn the basics, and think about the topic for a few weeks. I focus on answering the one question that interests me the most. How do I use quantum computing to crack secp256k1, the cryptographic system that underpins trillions of dollars of cryptocurrencies.</p>
+<p><br/></p>
+<h4 id="preliminaries">Preliminaries<a class="headerlink" href="#preliminaries" title="Permanent link">¶</a></h4>
+<h6 id="notation">Notation<a class="headerlink" href="#notation" title="Permanent link">¶</a></h6>
+<p>Let <span class="math">\(\mathbb{H}\)</span> be a Hilbert space, and <span class="math">\(\mathbb{H}^*\)</span> be set of linear maps from <span class="math">\(\mathbb{H} \mapsto \mathbb{C}\)</span>, where <span class="math">\(\mathbb{C}\)</span> denotes the complex number field. Elements in <span class="math">\(\mathbb{H}\)</span> is denoted by <strong>ket</strong> vector <span class="math">\(|x \rangle\)</span>, and elements in <span class="math">\(\mathbb{H}^*\)</span> is denoted by <strong>bra</strong> vector <span class="math">\(\langle y|\)</span>. And <span class="math">\(\langle y|x \rangle \in \mathbb{C}\)</span>. For any <span class="math">\(\langle x| \in \mathbb{H}^*\)</span>, it could be called the dual of <span class="math">\(|x \rangle \in \mathbb{H}\)</span>, and <span class="math">\(\langle y|x \rangle\)</span> is an inner product of <span class="math">\(|x \rangle\)</span> and <span class="math">\(
+\langle y |\)</span>.</p>
+<p><br/>
+A <span class="math">\(n\)</span>-qubit system is a <span class="math">\(2^n\)</span>-dimensional Hilbert space. For a concrete example, let <span class="math">\(\mathbb{H}\)</span> be a 4 dimensional Hilbert space. The standard orthnormal basis in vector notation are:
+</p>
+<div class="math">$$
+\begin{pmatrix} 1 \\ 0 \\ 0 \\ 0 \end{pmatrix},
+\begin{pmatrix} 0 \\ 1 \\ 0 \\ 0 \end{pmatrix},
+\begin{pmatrix} 0 \\ 0 \\ 1 \\ 0 \end{pmatrix},
+\begin{pmatrix} 0 \\ 0 \\ 0 \\ 1 \end{pmatrix}.
+$$</div>
+<p>
+In quantum mechanics and quantum computing, it is more convenient to use the bracket notation
+</p>
+<div class="math">$$
+|00\rangle, |01\rangle,  |10\rangle, |11\rangle
+$$</div>
+<p>
+As we will see later, this is a convenient computing basis.</p>
+<h6 id="quantum-states">Quantum States<a class="headerlink" href="#quantum-states" title="Permanent link">¶</a></h6>
+<p>The state of quantum system is described by a vector in a Hilbert Space. For example, let’s pick the basis <span class="math">\(|0\rangle\)</span> and <span class="math">\(|1 \rangle\)</span> for a 1-qubit system. A state <span class="math">\(\psi \in \mathbb{H}\)</span> is a linear combination of the chosen basis,
+</p>
+<div class="math">$$
+\alpha_0 |0\rangle + \alpha_1 |1\rangle,
+$$</div>
+<p>
+where <span class="math">\(\alpha_0, \alpha_1 \in \mathbb{C}\)</span>. The evolution of the state of a closed quantum system is described by a unitary operator. For any evolution, there is a unitary operator <span class="math">\(U\)</span> such that, 
+</p>
+<div class="math">$$
+|\psi_2\rangle = U |\psi_1\rangle.
+$$</div>
+<p><br/>
+A concrete example of a <span class="math">\(1\)</span>-qubit system is using polarization states of a single photon to represent the quantum state. <span class="math">\(|0 \rangle\)</span> is horizontally polarized photon and <span class="math">\(|1 \rangle\)</span> is a vertically polarized photon. A <span class="math">\(n\)</span>-qubit system could be constructed by composing <span class="math">\(n\)</span> many <span class="math">\(1\)</span>-qubit system.</p>
+<h6 id="quantum-gates-and-circuit">Quantum Gates and Circuit<a class="headerlink" href="#quantum-gates-and-circuit" title="Permanent link">¶</a></h6>
+<p>Let’s look at a simple <span class="math">\(1\)</span>-qubit quantum circuit.
+<figure>
+<img src="images/2025-01-07/simple-circuit.png" style="display: block; margin-left: auto; margin-right: auto;" width="35%"/>
+<figcaption align="center">
+</figcaption>
+</figure></p>
+<p>The circuit starts with the state <span class="math">\(|0\rangle\)</span>. The <span class="math">\(H\)</span> operator is called the Hadamard gate, which will be explained shortly. The most basic operators are also called quantum gates because gates are the building blocks of more complex operators. The quantum state becomes <span class="math">\(\psi_1\)</span> after the Hadamard gate, which is <span class="math">\(H |1\rangle = |\psi_1\rangle = \frac{1}{\sqrt{2}} |0\rangle + \frac{1}{\sqrt{2}} |1\rangle\)</span>. After second Hadamard gate, the state become <span class="math">\(H \lvert \psi_1 \rangle = \lvert 0 \rangle\)</span>. This will be obvious once we write down what Hadamard gates are in algebraic notation.</p>
+<p><br/>
+The most basic gates unitary transformation are basic rotations:
+</p>
+<div class="math">$$
+I \equiv \begin{bmatrix} 1 &amp; 0 \\ 0 &amp; 1 \end{bmatrix}, \quad
+X \equiv \begin{bmatrix} 0 &amp; 1 \\ 1 &amp; 0 \end{bmatrix}
+$$</div>
+<div class="math">$$
+Y \equiv \begin{bmatrix} 0 &amp; -i \\ i &amp; 0 \end{bmatrix}, \quad
+Z \equiv \begin{bmatrix} 1 &amp; 0 \\ 0 &amp; -1 \end{bmatrix}
+$$</div>
+<p>
+These transformations are called Pauli gates. <span class="math">\(I\)</span> is the identity operator. For example, <span class="math">\(I |0 \rangle \langle  = |0 \rangle\)</span>. The <span class="math">\(X\)</span>, <span class="math">\(Y\)</span>, and <span class="math">\(Z\)</span> corresponds to rotations if we look at the quantum state in the Bloch sphere, which is just kind of a polar coordinate system for <span class="math">\(1\)</span>-qubit system. In particular <span class="math">\(X\)</span> is the <code>NOT</code> gate because <span class="math">\(X |0 \rangle = |1 \rangle\)</span>. and <span class="math">\(X |1 \rangle = |0\rangle\)</span></p>
+<p><br/>
+In classical circuits, the set of { <code>AND</code>, <code>OR</code>, <code>NOT</code> } gates are universal because any logical function, such as addition, subtraction, and if-then logic, can be built using only these gates. In quantum circuits, <span class="math">\(X\)</span>, <span class="math">\(Y\)</span>, and <span class="math">\(Z\)</span> do not form a universal set. For one, they cannot encode entanglement. But there is a simple universal set. The set <span class="math">\(\{H, T, CNOT \}\)</span> is universal. <span class="math">\(H\)</span> is called the Hadamard gate,
+</p>
+<div class="math">$$
+H = \frac{1}{\sqrt{2}}
+\begin{bmatrix} 
+1 &amp; 1 \\ 
+1 &amp; -1 
+\end{bmatrix}.
+$$</div>
+<p><span class="math">\(T\)</span> is known as the <span class="math">\(\frac{\pi}{8}\)</span>-phase gate,
+</p>
+<div class="math">$$
+T = \begin{bmatrix} 
+e^{-i \frac{\pi}{8}} &amp; 0 \\ 
+0 &amp; e^{i \frac{\pi}{8}} 
+\end{bmatrix}.
+$$</div>
+<p><span class="math">\(CNOT\)</span> is known as the controlled-not gate, 
+</p>
+<div class="math">$$
+CNOT =
+\begin{bmatrix}
+1 &amp; 0 &amp; 0 &amp; 0 \\
+0 &amp; 1 &amp; 0 &amp; 0 \\
+0 &amp; 0 &amp; 0 &amp; 1 \\
+0 &amp; 0 &amp; 1 &amp; 0
+\end{bmatrix}.
+$$</div>
+<p>
+The controlled-not gate flips the state of the second qubit if the first qubit is <span class="math">\(|1\rangle\)</span> and does nothing if <span class="math">\(0\rangle\)</span>. Note that <span class="math">\(H\)</span> and <span class="math">\(T\)</span> are <span class="math">\(1\)</span>-qubit gate, but <code>CNOT</code> acts on 2 qubits. <span class="math">\(H\)</span> and <span class="math">\(T\)</span> cannot induce entanglement, but <code>CNOT</code> can. This is the main reason that pure rotation gates could not form a universal set.</p>
+<p><br/>
+Once we have a universal set, another key result is the Solovay–Kitaev Theorem, which states that we can approximate any unitary operator efficiently using only gates from a universal set. The existence of universal set and Solovay–Kitaev give us powerful tools to build quantum circuits.</p>
+<h6 id="quantum-measurement">Quantum Measurement<a class="headerlink" href="#quantum-measurement" title="Permanent link">¶</a></h6>
+<p>Measuring a quantum system alters its state. A Von Newmann measurement of system in state <span class="math">\(\alpha_0 |0\rangle + \alpha_1 |1\rangle\)</span> would output <span class="math">\(0\)</span> with probability <span class="math">\(|\alpha_0|^2\)</span>, and output <span class="math">\(1\)</span> with probability <span class="math">\(|\alpha_1|^2\)</span>, where <span class="math">\(|\alpha_0|^2 + |\alpha_1|^2 = 1\)</span>.</p>
+<p><br/>
+We can take a look at two circuits differing by only by an intermediate measure. 
+<figure>
+<img src="images/2025-01-07/two-simple.png" style="display: block; margin-left: auto; margin-right: auto;" width="50%"/>
+<figcaption align="center">
+Measurement collapses the quantum state.
+</figcaption>
+</figure></p>
+<p>In the top circuit, the state right before the final measurement is <span class="math">\(|0 \rangle\)</span>. The final measurement is always <span class="math">\(0\)</span>. On the other hand, the bottom circuit has an extra intermediate measurement. This intermediate state <span class="math">\(\phi_1\)</span> is either <span class="math">\(|0 \rangle\)</span> or <span class="math">\(|1 \rangle\)</span>, with equal probability. Then, 
+</p>
+<div class="math">$$
+|\phi_2\rangle =
+\begin{cases}
+\frac{1}{\sqrt{2}} (|0\rangle + |1\rangle) &amp; \text{with probability } \frac{1}{2} \\
+\frac{1}{\sqrt{2}} (|0\rangle - |1\rangle) &amp; \text{with probability } \frac{1}{2}.
+\end{cases}
+$$</div>
+<p>The final measurement of the second circuit will yield <span class="math">\(0\)</span> or <span class="math">\(1\)</span> with equal probability. The difference in the two circuits are due to an extra measurement.</p>
+<h5 id="controlled-gate-and-phase-kickback">Controlled Gate and Phase Kickback<a class="headerlink" href="#controlled-gate-and-phase-kickback" title="Permanent link">¶</a></h5>
+<p>We have seen a <span class="math">\(\text{C}NOT\)</span> gate, which is a conditional operation. The concept of control gate applies more generally to any unitary operation. This is usually drawn like the following.
+<figure>
+<img src="images/2025-01-07/c-u-gate.png" style="display: block; margin-left: auto; margin-right: auto;" width="30%"/>
+<figcaption align="center">
+A controlled-<span class="math">\(U\)</span> gate, written as <span class="math">\(\text{c-}U\)</span>.
+</figcaption>
+</figure></p>
+<p><br/>
+In a 2-qubit system, it only acts on the one of the qubit and leave the other qubit untouched. Controlled gates are often used to implement a technique known as phase kickback, which is crucial to many quantum circuits. A controlled operation <span class="math">\(U\)</span> is applied to a target register while conditioning on a controlled register. Instead of affecting the target register, the control register experiences a phase shift. For example, in the following circuit, the <span class="math">\(Z\)</span> operation is controlled by the first qubit but the action is applied on the second qubit.
+<figure>
+<img src="images/2025-01-07/z-gate-kick-back.png" style="display: block; margin-left: auto; margin-right: auto;" width="35%"/>
+<figcaption align="center">
+Phase Kickback
+</figcaption>
+</figure>
+The final state is an entangled state <span class="math">\(\frac{1}{\sqrt{2}} ( |0 1\rangle - |1 1\rangle )\)</span>. We can look at the control qubit marginally, and it is <span class="math">\(\frac{1}{\sqrt{2}} (| 0\rangle - |1\rangle )\)</span>, which is just a phase shift of the initial control register. This is the magic of entanglement. It allows the phase information to be kicked back to the control register even though the action is intended to be on the target. The main algorithm will make use of this idea to encode key information in the frequency domain, and use phase kick back to extract the phase information.</p>
+<h4 id="first-look-at-the-discrete-log-circuit">First Look at the Discrete Log Circuit<a class="headerlink" href="#first-look-at-the-discrete-log-circuit" title="Permanent link">¶</a></h4>
+<p>We focus on the special case of the elliptical curve secp256k1. My previous post on the elliptical curve <a href="https://sander.ai/2024/09/02/spectral-autoregression.html">secp256k1</a>. The elements <span class="math">\(a, b\)</span> are group points as defined by the elliptical curve,
+</p>
+<div class="math">\begin{align*}
+B := \{ (x, y) \: | \: &amp; y^2 = x^3 + 7 \; (mod \; p), \text{where } x,y \in \mathbb{F}_p  \}
+\end{align*}</div>
+<p>
+Unlike my previous blog, I am using multiplication to denote the group operation. The group operation of <span class="math">\(P, Q, R \in B\)</span> is such that <span class="math">\(P \cdot Q \cdot R=0\)</span> if all three points are aligned. We also set 
+</p>
+<div class="math">\begin{eqnarray*}
+p &amp;=&amp; 2^{256} - 2^{32} - 977 \\
+q &amp;=&amp; 2^{256} - 2^{32} - 2^9 - 2^8 - 2^7 - 2^6 - 2^4 - 1.
+\end{eqnarray*}</div>
+<p><span class="math">\(b^t\)</span> means that <span class="math">\(b \cdot b  \cdots \cdot b\)</span> for <span class="math">\(t\)</span>-many times. It is just a notation. The problem statement is finding <span class="math">\(t \in \{1, 2, \cdots, q\}\)</span> for the discrete log problem <span class="math">\(a = b^t\)</span>. In the case of public key cryptography, <span class="math">\(a\)</span> is the public key and <span class="math">\(t\)</span> is the secret key. The goal is to find <span class="math">\(t\)</span> given the public key <span class="math">\(a\)</span>. To solve this problem, we implement the following quantum circuit.
+<figure>
+<img src="images/2025-01-07/discrete-log-simple.png" style="display: block; margin-left: auto; margin-right: auto;" width="80%"/>
+<figcaption align="center">
+The circuit for solving the discrete log problem.
+</figcaption>
+</figure></p>
+<p><br/>
+We use three registers. Each register uses <span class="math">\(n=256\)</span> qubit. The first two registers are called controlled registers, and the third is called target register. Applying the quantum operations of <span class="math">\(\mathrm{QFT}\)</span>, <span class="math">\(\text{c-}U^y_b\)</span>, <span class="math">\(\text{c-}U^x_a\)</span>, and <span class="math">\(\mathrm{QFT}^{-1}\)</span>, we measure the first two registers. We will cover the details of all these unitary operators in next section. We measure the first register to get a sequence of <span class="math">\(x_i \in \{0, 1\}\)</span>.  <span class="math">\(\{x_1, \cdots, x_n\}\)</span> are just a sequence of binary numbers, and it encodes a binary number <span class="math">\(x\)</span>,
+</p>
+<div class="math">$$
+x = 2^{n-1}x_1  + 2^{n-2}x_2  + \cdots + x_n =  x_1 x_2 \cdots x_n.
+$$</div>
+<p><span class="math">\(y\)</span> is measured similarly. Now, calculate <span class="math">\(\tilde{x} = \lfloor \frac{q \, x }{2^{256}}  \rceil\)</span> and <span class="math">\(\tilde{y} = \lfloor \frac{q \, y }{2^{256}}  \rceil\)</span>, and 
+</p>
+<div class="math">$$
+\tilde{t} = \frac{\tilde{y}}{\tilde{x}}
+$$</div>
+<p>
+This <span class="math">\(\tilde{t}\)</span> has a good probability (<span class="math">\( \left[ \frac{8}{\pi^2} \right]^2 \approx 0.657\)</span>) to be the correct <span class="math">\(t\)</span> that solves the discrete log problem. </p>
+<p>Notes that the circuit is tractable. The number of qubits required is in the order of <span class="math">\(n=256\)</span>. The initiated quantum states are in the pure computational basis. We will unpack all these quantum operators <span class="math">\(\mathrm{QFT}\)</span>, <span class="math">\(\mathrm{QFT}^{-1}\)</span>, <span class="math">\(\text{c-}U^y_b\)</span>, and <span class="math">\(\text{c-}U^x_a\)</span>. We will show that they could be efficiently implemented.</p>
+<h4 id="dissecting-the-discrete-log-circuit">Dissecting the Discrete Log Circuit<a class="headerlink" href="#dissecting-the-discrete-log-circuit" title="Permanent link">¶</a></h4>
+<p>We will look at each of the key component that allows us to build up to the discrete log algorithm.</p>
+<h6 id="step-1-qft">Step 1: <span class="caps">QFT</span><a class="headerlink" href="#step-1-qft" title="Permanent link">¶</a></h6>
+<p>The Discrete Fourier Transform (<span class="caps">DFT</span>) converts a sequence of complex numbers into another sequence of complex numbers. For example, if the original sequence just sampled the pressure of a sound wave, the transformed sequence corresponds to the amplitudes and phase of each of the frequency component. The two sequences contain the same information, but just in different computational basis.</p>
+<p>The <span class="caps">QFT</span> is the unitary operator that maps each basis state <span class="math">\(|x \rangle\)</span> to a superposition of all basis states, 
+</p>
+<div class="math">$$
+\mathrm{QFT}: |x\rangle \;\mapsto\; \frac{1}{\sqrt{2^n}}
+\sum_{y=0}^{2^n - 1} e^{2\pi i \, \frac{x \, y}{2^n}} \;|y\rangle.
+$$</div>
+<p>The transformation is a change of basis similar in spirit as in <span class="caps">DFT</span>. However, this operation is not a just a mathematical reformulation, it is a physical quantum evolution. Below is a circuit that implements the the <span class="caps">QFT</span> operation.
+<figure>
+<img src="images/2025-01-07/qft.png" style="display: block; margin-left: auto; margin-right: auto;" width="80%"/>
+<figcaption align="center">
+<span class="caps">QFT</span> Circuit
+</figcaption>
+</figure>
+The <span class="math">\(R_k\)</span> operation is a <span class="math">\(1\)</span>-qubit phase rotation operator, defined as
+</p>
+<div class="math">$$
+R_k = 
+\begin{pmatrix}
+1 &amp; 0\\
+0 &amp; e^{\frac{2\pi i}{2^k}}
+\end{pmatrix}.
+$$</div>
+<p><span class="caps">QFT</span> is frequently create a convenient computational state of the quantum state. For example, we could first prepare the circurt to be in all <span class="math">\(|0 \rangle\)</span>, and applying a <span class="math">\(\mathrm{QFT}\)</span> will give us a superposition state. Once we do some additional operations, we often want to convert the system back to th original computational basis for measurements. For that, we use <span class="math">\(\mathrm{QFT}^{-1}\)</span>,
+</p>
+<div class="math">$$
+\mathrm{QFT}^{-1} : |x\rangle \;\mapsto\; \frac{1}{\sqrt{2^n}} 
+\sum_{y=0}^{2^n-1} e^{-2\pi i \frac{x\, y}{2^n} } \;|y \rangle.
+$$</div>
+<p>
+The implementation of <span class="math">\(\mathrm{QFT}^{-1}\)</span> is just reversing each quantum gates and flip each quantum gates to its conjugate transpose.</p>
+<h6 id="step-2-phase-estimation">Step 2: Phase Estimation<a class="headerlink" href="#step-2-phase-estimation" title="Permanent link">¶</a></h6>
+<p>Let see how we can use <span class="math">\(\mathrm{QFT}^{-1}\)</span> to do phase estimation. We are given the quantum state <span class="math">\(\frac{1}{\sqrt{2^n}} \sum_{y=0}^{2^n - 1} e^{2\pi i \,\omega\,y} \,|y\rangle\)</span>, we are asked to estimate <span class="math">\(\omega\)</span>. Let’s rewrite omega as
+</p>
+<div class="math">$$
+\omega = 2^{-1}x_1  + 2^{-2}x_2  + \cdots + 2^{-n} x_n,
+$$</div>
+<p>
+then we can use the following circuit at <span class="math">\(|x_n \rangle \cdots | x_1 \rangle\)</span> and output <span class="math">\(\{\tilde{x}_1, \cdots \tilde{x}_n \}\)</span>
+<figure>
+<img src="images/2025-01-07/phase-estimation.png" style="display: block; margin-left: auto; margin-right: auto;" width="75%"/>
+<figcaption align="center">
+Phase estimation via <span class="math">\(QFT^-1\)</span>
+</figcaption>
+</figure>
+Let <span class="math">\(\tilde{x}= 2^n\omega=\tilde{x}_1 \tilde{x}_2 \cdots x_n\)</span>. It turns out that there is a <span class="math">\(\frac{8}{\pi^2}\)</span> probability that the true answer <span class="math">\(\omega\)</span> lies between <span class="math">\([\frac{x}{2^n}, \frac{x}{2^n}+1]\)</span>. The analytic constant <span class="math">\(\frac{8}{\pi^2}\)</span> is a bit mysterious. The phase estimation does not just cluster around the exact integer approximation <span class="math">\(x\)</span>. It has non‐negligible support at <span class="math">\([x, x+1]\)</span>, where 
+</p>
+<div class="math">$$
+x= 2^n\omega = 2^{n-1}x_1  + 2^{n-2}x_2  + \cdots + x_n =  x_1 x_2 \cdots x_n.
+$$</div>
+<p>
+The accumulated probability is <span class="math">\(\frac{8}{\pi^2}\)</span>.</p>
+<p><br/>
+It should be noted that this problem is a bit artificial because the input state of the circuit is prepared in some convenient superposition state. This algorithm is a component of the discrete log algorithm.</p>
+<h6 id="step-3-eigenvalue-estimation">Step 3: Eigenvalue Estimation<a class="headerlink" href="#step-3-eigenvalue-estimation" title="Permanent link">¶</a></h6>
+<p>The eigenvalue estimation algorithm is similarly artificial to phase estimation. But again, it is a building block toward the complete discrete log algorithm. The eigenvalue problem asks us to find <span class="math">\(\omega\)</span> given an arbitrary unitary operator <span class="math">\(U\)</span>, its eigenstate <span class="math">\(|\psi \rangle\)</span>, and the eigenvalue in the form of <span class="math">\(e^{2\pi i \omega}\)</span>. 
+<figure>
+<img src="images/2025-01-07/eigenvalue-estimation.png" style="display: block; margin-left: auto; margin-right: auto;" width="100%"/>
+<figcaption align="center">
+Eigenvalue Estimation Circuit
+</figcaption>
+</figure>
+The circuit starts with input state <span class="math">\(|0 \rangle\)</span> and <span class="math">\(\psi \rangle\)</span>. We measure <span class="math">\(\{\tilde{x}_1, \cdots \tilde{x}_n \}\)</span>. Similar to the phase estimation, <span class="math">\(\frac{\tilde{x}}{2^n}\)</span> is a good estimate of <span class="math">\(\omega\)</span> with probability <span class="math">\(\frac{8}{\pi^2}\)</span>. It is clear that the eigenvalue estimation problem is directly mapped to the phase estimation problem.</p>
+<p><br/>
+The operations on the bottom, target register is often denoted as <span class="math">\(\text{c-}U^x\)</span>. This operation is effectively applying the unitary operator <span class="math">\(x\)</span> times. This operation kicks back the phase information to the control register. The <span class="math">\(\mathrm{QFT}^{-1}\)</span> operation decodes the phase information back to the computation basis for us to measure.</p>
+<p><br/>
+A key mystery of this circuit is how we could prepare the second register to be in some specific eigenstate <span class="math">\(| \psi \rangle\)</span>. There is another clever technique that solves the problem for us via the Spectral Theorem. The theorem says that for any Hilbert space, there is an orthonormal basis consisting of only eigenvectors. This means that any state <span class="math">\(\phi\)</span> could be rewritten in the eigenvector basis
+</p>
+<div class="math">$$
+|\phi\rangle = \sum_{j=0}^{2^n - 1} \alpha_j |\psi_j\rangle
+$$</div>
+<p>
+If the starting state is arbitrary <span class="math">\(\phi\)</span> in the target register instead of eigenstate <span class="math">\(|\psi \rangle\)</span>, the circuit maps the state to
+</p>
+<div class="math">$$
+\sum_{j=0}^{2^n - 1} \alpha_j |\omega_j \rangle |\psi_j\rangle
+$$</div>
+<p>
+The circuit map <span class="math">\(|0\rangle^{\otimes n} |\psi_j\rangle\)</span> to <span class="math">\(|\omega_j \rangle |\psi_j\rangle\)</span>. 
+Measuring the system collapse the system into an eigenstate <span class="math">\(\psi_j\)</span> with probability <span class="math">\(|\alpha_j|^2\)</span>. This idea allows us use the eigenvalue estimation algorithm by preparing the target register in a convenient computational basis.</p>
+<h6 id="step-4-discrete-log-one-more-time">Step 4: Discrete Log One More Time<a class="headerlink" href="#step-4-discrete-log-one-more-time" title="Permanent link">¶</a></h6>
+<p>The eigenvalue estimation circuit is already very closely resembled the discrete log circuit. We have already explained in details <span class="math">\(\mathrm{QFT}\)</span>, <span class="math">\(\mathrm{QFT}^{-n}\)</span>. We need to explain <span class="math">\(\text{c-}U_a^x\)</span> and <span class="math">\(\text{c-} U_b^y\)</span>. </p>
+<p><br/>
+Let’s define the unitary operator <span class="math">\(U_a\)</span>,
+</p>
+<div class="math">$$
+U_a : |s \rangle \mapsto | s \cdot a  \rangle .
+$$</div>
+<p>
+Note that the <span class="math">\(\cdot\)</span> denotes the elliptical group operation. This means that the binary number <span class="math">\(s\)</span> denotes a group element, but <span class="math">\(| s \rangle\)</span> is a quantum state, which could be pure state or a superposition state. <span class="math">\(s \cdot a\)</span> is again a group element. To apply the eigenvalue estimation algorithm we proposed earlier, we need to this operator’s eigenstate. The eigenstate is the following,
+</p>
+<div class="math">$$
+|u_k\rangle = \frac{1}{\sqrt{q}} \sum_{s=0}^{q-1} e^{-2\pi i \frac{k}{q} s} |a^s \rangle.
+$$</div>
+<p>
+We now have
+</p>
+<div class="math">\begin{eqnarray*}
+U_a |u_k\rangle &amp;=&amp; \frac{1}{\sqrt{q}} \sum_{s=0}^{q-1} e^{-2\pi i \frac{k}{q} s} U_a |a^s  \rangle \\
+&amp;=&amp; e^{2\pi i \frac{k}{q}} |u_k\rangle.
+\end{eqnarray*}</div>
+<p>
+That is, <span class="math">\(U_a\)</span> has an eigenvalue of <span class="math">\(e^{2\pi i \frac{k}{q}}\)</span>. Similarly, <span class="math">\(U_b\)</span> has an eigenvalue of <span class="math">\(e^{2\pi i \frac{k t}{q}}\)</span>. If we have these two eigenvalues, <span class="math">\(t\)</span> is obvious. This is the reason why we did so much work to explain <span class="math">\(\mathrm{QFT}\)</span>, phase estimation, and eigenvalue estimation. With just small amount of algebraic manipulation, we just converted the discrete log problem to problem of eigenvalue estimation.</p>
+<p><br/>
+The last thing we need is to show that we could prepare the target register of the discrete log circuit in the eigenvector state of <span class="math">\(U_a\)</span> and <span class="math">\(U_b\)</span>. It turns out that all we need to do is to prepare the target register in <span class="math">\(|1 \rangle\)</span> because
+</p>
+<div class="math">\begin{eqnarray*}
+|0\rangle |1\rangle &amp;=&amp; |0\rangle \left( \frac{1}{\sqrt{q}} \sum_{k=0}^{q-1} |u_k\rangle \right) \\
+                    &amp;=&amp; \frac{1}{\sqrt{q}} \sum_{k=0}^{q-1} |0\rangle |u_k\rangle.
+\end{eqnarray*}</div>
+<p>
+That is the case because
+</p>
+<div class="math">\begin{eqnarray*}
+\frac{1}{\sqrt{q}} \sum_{k=0}^{q-1} |u_k\rangle
+&amp;=&amp; \frac{1}{\sqrt{q}} \sum_{k=0}^{q-1} \frac{1}{\sqrt{q}} \sum_{s=0}^{q-1} e^{-2\pi i \frac{k}{q} s} |a^s \rangle.
+\end{eqnarray*}</div>
+<p>
+<span class="math">\(a^s = | 1 \rangle\)</span> if and only if <span class="math">\(s = 0 \mod p\)</span>. Then <span class="math">\(\frac{1}{\sqrt{q}} \frac{1}{\sqrt{q}} \sum_{k=0}^{q-1} e^{-2\pi i \frac{k}{q} \cdot 0} = \frac{1}{q} \sum_{k=0}^{q-1} 1 = 1\)</span>. It must be the case that all other states have amplitude <span class="math">\(0\)</span>. The state <span class="math">\(|0\rangle |1\rangle\)</span> is the probably the friendliest to physical implementation.</p>
+<p><br/>
+Now we have the full discrete log circuit.
+<figure>
+<img src="images/2025-01-07/discrete-log-full.png" style="display: block; margin-left: auto; margin-right: auto;" width="100%"/>
+<figcaption align="center">
+Discrete Log Circuit
+</figcaption>
+</figure>
+We prepare two control registers in <span class="math">\(|0 \rangle\)</span> and the target register in <span class="math">\(|1 \rangle\)</span>. The <span class="math">\(U_a\)</span> and <span class="math">\(U_b\)</span> have the same eigenvector with slightly different eigenvalues. In fact, once we find out those eigenvalues, we can easily recover the secret key <span class="math">\(t\)</span>. We first use <span class="math">\(\mathrm{QFT}\)</span> to convert the controlled registers into superposition state in the frequency domain. We use the control operations to kickback the eigenvalue to the controlled registers. We use <span class="math">\(\mathrm{QFT}^{-1}\)</span> to extract the eigenvalues. Voila! We just cracked the key cryptographic system that powers Bitcoin and Ethereum.</p>
+<h4 id="not-there-yet">Not There Yet<a class="headerlink" href="#not-there-yet" title="Permanent link">¶</a></h4>
+<p>All the theories are in place to implement circuits that allow us to find the private key for a Bitcoin account. Why is it the case that Bitcoin is still perfectly safe for the foreseeable future?</p>
+<p>The most important quantum operation to implement is <span class="math">\(U_b\)</span>. At a minimum, it requires circuits that perform elliptical curve point binary operations. Assume that we only use the universal set <span class="math">\(\{H, T, CNOT\}\)</span>. All the modular arithmetic operations are on <span class="math">\(n=256\)</span> bit numbers. Implementing the group operation requires modular multiplication and inversion. One estimate is that <span class="math">\(10^7\)</span> gates are required for a single group point operation. Extrapolating this out in our circuit, we need at least <span class="math">\(10^{9}\)</span> quantum gates. </p>
+<p>The most powerful quantum computer could handle 1000s of qubits. However, the maximum gate depth is more like 100s of gates. We need billions of gates. A key blocker is that qubits lose information over time due to decoherence. If the gate depth exceeds the coherence time, qubits lose their quantum states before the computation finishes.</p>
+<p>The other key challenge to a feasible discrete log circuit is quantum error. Classical computing also has to deal with errors. However, the problem there is much less pronounced. For a typical consumer <span class="caps">CPU</span>, per bit-hour is probably <span class="math">\(10^{-10}\)</span> to <span class="math">\(10^{-18}\)</span>. Per operation would be more like <span class="math">\(10^{-25}\)</span>. On the other hand, quantum per-qubit gate error rate is estimated to be <span class="math">\(10^{-3}\)</span>. The comparison between the two systems is not just a problem of order of magnitude, it is order of order of magnitude. Even though our circuit only requires 1000 logical qubits, it requires at least millions of physical qubits if we were to implement any feasible error correction scheme.</p>
+<h4 id="intuition-behind-the-quantum-speedup">Intuition Behind the Quantum Speedup<a class="headerlink" href="#intuition-behind-the-quantum-speedup" title="Permanent link">¶</a></h4>
+<p>There are many interpretations that explain why quantum computers is able to lead to speed up that classical algorithms cannot. I will highlight a few reasons that make the most sense to me. </p>
+<p>Superposition offers the most basic yet intuitive explanation. We can compare <span class="math">\(n\)</span>-qubit to <span class="math">\(n\)</span> classical bit. Let us revisit the definition of a quantum state. A <span class="math">\(n\)</span>-qubit represents an element of Hilbert space with <span class="math">\(2^n\)</span> dimension. It is a <span class="math">\(2^n\)</span> dimensional vector. On the other hand, <span class="math">\(n\)</span> classical bit is only a <span class="math">\(n\)</span> dimensional vector. My favorite way to think about this is that a <span class="math">\(n\)</span>-qubit quantum state represents a random variable whose set of events is <span class="math">\(\Omega = \{ 0, 1\} ^n\)</span>. With the following quantum state,
+</p>
+<div class="math">$$
+\psi\rangle = \sum_{i=0}^{2^n -1} \alpha_i |i\rangle,
+$$</div>
+<p>
+it defines a random variable
+</p>
+<div class="math">$$
+P(i) = |\alpha_i|^2, \quad \sum_{i=0}^{2^n -1} P(i) = 1.
+$$</div>
+<p>
+But <span class="math">\(n\)</span>-bit could only represents a single realization. The set of <span class="math">\(\{ \alpha_i\}_i\)</span> has cardinality of <span class="math">\(2^n\)</span>. If we use <span class="math">\(16\)</span> classical bit to encode one <span class="math">\(\alpha_i\)</span>, it would require <span class="math">\(16 \cdot 2^n\)</span> bits to encode the entire random variable. Superposition allows <span class="math">\(n\)</span> qubits to takes on simultaneous <span class="math">\(2^n\)</span> different possibilities. Quantum reality is tripping!</p>
+<p>I find the quantum phenomenon of interference and entanglement to be less obvious in terms of how they immediately lead to speedup. To me, they are just basic quantum properties that govern the math behind quantum operators. However, if we have to hold on to them and come up with some intuitions, I think about inference as a technique that we could use to design our quantum algorithms to amplify the correct answers while allowing wrong answers to cancel each other out. Entanglement allows local operations to manipulate the entire quantum state collectively. In the mechanism of a phase kickback, entanglement makes the operation on a target register non-local, forcing a phase shift in the control register even though the quantum operation is explicitly performed only on the target register.</p>
+<hr/>
+<h4 id="footnotes">Footnotes<a class="headerlink" href="#footnotes" title="Permanent link">¶</a></h4>
+<!-- ###### Classical computer error handling
+
+CPU error correction
+
+For inflight data inside data buses and buffer. Inside the CPU pipeline, there are numerous buffers, registers, and data buses. Parity and ECC are both used for error detection and protection against corruption due to cosmic rays or other transient faults. If a transient error is detected, the CPU might could retry the operation or escalate it to an error-handling mechanism.
+
+To ensure correctness, CPUs implement error detection and correction (EDAC) mechanisms. The most common techniques include parity bits, ECC (Error Correction Code), and redundancy methods.
+
+error detection, redundancy, 
+Error could come from cosmic ray and powerful fluctuation. 
+
+consumer cpu, 1 bit level error every few months. 
+ -->
+<!-- $$
+U^y_b
+$$
+
+$$
+| \phi_1 \rangle
+$$
+
+$$
+|\phi_2 \rangle
+$$
+
+
+$$
+\frac{1}{\sqrt{2}} (|0\rangle + e^{2\pi i(x_1 2^{-1} + x_2 2^{-2} + \cdots + + x_n 2^{-n})}\,|1\rangle)
+$$
+
+
+$$
+\frac{1}{\sqrt{2}} (|0\rangle + e^{2\pi i(x_2 2^{-1} + x_3 2^{-2} + \cdots + + x_n 2^{-n+1})}\,|1\rangle)
+$$
+
+
+$$
+\frac{1}{\sqrt{2}} (|0\rangle + e^{2\pi i(x_n 2^{-1})}\,|1\rangle)
+$$
+
+
+$$
+U^{2^{n-1}}
+$$
+
+$$
+U^{2^{n-2}}
+$$
+
+$$
+U
+$$
+
+$$ 
+|x_2 \rangle
+$$
+
+$$ 
+|x_1 \rangle \quad  |x_2 \rangle \quad |x_3 \rangle \quad |x_{n-1} \rangle  \quad|x_n \rangle
+$$
+
+$$ 
+|y_1 \rangle \quad  |y_2 \rangle \quad |y_3 \rangle \quad |y_{n-1} \rangle  \quad|y_n \rangle
+$$
+
+
+$$ 
+U^{2^{n-1}}_a  \quad  U^{2^{n-2}}_a  \quad  U_a
+$$
+
+$$
+U^{2^{n-1}}_b  \quad  U^{2^{n-2}}_b  \quad  U_b
+$$
+
+
+$$
+|1 \rangle = \frac{1}{\sqrt{q}} \sum_{k=0}^{q-1} |u_k\rangle 
+$$ -->
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=default';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        // "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'auto' } }," +
+        "    jax: ['input/TeX','input/MathML','output/SVG']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['TeX', 'STIX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+
+</script>
+
+
+
+             
+ 
+            
+            
+            
+
+
+
+
+
+
+
+
+            <hr/>
+            <script src="https://utteranc.es/client.js"
+                    repo="jinfwhuang/jinfwhuang.github.io"
+                    issue-term="pathname"
+                    label="user-comments"
+                    theme="github-light"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+
+            <hr/>
+            <aside>
+            <nav>
+            <ul class="articles-timeline">
+                <li class="previous-article">« <a href="/2024-11-11-flat-water-paddle-up" title="Previous: My Journey: Flat Water Foiling Paddle Up - All Pain, No Fun">My Journey: Flat Water Foiling Paddle Up <small class="subtitle">All Pain, No Fun</small></a></li>
+            </ul>
+            </nav>
+            </aside>
+        </div>
+        <section id="article-sidebar" class="span2">
+            <h4>Published</h4>
+            <time itemprop="dateCreated" datetime="2025-01-07T00:00:00-08:00">Tue 07 January 2025</time>
+            <!--             <h4>Category</h4>
+            <a class="category-link" href="/categories#misc-ref">misc</a>
+ -->
+<h4>Contact</h4>
+<div id="sidebar-social-link">
+    <a href="https://twitter.com/jinfwhuang" title="Twiiter" target="_blank" rel="nofollow noopener noreferrer">
+        <svg xmlns="http://www.w3.org/2000/svg" aria-label="Twitter" role="img" viewBox="0 0 512 512"><rect width="512" height="512" rx="15%" fill="#1da1f3"/><path fill="#fff" d="M437 152a72 72 0 0 1-40 12 72 72 0 0 0 32-40 72 72 0 0 1-45 17 72 72 0 0 0-122 65 200 200 0 0 1-145-74 72 72 0 0 0 22 94 72 72 0 0 1-32-7 72 72 0 0 0 56 69 72 72 0 0 1-32 1 72 72 0 0 0 67 50 200 200 0 0 1-105 29 200 200 0 0 0 309-179 200 200 0 0 0 35-37"/></svg>
+    </a>
+    <a href="https://www.linkedin.com/in/jinfwhuang" title="LinkedIn" target="_blank" rel="nofollow noopener noreferrer">
+        <svg xmlns="http://www.w3.org/2000/svg" aria-label="LinkedIn" role="img" viewBox="0 0 512 512" fill="#fff"><rect width="512" height="512" rx="15%" fill="#0077b5"/><circle cx="142" cy="138" r="37"/><path stroke="#fff" stroke-width="66" d="M244 194v198M142 194v198"/><path d="M276 282c0-20 13-40 36-40 24 0 33 18 33 45v105h66V279c0-61-32-89-76-89-34 0-51 19-59 32"/></svg>
+    </a>
+</div>
+            
+
+
+
+
+
+            
+
+
+
+
+
+        </section>
+</div>
+</article>
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe.
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides.
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo https://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>                    </div>
+                    <div class="span1"></div>
+                </div>
+            </div>
+        </div>
+<!--        <footer>
+
+    <div>
+        <span class="site-name"><span style="color:black;">Jin's Notes</span></span> - the hardest part is taking the first step
+    </div>
+
+
+
+    <div id="fpowered">
+        Powered by: <a href="http://getpelican.com/" title="Pelican Home Page" target="_blank" rel="nofollow noopener noreferrer">Pelican</a>
+        Theme: <a href="https://elegant.oncrashreboot.com/" title="Theme Elegant Home Page" target="_blank" rel="nofollow noopener noreferrer">Elegant</a>
+    </div>
+</footer>-->
+            <script src="//code.jquery.com/jquery.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+        <script src="/theme/js/elegant.prod.9e9d5ce754.js"></script>
+        <script>
+            function validateForm(query)
+            {
+                return (query.length > 0);
+            }
+        </script>
+
+
+
+
+    <script>
+    (function () {
+        if (window.location.hash.match(/^#comment-\d+$/)) {
+            $('#comment_thread').collapse('show');
+        }
+    })();
+    window.onhashchange=function(){
+        if (window.location.hash.match(/^#comment-\d+$/))
+            window.location.reload(true);
+    }
+    $('#comment_thread').on('shown', function () {
+        var link = document.getElementById('comment-accordion-toggle');
+        var old_innerHTML = link.innerHTML;
+        $(link).fadeOut(200, function() {
+            $(this).text('Click here to hide comments').fadeIn(200);
+        });
+        $('#comment_thread').on('hidden', function () {
+            $(link).fadeOut(200, function() {
+                $(this).text(old_innerHTML).fadeIn(200);
+            });
+        })
+    })
+</script>
+
+    </body>
+    <!-- Theme: Elegant built for Pelican
+        License : MIT -->
+
+</html>
