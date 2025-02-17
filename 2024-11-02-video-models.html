@@ -138,7 +138,9 @@
             <p>Language and vision models are the two frontiers of <span class="caps">AI</span> research and product engineering. Language models are mature enough to be many people’s first stop for information. The early products powered by LLMs have changed how many search and learn.  For example, I have used ChatGPT and Perplexity more than Google Search in the past 3 months. Image models also power useful products. For example, the most popular photo or social medial editing tools incorporate elements powered by image foundation models, e.g. Photoshop Firefly and Midjourney. Chatting and image editing products have already achieved mainstream adoption, demonstrating that they are both futuristic and practical.</p>
 <p>Video models are still experimental. Since the unveiling of Sora in February this year, video models have been one of the competitive frontiers for top industrial <span class="caps">AI</span> labs<sup id="sf-2024-11-02-video-models-1-back"><a href="#sf-2024-11-02-video-models-1" class="simple-footnote" title=" I would say that the two frontiers in the year of 2024 have been LLMs and video generation. Industrial AI labs are AI teams within large tech corporations or extremely well-funded startup companies. Examples are Google, Facebook, Bytedance, OpenAI, and Anthropic.">1</a></sup>. Many of these teams put enormous resources and focus on video generation. Numerous companies release their models, some in the form of paid trials and some in the form of just announcements and sample prompt-video pairs. They are still not packaged as useful products yet. The products are just a thin proxy to the underlying models. <span class="caps">AI</span> powered video editing is still not available.</p>
 <p>In this blog post, I am going to use two examples to draw out the basics of what video models look like today. This minimum technical background will allow us to understand how most video generation model is constructed, trained, and used for inference. It would give us the ability to think through its relationship to the its adjacent cousins of language and image models. We could also better understand how video models might evolve in the coming 6-18 months.</p>
-<p>I picked MovieGen ([polyak2024moviegencastmedia]) and VideoPoet (<a href='#kondratyuk2024videopoetlargelanguagemodel' id='ref-kondratyuk2024videopoetlargelanguagemodel-1'>
+<p>I picked MovieGen (<a href='#polyak2024moviegencastmedia' id='ref-polyak2024moviegencastmedia-1'>
+    PZB+24
+</a>) and VideoPoet (<a href='#kondratyuk2024videopoetlargelanguagemodel' id='ref-kondratyuk2024videopoetlargelanguagemodel-1'>
     KYG+24
 </a>) as the two representative models for a deep dive. MovieGen is a good case study because it is one of the current state-of-the-arts, and the only leading project that releases substantial details about its data, engineering, and design space. Its design choices should be representative of the approaches that everyone else is fast copying. VideoPoet represents the best of open-source models before Sora turned video generation into a completely closed-source field. VideoPoet was also interesting because it crucially does not use DiT. Its technology illustrates alternative design choices that the video model community has more or less abandoned in the last year.</p>
 <p><br></p>
@@ -684,6 +686,22 @@ https://huggingface.co/tencent/HunyuanVideo  -->
     <hr>
     <h3>Citations</h3>
     <ol class="references">
+            <li id="polyak2024moviegencastmedia">
+                <span class="reference-text">Polyak, Adam, Zohar, Amit, Brown, Andrew, Tjandra, Andros, Sinha, Animesh, Lee, Ann, Vyas, Apoorv, Shi, Bowen, Ma, Chih-Yao, Chuang, Ching-Yao, Yan, David, Choudhary, Dhruv, Wang, Dingkang, Sethi, Geet, Pang, Guan, Ma, Haoyu, Misra, Ishan, Hou, Ji, Wang, Jialiang, Jagadeesh, Kiran, Li, Kunpeng, Zhang, Luxin, Singh, Mannat, Williamson, Mary, Le, Matt, Yu, Matthew, Singh, Mitesh&nbsp;Kumar, Zhang, Peizhao, Vajda, Peter, Duval, Quentin, Girdhar, Rohit, Sumbaly, Roshan, Rambhatla, Sai&nbsp;Saketh, Tsai, Sam, Azadi, Samaneh, Datta, Samyak, Chen, Sanyuan, Bell, Sean, Ramaswamy, Sharadh, Sheynin, Shelly, Bhattacharya, Siddharth, Motwani, Simran, Xu, Tao, Li, Tianhe, Hou, Tingbo, Hsu, Wei-Ning, Yin, Xi, Dai, Xiaoliang, Taigman, Yaniv, Luo, Yaqiao, Liu, Yen-Cheng, Wu, Yi-Chiao, Zhao, Yue, Kirstain, Yuval, He, Zecheng, He, Zijian, Pumarola, Albert, Thabet, Ali, Sanakoyeu, Artsiom, Mallya, Arun, Guo, Baishan, Araya, Boris, Kerr, Breena, Wood, Carleigh, Liu, Ce, Peng, Cen, Vengertsev, Dimitry, Schonfeld, Edgar, Blanchard, Elliot, Juefei-Xu, Felix, Nord, Fraylie, Liang, Jeff, Hoffman, John, Kohler, Jonas, Fire, Kaolin, Sivakumar, Karthik, Chen, Lawrence, Yu, Licheng, Gao, Luya, Georgopoulos, Markos, Moritz, Rashel, Sampson, Sara&nbsp;K., Li, Shikai, Parmeggiani, Simone, Fine, Steve, Fowler, Tara, Petrovic, Vladan, and Du, Yuming.
+Movie gen: a cast of media foundation models.
+2024.
+URL: <a href="https://arxiv.org/abs/2410.13720">https://arxiv.org/abs/2410.13720</a>, <a href="https://arxiv.org/abs/2410.13720">arXiv:2410.13720</a>.</span>
+                    <a class="cite-backref" href="#ref-polyak2024moviegencastmedia-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
             <li id="kondratyuk2024videopoetlargelanguagemodel">
                 <span class="reference-text">Kondratyuk, Dan, Yu, Lijun, Gu, Xiuye, Lezama, José, Huang, Jonathan, Schindler, Grant, Hornung, Rachel, Birodkar, Vighnesh, Yan, Jimmy, Chiu, Ming-Chang, Somandepalli, Krishna, Akbari, Hassan, Alon, Yair, Cheng, Yong, Dillon, Josh, Gupta, Agrim, Hahn, Meera, Hauth, Anja, Hendon, David, Martinez, Alonso, Minnen, David, Sirotenko, Mikhail, Sohn, Kihyuk, Yang, Xuan, Adam, Hartwig, Yang, Ming-Hsuan, Essa, Irfan, Wang, Huisheng, Ross, David&nbsp;A., Seybold, Bryan, and Jiang, Lu.
 Videopoet: a large language model for zero-shot video generation.
