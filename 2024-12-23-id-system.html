@@ -12,7 +12,7 @@
 
         <meta name="author" content="jin" />
 
-        <meta name="description" content="I am going to write a short post on my favorite choice id. I have used this id design for quite a while and on many large software systems. One such software system is a data system for storing large number of images and videos. Another example is large scaled …
+        <meta name="description" content="I am going to write a short post on an ID design choice that I like. I have used this ID design for quite a while across many large software systems. One such software system is a data system for storing a large number of images and videos. Another example …
 " />
         <meta name="twitter:creator" content="@jinfwhuang">
         <meta property="og:type" content="article" />
@@ -22,12 +22,12 @@
 
 <meta property="og:title" content="ID System "/>
 <meta property="og:url" content="/2024-12-23-id-system" />
-<meta property="og:description" content="I am going to write a short post on my favorite choice id. I have used this id design for quite a while and on many large software systems. One such software system is a data system for storing large number of images and videos. Another example is large scaled …" />
+<meta property="og:description" content="I am going to write a short post on an ID design choice that I like. I have used this ID design for quite a while across many large software systems. One such software system is a data system for storing a large number of images and videos. Another example …" />
 <meta property="og:site_name" content="Jin&#39;s Notes" />
 <meta property="og:article:author" content="jin" />
 <meta property="og:article:published_time" content="2024-12-23T00:00:00-08:00" />
 <meta name="twitter:title" content="ID System ">
-<meta name="twitter:description" content="I am going to write a short post on my favorite choice id. I have used this id design for quite a while and on many large software systems. One such software system is a data system for storing large number of images and videos. Another example is large scaled …">
+<meta name="twitter:description" content="I am going to write a short post on an ID design choice that I like. I have used this ID design for quite a while across many large software systems. One such software system is a data system for storing a large number of images and videos. Another example …">
 <meta property="og:image" content="/images/android-chrome-192x192.png" />
 <meta name="twitter:image" content="/images/android-chrome-192x192.png" >
 
@@ -103,7 +103,7 @@
         <h4>Contents</h4>
         <div class="toc">
 <ul>
-<li><a href="#prefix-and-base58">Prefix and Base58</a></li>
+<li><a href="#why-prefix-and-base58">Why Prefix and Base58</a></li>
 <li><a href="#bit-length">Bit Length</a></li>
 <li><a href="#monotonicity">Monotonicity</a></li>
 <li><a href="#case-studies">Case Studies</a></li>
@@ -114,17 +114,17 @@
     <div class="span8 article-content">
             
             
-<p>I am going to write a short post on my favorite choice id. I have used this id design for quite a while and on many large software systems. One such software system is a data system for storing large number of images and videos. Another example is large scaled collaborative visual editing tool. Another example is an ad tech data system.</p>
-<p>I dislike some of the common or default approaches for ids. For example, mysql defaults to simple incremental form 1, e.g. 1, 2, 3. Mongodb uses a 24 bytes in hexidecimal, eg. 64e9bce70b7bbd814e996350. Other common ones are uuid (e.g. d77c94e3-82f1-4cf2-b080-948c8580cf5d), or just plain number (e.g. 1459236513600), or a long sha-256 hash (e.g. 4a5e1b3dddb04198e13bace4273a2642d00d266a). </p>
-<p>My choice of id looks like this <code>img_6ykNcuNA7u</code>. It is prefixed and base58, and its entropy bit length is chosen base on needs.</p>
-<h6 id="prefix-and-base58">Prefix and Base58<a class="headerlink" href="#prefix-and-base58" title="Permanent link">¶</a></h6>
-<p>Prefix ids make it easy to debug. When I encounters an id in reports, logs, debugging message, or random slack messages, I could quickly understand the context without looking up databases or asking another person. The prefix allows me to quickly identify where to look up that id. </p>
-<p>Prefix makes it easier to mix different data types. One common scenario that different data types will be placed into different databases. For example, the data are stored in a transaction database, but the same data are replicated to some analytics system. They have different table layouts. Sometimes multiple data types are merged. Uniqueness across data types are required, and having prefix usually make life a lot easier.</p>
+<p>I am going to write a short post on an <span class="caps">ID</span> design choice that I like. I have used this <span class="caps">ID</span> design for quite a while across many large software systems. One such software system is a data system for storing a large number of images and videos. Another example is a large-scale collaborative visual editing tool. Another example is an ad tech data system.</p>
+<p>I dislike some of the common or default approaches for IDs. For example, mysql defaults to simple incremental form 1, e.g. 1, 2, 3. MongoDB uses 24 bytes in hexadecimal, eg. 64e9bce70b7bbd814e996350. Other common ones are uuid (e.g. d77c94e3-82f1-4cf2-b080-948c8580cf5d), or just plain number (e.g. 1459236513600), or a long sha-256 hash (e.g. 4a5e1b3dddb04198e13bace4273a2642d00d266a). </p>
+<p>My choice of <span class="caps">ID</span> looks like this <code>img_6ykNcuNA7u</code>. It is prefixed and base58, and its entropy bit length is chosen based on needs.</p>
+<h6 id="why-prefix-and-base58">Why Prefix and Base58<a class="headerlink" href="#why-prefix-and-base58" title="Permanent link">¶</a></h6>
+<p>Prefix IDs make it easy to debug. When I encounter an <span class="caps">ID</span> in reports, logs, debugging messages, or random Slack messages, I can quickly understand the context without looking up databases or asking another person. The prefix allows me to quickly identify where to look up that <span class="caps">ID</span>. </p>
+<p>Prefixes make it easier to mix different data types. One common scenario is that different data types will be placed into different databases. For example, the data are stored in a transaction database, but the same data are replicated in some analytics systems. They have different table layouts. Sometimes multiple data types are merged. Uniqueness across data types is required, and having IDs prefixed usually makes life a lot easier.</p>
 <p>Base58 is easy to differentiate and relatively space efficient compared to hex. For example, base58 <code>6ykNcuNA7uFGsA</code> vs. hex <code>6a696e6875616e676a69</code>. The other candidate is base64. Base64 uses weird delimiting characters like <code>/+=</code>, making them unsafe for urls. Base58 avoids ambiguous characters such as <code>0OolI</code>. Note that base58 was made popular by cryptocurrency projects, especially Bitcoin.</p>
-<p>I only use underscore as a valid delimiter. One might argue that hyphen could work. I prefer to avoid them because underscore is much more universally accepted. Any other characters bound to cause issues once we cross database, programming language, or <span class="caps">UI</span> system boundaries.</p>
+<p>I only use underscore as a valid delimiter. One might argue that hyphen could work. I prefer to avoid them because underscore is much more universally accepted. Any other characters are bound to cause issues once we cross database, programming language, or <span class="caps">UI</span> system boundaries.</p>
 <h6 id="bit-length">Bit Length<a class="headerlink" href="#bit-length" title="Permanent link">¶</a></h6>
-<p>There is a tradeoff between entropy and id length. Long ids are cumbersome and ugly. I prefer id to be as short as possible because they are easier to copy, debug, and more pleasing to my eyes. One key consideration is the collision rate. I strongly discourage incremental id, such as <code>101</code>, <code>102</code>, <code>103</code>, etc. This would mean that id generation requires centralized coordination. Picking an id should be allowed to be done in a decentralized way. Even client codes should be allowed to generate id for new data objects. It avoids dependency on specific database technologies. Without a central coordinator, ids are just random.</p>
-<p>We might also want our id to be cryptographically strong. For example, if we were to expose an <span class="caps">URL</span> that looks like <code>https://video_clip/{id}</code>. We do not need to have any authentication behind the url if the id has enough entropy. The id itself could act as its own password. The bit length requirement in terms of security is quite easy to pick. If we assume an energy cost of 1 nanoJoule per key and $0.10 per kWh. We get the following table about energy cost required to crack a key with a certain bit length. For almost all enterprise applications, I consider 88 bit to be sufficient.</p>
+<p>There is a tradeoff between entropy and id length. Long IDs are cumbersome and ugly. I prefer <span class="caps">ID</span> to be as short as possible because they are easier to copy, debug, and more pleasing to my eyes. One key consideration is the collision rate. I strongly discourage incremental <span class="caps">ID</span>, such as <code>101</code>, <code>102</code>, <code>103</code>, etc. This would mean that <span class="caps">ID</span> generation requires centralized coordination. Picking an <span class="caps">ID</span> should be allowed to be done in a decentralized way. Even client codes should be allowed to generate IDs for new data objects. It avoids dependency on specific database technologies. Without a central coordinator, IDs are just random.</p>
+<p>We might also want our <span class="caps">ID</span> to be cryptographically strong. For example, if we were to expose an <span class="caps">URL</span> that looks like <code>https://video_clip/{id}</code>. We do not need to have any authentication behind the <span class="caps">URL</span> if the <span class="caps">ID</span> has enough entropy. The <span class="caps">ID</span> itself could act as its own password. The bit length requirement in terms of security is quite easy to pick. If we assume an energy cost of 1 nanoJoule per key and $0.10 per kWh, we get the following table about the energy cost required to crack a key with a certain bit length. For almost all enterprise applications, I consider 88 bit to be sufficient.</p>
 <table>
 <thead>
 <tr>
@@ -155,7 +155,7 @@
 </tr>
 </tbody>
 </table>
-<p>From the perspective of collision rate, it is helpful to look at a few formulae. The probability without a single collision if there are <span class="math">\(x\)</span> items and there are <span class="math">\(N\)</span> total ids.
+<p>From the perspective of collision rate, it is helpful to look at a few formulae. The probability of not having a single collision when there are <span class="math">\(x\)</span> items and <span class="math">\(N\)</span> total IDs.
 </p>
 <div class="math">$$
 \frac{N}{N} \times \frac{N-1}{N} \times \frac{N-2}{N} \times \dots \times \frac{N-x+1}{N}.
@@ -193,11 +193,11 @@ For <span class="math">\(x=10^9\)</span>, we have</p>
 </tr>
 </tbody>
 </table>
-<p>That is the probability that there is at least one collision in the system. I would say for most applications, <span class="math">\(10^{-6}\)</span> is good enough. My rationale is that if the probability of the company sponsoring the project going under, or the world facing a total nuclear war, is higher than this system will encounter a single collision, it is safe enough. For example, when I was building a data platform for images and video clips, I estimated the total images and videos that our platform will be supporting is less than a trillion. I chose the id to be <span class="math">\(n=100\)</span> bit. The collision probability is roughly <span class="math">\(10^{-6}\)</span>.</p>
+<p>That is the probability that there is at least one collision in the system. I would say for most applications, <span class="math">\(10^{-6}\)</span> is good enough. My rationale is that if the probability of the company sponsoring the project going under, or the world facing a total nuclear war, is higher than this system will encounter a single collision, it is safe enough. For example, when I was building a data platform for images and video clips, I estimated the total number of images and videos that our platform will be supporting is less than a trillion. I chose the id to be <span class="math">\(n=100\)</span> bit. The collision probability is roughly <span class="math">\(10^{-6}\)</span>.</p>
 <h6 id="monotonicity">Monotonicity<a class="headerlink" href="#monotonicity" title="Permanent link">¶</a></h6>
-<p>I had one real-world success story using an id system that looks like this: <code>img_3eroZu_2YV2svey1WA3U</code>. It uses 32 bit (i.e. 6 base58 characters) to keep track of a timestamp with resolution in seconds. This ensures that the ids are generated with rough monotonicity. This is helpful for some database and partitioning operations. This system use 32 bit for the timestamp, and 72 bit for entropy. Even though it only has 72 bit of randomness, it is sufficient because it is 72 bit for each second.</p>
+<p>I had one real-world success story using an <span class="caps">ID</span> system that looks like this: <code>img_3eroZu_2YV2svey1WA3U</code>. It uses 32 bit (i.e. 6 base58 characters) to keep track of a timestamp with resolution in seconds. This ensures that the IDs are generated with rough monotonicity. This is helpful for some database and partitioning operations. This system uses 32 bit for the timestamp, and 72 bit for entropy. Even though it only has 72 bit of randomness, it is sufficient because it is 72 bit for each second.</p>
 <h6 id="case-studies">Case Studies<a class="headerlink" href="#case-studies" title="Permanent link">¶</a></h6>
-<p>I am just provide a table. It said it all.</p>
+<p>I am providing a table. It said it all.</p>
 <table>
 <thead>
 <tr>
