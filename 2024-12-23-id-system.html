@@ -103,7 +103,7 @@
         <h4>Contents</h4>
         <div class="toc">
 <ul>
-<li><a href="#why-prefix-and-base58">Why Prefix and Base58</a></li>
+<li><a href="#prefix-and-base58">Prefix and Base58</a></li>
 <li><a href="#bit-length">Bit Length</a></li>
 <li><a href="#monotonicity">Monotonicity</a></li>
 <li><a href="#case-studies">Case Studies</a></li>
@@ -117,7 +117,7 @@
 <p>I am going to write a short post on my favorite choice id. I have used this id design for quite a while and on many large software systems. One such software system is a data system for storing large number of images and videos. Another example is large scaled collaborative visual editing tool. Another example is an ad tech data system.</p>
 <p>I dislike some of the common or default approaches for ids. For example, mysql defaults to simple incremental form 1, e.g. 1, 2, 3. Mongodb uses a 24 bytes in hexidecimal, eg. 64e9bce70b7bbd814e996350. Other common ones are uuid (e.g. d77c94e3-82f1-4cf2-b080-948c8580cf5d), or just plain number (e.g. 1459236513600), or a long sha-256 hash (e.g. 4a5e1b3dddb04198e13bace4273a2642d00d266a). </p>
 <p>My choice of id looks like this <code>img_6ykNcuNA7u</code>. It is prefixed and base58, and its entropy bit length is chosen base on needs.</p>
-<h6 id="why-prefix-and-base58">Why Prefix and Base58<a class="headerlink" href="#why-prefix-and-base58" title="Permanent link">¶</a></h6>
+<h6 id="prefix-and-base58">Prefix and Base58<a class="headerlink" href="#prefix-and-base58" title="Permanent link">¶</a></h6>
 <p>Prefix ids make it easy to debug. When I encounters an id in reports, logs, debugging message, or random slack messages, I could quickly understand the context without looking up databases or asking another person. The prefix allows me to quickly identify where to look up that id. </p>
 <p>Prefix makes it easier to mix different data types. One common scenario that different data types will be placed into different databases. For example, the data are stored in a transaction database, but the same data are replicated to some analytics system. They have different table layouts. Sometimes multiple data types are merged. Uniqueness across data types are required, and having prefix usually make life a lot easier.</p>
 <p>Base58 is easy to differentiate and relatively space efficient compared to hex. For example, base58 <code>6ykNcuNA7uFGsA</code> vs. hex <code>6a696e6875616e676a69</code>. The other candidate is base64. Base64 uses weird delimiting characters like <code>/+=</code>, making them unsafe for urls. Base58 avoids ambiguous characters such as <code>0OolI</code>. Note that base58 was made popular by cryptocurrency projects, especially Bitcoin.</p>
