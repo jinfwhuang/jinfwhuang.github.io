@@ -1,0 +1,1318 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="/theme/css/elegant.prod.9e9d5ce754.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="/theme/css/custom.css" media="screen">
+
+        <link rel="dns-prefetch" href="//fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+
+        <meta name="author" content="jin" />
+
+        <meta name="description" content="My previous blog post takes a data-centric view of end-to-end robot learning. I have also written about open-source vision datasets. This post compares the scale and source of datasets used in robot learning. It includes public datasets, disclosed private corpora, and training mixtures described in papers and company posts. Conversion …
+" />
+        <meta name="twitter:creator" content="@jinfwhuang">
+        <meta property="og:type" content="article" />
+        <meta name="twitter:card" content="summary">
+
+<meta name="keywords" content="ai, robotics, misc, " />
+
+<meta property="og:title" content="Robotics Datasets "/>
+<meta property="og:url" content="/2026-06-03-robotics-datasets" />
+<meta property="og:description" content="My previous blog post takes a data-centric view of end-to-end robot learning. I have also written about open-source vision datasets. This post compares the scale and source of datasets used in robot learning. It includes public datasets, disclosed private corpora, and training mixtures described in papers and company posts. Conversion …" />
+<meta property="og:site_name" content="Jin&#39;s Notes" />
+<meta property="og:article:author" content="jin" />
+<meta property="og:article:published_time" content="2026-06-03T00:00:00-07:00" />
+<meta name="twitter:title" content="Robotics Datasets ">
+<meta name="twitter:description" content="My previous blog post takes a data-centric view of end-to-end robot learning. I have also written about open-source vision datasets. This post compares the scale and source of datasets used in robot learning. It includes public datasets, disclosed private corpora, and training mixtures described in papers and company posts. Conversion …">
+<meta property="og:image" content="/images/android-chrome-192x192.png" />
+<meta name="twitter:image" content="/images/android-chrome-192x192.png" >
+
+        <title>Robotics Datasets  · Jin&#39;s Notes
+</title>
+        <link rel="shortcut icon" href="/theme/images/favicon.ico" type="image/x-icon" />
+        <link rel="icon" href="/theme/images/apple-touch-icon-152x152.png" type="image/png" />
+        <link rel="apple-touch-icon" href="/theme/images/apple-touch-icon.png"  type="image/png" />
+        <link rel="apple-touch-icon" sizes="57x57" href="/theme/images/apple-touch-icon-57x57.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="/theme/images/apple-touch-icon-72x72.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="76x76" href="/theme/images/apple-touch-icon-76x76.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="/theme/images/apple-touch-icon-114x114.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="120x120" href="/theme/images/apple-touch-icon-120x120.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="144x144" href="/theme/images/apple-touch-icon-144x144.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="152x152" href="/theme/images/apple-touch-icon-152x152.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="152x152" href="/theme/images/apple-touch-icon-180x180.png" type="image/png" />
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+     m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+     })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-207279664-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+
+    </head>
+    <body>
+        <div id="content">
+            <div class="navbar navbar-static-top">
+                <div class="navbar-inner">
+                    <div class="container-fluid">
+                        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </a>
+                        <a class="brand" href="/"><span class=site-name><span style="color:black;">Jin's Notes</span></span></a>
+                        <div class="nav-collapse collapse">
+                            <ul class="nav pull-right top-menu">
+                                <li >
+                                    <a href=
+                                       "/"
+                                    >Home</a>
+                                </li>
+<!--                                <li ><a href="/categories">Categories</a></li>-->
+                                <li ><a href="/tags">Tags</a></li>
+                                <li ><a href="/archives">Archives</a></li>
+                                <li><form class="navbar-search" action="/search" onsubmit="return validateForm(this.elements['q'].value);"> <input type="text" class="search-query" placeholder="Search" name="q" id="tipue_search_input"></form></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid">
+                <div class="row-fluid">
+                    <div class="span1"></div>
+                    <div class="span10">
+<article itemscope>
+<div class="row-fluid">
+    <header class="page-header span10 offset2">
+        <h1>
+            <a href="/2026-06-03-robotics-datasets">
+                Robotics Datasets<br/>
+            </a>
+        </h1>
+    </header>
+</div>
+
+<div class="row-fluid">
+    <div class="span2 table-of-content">
+        <nav>
+        <h4>Contents</h4>
+        <div class="toc">
+<ul>
+<li><a href="#conversion-rules">Conversion Rules</a></li>
+<li><a href="#rough-scale-ladder">Rough Scale Ladder</a></li>
+<li><a href="#general-vision-data">General Vision Data</a><ul>
+<li><a href="#video-generation-model-corpora">Video-Generation Model Corpora</a></li>
+</ul>
+</li>
+<li><a href="#human-body-third-person">Human Body: Third Person</a></li>
+<li><a href="#human-body-motion-capture">Human Body: Motion Capture</a></li>
+<li><a href="#human-body-first-person">Human Body: First Person</a></li>
+<li><a href="#human-body-with-robot-hands">Human Body With Robot Hands</a></li>
+<li><a href="#robot-body-with-human-brain-teleoperation">Robot Body With Human Brain: Teleoperation</a></li>
+<li><a href="#robot-body-with-robot-brain">Robot Body With Robot Brain</a></li>
+</ul>
+</div>
+        </nav>
+    </div>
+    <div class="span8 article-content">
+            
+            <div class="article-body">
+                
+<p>My previous blog post takes a data-centric view of end-to-end robot learning. I have also written about <a href="https://jinsnotes.com/2024-08-01-vision-dataset">open-source vision datasets</a>.</p>
+<p>This post compares the scale and source of datasets used in robot learning. It includes public datasets, disclosed private corpora, and training mixtures described in papers and company posts.</p>
+<h4 id="conversion-rules">Conversion Rules<a class="headerlink" href="#conversion-rules" title="Permanent link">¶</a></h4>
+<ul>
+<li>Use reported hours when they exist.</li>
+<li>Otherwise, assume one robot trajectory is 15 seconds: 240 trajectories = 1 hour.</li>
+<li>For robot frames or steps, use the reported rate. If it is missing, assume 10 Hz: 36,000 steps = 1 hour.</li>
+<li>For video clips, assume 10 seconds: 360 clips = 1 hour.</li>
+<li>For still images, use one second per image: 3,600 images = one image-equivalent hour.</li>
+<li>Count synchronized camera views as one timeline.</li>
+<li>Round aggressively. <code>~</code> means converted rather than reported.</li>
+<li>Raw source pools, model training mixes, and released datasets are different. The notes say which one a row represents.</li>
+<li>Notes mark known reuse or known disjointness. <code>private</code> and <code>self-collected</code> do not by themselves prove no overlap.</li>
+</ul>
+<p>The 15-second rule sits near AgiBot World (10.7 seconds/trajectory), <span class="caps">RT</span>-1 (14.5), <span class="caps">DROID</span> (16.6), <span class="caps">BC</span>-Z (17.4), and FastUMI-100K (21.6).</p>
+<p>Rows named <code>training mix</code> come from model papers. They often reuse the named public datasets and should not be added together.</p>
+<h4 id="rough-scale-ladder">Rough Scale Ladder<a class="headerlink" href="#rough-scale-ladder" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Data type</th>
+<th>Anchor dataset</th>
+<th>Estimated equivalent hours</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Video-generation raw pool</td>
+<td><a href="https://arxiv.org/abs/2501.03575">Cosmos</a></td>
+<td>~19,200,000</td>
+</tr>
+<tr>
+<td>Human body, mixed viewpoint</td>
+<td><a href="https://www.skild.ai/blogs/series-c">Skild Brain human-video pool</a></td>
+<td>~5,600,000+</td>
+</tr>
+<tr>
+<td>Video-generation training mix</td>
+<td><a href="https://arxiv.org/abs/2503.20314">Wan 2.1</a></td>
+<td>~2,800,000+</td>
+</tr>
+<tr>
+<td>Human body, third person</td>
+<td><a href="https://arxiv.org/abs/2506.09985">V-<span class="caps">JEPA</span> 2 VideoMix22M</a></td>
+<td>~1,735,000</td>
+</tr>
+<tr>
+<td>Video-generation training mix</td>
+<td><a href="https://seed.bytedance.com/en/seedance2_5">Seedance 2.5</a></td>
+<td>&gt;1,000,000</td>
+</tr>
+<tr>
+<td>Human body, first person</td>
+<td><a href="https://www.dyna.co/dyna-2">Dyna-2 training corpus</a></td>
+<td>1,000,000+</td>
+</tr>
+<tr>
+<td>Human body with robot hands</td>
+<td><a href="https://generalistai.com/blog/gen-1">Generalist <span class="caps">GEN</span>-1 corpus</a></td>
+<td>500,000+</td>
+</tr>
+<tr>
+<td>Robot body with robot brain</td>
+<td><a href="https://www.dexterity.ai/blog/foresight">Dexterity Foresight</a></td>
+<td>~300,000</td>
+</tr>
+<tr>
+<td>Human body, first person</td>
+<td><a href="https://www.genesis.ai/blog/gene-26-5-advancing-robotic-manipulation-to-human-level"><span class="caps">GENE</span>-26.5 human pool</a></td>
+<td>200,000+</td>
+</tr>
+<tr>
+<td>Human body, first person</td>
+<td><a href="https://www.spirit-ai.com/en/news/30">Spirit interaction pool</a></td>
+<td>200,000+</td>
+</tr>
+<tr>
+<td>Human body, third person</td>
+<td><a href="https://www.di.ens.fr/willow/research/howto100m/">HowTo100M</a></td>
+<td>134,472</td>
+</tr>
+<tr>
+<td>Mixed human and robot video</td>
+<td><a href="https://arxiv.org/abs/2410.06158"><span class="caps">GR</span>-2 video pretraining mix</a></td>
+<td>~106,000</td>
+</tr>
+<tr>
+<td>Human body, first person</td>
+<td><a href="https://huggingface.co/datasets/builddotai/Egocentric-100K">Build Egocentric-100K</a></td>
+<td>100,405</td>
+</tr>
+<tr>
+<td>Human body, first person</td>
+<td><a href="https://huggingface.co/collections/LightwheelAI/egosuite-open100k">EgoSuite-Open100K</a></td>
+<td>100,000 planned / 10,000 claimed</td>
+</tr>
+<tr>
+<td>Human body with robot hands</td>
+<td><a href="https://www.sunday.ai/blog/no-robot-data">Sunday <span class="caps">ACT</span>-1 corpus</a></td>
+<td>~50,000</td>
+</tr>
+<tr>
+<td>Human body, first person</td>
+<td><a href="https://arxiv.org/abs/2509.15212">RynnVLA-001 video mix</a></td>
+<td>~33,000</td>
+</tr>
+<tr>
+<td>Robot body with robot brain</td>
+<td><a href="https://arxiv.org/abs/2604.20246">Sereact Cortex 2.0</a></td>
+<td>&gt;27,000</td>
+</tr>
+<tr>
+<td>Robot body with human brain</td>
+<td><a href="https://github.com/Robbyant/lingbot-vla">LingBot-<span class="caps">VLA</span> training corpus</a></td>
+<td>20,000</td>
+</tr>
+<tr>
+<td>Robot body with human brain</td>
+<td><a href="https://arxiv.org/abs/2410.24164"><span class="math">\(\pi_0\)</span> training mix</a></td>
+<td>&gt;10,000</td>
+</tr>
+<tr>
+<td>Robot body with robot brain</td>
+<td><a href="https://karolhausman.github.io/mt-opt/"><span class="caps">MT</span>-Opt</a></td>
+<td>9,600</td>
+</tr>
+</tbody>
+</table>
+<h4 id="general-vision-data">General Vision Data<a class="headerlink" href="#general-vision-data" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Dataset</th>
+<th>Estimated equivalent hours</th>
+<th>Released</th>
+<th>Org</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://laion.ai/blog/relaion-5b/">Re-<span class="caps">LAION</span>-5B</a></td>
+<td>~1,500,000</td>
+<td>2024</td>
+<td><span class="caps">LAION</span></td>
+<td>5.53b <span class="caps">URL</span>-text pairs; one second/image</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/2307.15818"><span class="caps">RT</span>-2 vision-language training mix</a></td>
+<td>~278,000</td>
+<td>2023</td>
+<td>Google DeepMind</td>
+<td>1b filtered WebLI examples; model mix, not a standalone release</td>
+</tr>
+<tr>
+<td><a href="https://github.com/kakaobrain/coyo-dataset"><span class="caps">COYO</span>-700M</a></td>
+<td>~207,000</td>
+<td>2022</td>
+<td>Kakao Brain</td>
+<td>747m <span class="caps">URL</span>-text pairs; one second/image</td>
+</tr>
+<tr>
+<td><a href="https://snap-research.github.io/Panda-70M/">Panda-70M</a></td>
+<td>167,000</td>
+<td>2024</td>
+<td>Snap</td>
+<td>70.7m captioned clips; reported duration</td>
+</tr>
+<tr>
+<td><a href="https://ai.meta.com/datasets/segment-anything/"><span class="caps">SA</span>-1B</a></td>
+<td>~3,100</td>
+<td>2023</td>
+<td>Meta</td>
+<td>11m images and 1.1b generated masks; hours count images once</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/2601.21199"><span class="caps">UBTECH</span> Thinker training mix</a></td>
+<td>undisclosed</td>
+<td>2026</td>
+<td><span class="caps">UBTECH</span></td>
+<td>1.7m grounding images, 100k ego clips, 1.8m robot-planning <span class="caps">QA</span>, 200k industrial files</td>
+</tr>
+</tbody>
+</table>
+<h5 id="video-generation-model-corpora">Video-Generation Model Corpora<a class="headerlink" href="#video-generation-model-corpora" title="Permanent link">¶</a></h5>
+<table>
+<thead>
+<tr>
+<th>Dataset</th>
+<th>Estimated hours</th>
+<th>Released</th>
+<th>Org</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://arxiv.org/abs/2501.03575">Cosmos raw video pool</a></td>
+<td>~19,200,000</td>
+<td>2025</td>
+<td><span class="caps">NVIDIA</span></td>
+<td>20m raw hours with 4% synthetic excluded; curator produced 100m clips</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/2503.20314">Wan 2.1 video pool</a></td>
+<td>~2,800,000+</td>
+<td>2025</td>
+<td>Alibaba</td>
+<td>lower bound from 2b+ videos at the reported 5-second training duration; images excluded</td>
+</tr>
+<tr>
+<td><a href="https://lf3-static.bytednsdoc.com/obj/eden-cn/lapzild-tss/ljhwZthlaukjlkulzlp/transparency/20260803/Public%20Summary%20of%20Training%20Data%20Content%20for%20Seedance%202.5.pdf">Seedance 2.5</a></td>
+<td>&gt;1,000,000</td>
+<td>2026</td>
+<td>ByteDance</td>
+<td>official training-data summary reports more than 1m video hours</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/2410.13720">Movie Gen video mix</a></td>
+<td>~278,000</td>
+<td>2024</td>
+<td>Meta</td>
+<td>O(100m) videos at 10 seconds/video; also uses O(1b) images</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/2410.06158"><span class="caps">GR</span>-2 video pretraining mix</a></td>
+<td>~106,000</td>
+<td>2024</td>
+<td>ByteDance</td>
+<td>38m mixed web, ego, and robot clips; reuses named public datasets</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/2606.01955"><span class="caps">WALL</span>-<span class="caps">WM</span> disclosed OpenVID slice</a></td>
+<td>~3,300</td>
+<td>2026</td>
+<td>X Square</td>
+<td>1.2m clips; only one component of a broader undisclosed mix</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/2412.03603">HunyuanVideo <span class="caps">SFT</span> set</a></td>
+<td>~2,800</td>
+<td>2024</td>
+<td>Tencent</td>
+<td>1m curated clips at 10 seconds/clip; pretraining scale hidden</td>
+</tr>
+</tbody>
+</table>
+<p>The defensible disclosed range is roughly thousands to tens of millions of hours, but the rows mix <span class="caps">SFT</span> subsets, model mixtures, and raw source pools.</p>
+<h4 id="human-body-third-person">Human Body: Third Person<a class="headerlink" href="#human-body-third-person" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Dataset</th>
+<th>Estimated hours</th>
+<th>Released</th>
+<th>Org</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://www.skild.ai/blogs/series-c">Skild Brain human-video pool</a></td>
+<td>~5,600,000+<sup id="fnref:skild-hours"><a class="footnote-ref" href="#fn:skild-hours">2</a></sup></td>
+<td>2026</td>
+<td>Skild <span class="caps">AI</span></td>
+<td>billions of mixed-view human-action videos; checkpoint mix undisclosed</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/2506.09985">V-<span class="caps">JEPA</span> 2 VideoMix22M</a></td>
+<td>~1,735,000</td>
+<td>2025</td>
+<td>Meta</td>
+<td>model mix; 1.6m h <span class="caps">YT1B</span> + HowTo100M, Kinetics, SSv2</td>
+</tr>
+<tr>
+<td><a href="https://www.di.ens.fr/willow/research/howto100m/">HowTo100M</a></td>
+<td>134,472</td>
+<td>2019</td>
+<td><span class="caps">INRIA</span> et al.</td>
+<td>1.22m videos / 136.6m weakly aligned clips</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/2010.10864">Kinetics-700</a></td>
+<td>~1,800</td>
+<td>2020</td>
+<td>DeepMind</td>
+<td>648k clips; 10 seconds/clip</td>
+</tr>
+<tr>
+<td><a href="https://www.qualcomm.com/developer/software/something-something-v-2-dataset">Something-Something V2</a></td>
+<td>~123-368</td>
+<td>2018</td>
+<td>TwentyBN / Qualcomm</td>
+<td>220,847 staged hand-object clips; reported 2-6 seconds/clip</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/2202.02005"><span class="caps">BC</span>-Z human-video corpus</a></td>
+<td>~52</td>
+<td>2022</td>
+<td>Google</td>
+<td>18,726 task videos; separate recordings from the robot episodes</td>
+</tr>
+</tbody>
+</table>
+<h4 id="human-body-motion-capture">Human Body: Motion Capture<a class="headerlink" href="#human-body-motion-capture" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Dataset</th>
+<th>Estimated hours</th>
+<th>Released</th>
+<th>Org</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://www.figure.ai/news/helix-02">Helix 02 System 0 motion corpus</a></td>
+<td>&gt;1,000</td>
+<td>2026</td>
+<td>Figure</td>
+<td>joint-level retargeted human motion; controller trained in simulation</td>
+</tr>
+<tr>
+<td><a href="https://noitom-robotics.github.io/hiphi/">HiPHI</a></td>
+<td>309</td>
+<td>2026</td>
+<td>Noitom Robotics</td>
+<td>external full-body/object mocap; 618h after mirroring</td>
+</tr>
+<tr>
+<td><a href="https://amass.is.tue.mpg.de/"><span class="caps">AMASS</span></a></td>
+<td>42</td>
+<td>2019</td>
+<td><span class="caps">MPI</span></td>
+<td>full-body mocap aggregated from 15 datasets</td>
+</tr>
+<tr>
+<td><a href="https://grab.is.tue.mpg.de/"><span class="caps">GRAB</span></a></td>
+<td>3.8</td>
+<td>2020</td>
+<td><span class="caps">MPI</span></td>
+<td>full-body/object mocap</td>
+</tr>
+</tbody>
+</table>
+<h4 id="human-body-first-person">Human Body: First Person<a class="headerlink" href="#human-body-first-person" title="Permanent link">¶</a></h4>
+<table>
+<thead>
+<tr>
+<th>Dataset</th>
+<th>Estimated hours</th>
+<th>Released</th>
+<th>Org</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://www.dyna.co/dyna-2">Dyna-2 training corpus</a></td>
+<td>1,000,000+</td>
+<td>2026</td>
+<td>Dyna</td>
+<td>partner plus internal mix; likely collaboration with Build Egocentric-1M</td>
+</tr>
+<tr>
+<td><a href="https://www.genesis.ai/blog/gene-26-5-advancing-robotic-manipulation-to-human-level"><span class="caps">GENE</span>-26.5 human pool</a></td>
+<td>200,000+</td>
+<td>2026</td>
+<td>Genesis <span class="caps">AI</span></td>
+<td>mixed egocentric, third-person, and glove data; component shares undisclosed</td>
+</tr>
+<tr>
+<td><a href="https://www.spirit-ai.com/en/news/30">Spirit interaction pool</a></td>
+<td>200,000+</td>
+<td>2026</td>
+<td>Spirit <span class="caps">AI</span></td>
+<td>human video from proprietary wearable devices; exact viewpoint and sensor mix undisclosed</td>
+</tr>
+<tr>
+<td><a href="https://huggingface.co/datasets/builddotai/Egocentric-100K">Build Egocentric-100K</a></td>
+<td>100,405</td>
+<td>2025</td>
+<td>Build <span class="caps">AI</span></td>
+<td>10.8b frames, 2.01m clips, gated Apache 2.0</td>
+</tr>
+<tr>
+<td><a href="https://huggingface.co/collections/LightwheelAI/egosuite-open100k">EgoSuite-Open100K</a></td>
+<td>100,000 planned</td>
+<td>2026</td>
+<td>Lightwheel</td>
+<td>first 10k hours claimed live; 50h sample directly auditable</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/2509.15212">RynnVLA-001 video pretraining mix</a></td>
+<td>~33,000</td>
+<td>2025</td>
+<td>Alibaba <span class="caps">DAMO</span></td>
+<td>12m ego manipulation clips; reuses HowTo100M, Ego4D, <span class="caps">EPIC</span>, and SSv2</td>
+</tr>
+<tr>
+<td><a href="https://github.com/NVIDIA/Isaac-GR00T"><span class="caps">GR00T</span> N1.7 EgoScale component</a></td>
+<td>20,000</td>
+<td>2026</td>
+<td><span class="caps">NVIDIA</span></td>
+<td>human-video component of a later <span class="caps">GR00T</span> mix; not additive with N1.6</td>
+</tr>
+<tr>
+<td><a href="https://ego4d-data.org/">Ego4D</a></td>
+<td>3,670</td>
+<td>2022</td>
+<td>Meta et al.</td>
+<td>egocentric video; detailed labels cover subsets</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/2503.14734"><span class="caps">GR00T</span> N1 human training mix</a></td>
+<td>2,517</td>
+<td>2025</td>
+<td><span class="caps">NVIDIA</span></td>
+<td>paper Table 7; selected slices of Ego4D and other rows below</td>
+</tr>
+<tr>
+<td><a href="https://www.1x.tech/discover/world-model-self-learning"><span class="caps">1XWM</span> human mid-training corpus</a></td>
+<td>900</td>
+<td>2026</td>
+<td>1X</td>
+<td>private egocentric human video; overlap with public datasets unknown</td>
+</tr>
+<tr>
+<td><a href="https://github.com/apple/ml-egodex">EgoDex</a></td>
+<td>829</td>
+<td>2025</td>
+<td>Apple</td>
+<td>338k first-person demonstrations with hand/body pose</td>
+</tr>
+<tr>
+<td><a href="https://ego-exo4d-data.org/">Ego-Exo4D</a></td>
+<td>221</td>
+<td>2024</td>
+<td>Meta et al.</td>
+<td>ego timeline; captures are disjoint from Ego4D</td>
+</tr>
+<tr>
+<td><a href="https://holoassist.github.io/">HoloAssist</a></td>
+<td>166</td>
+<td>2023</td>
+<td>Microsoft</td>
+<td>first-person tasks, hand pose, dialogue, interventions</td>
+</tr>
+<tr>
+<td><a href="https://epic-kitchens.github.io/2024"><span class="caps">EPIC</span>-<span class="caps">KITCHENS</span>-100</a></td>
+<td>100</td>
+<td>2020</td>
+<td>Bristol</td>
+<td>first-person kitchen video with 90k action segments</td>
+</tr>
+</tbody>
+</table>
+<h4 id="human-body-with-robot-hands">Human Body With Robot Hands<a class="headerlink" href="#human-body-with-robot-hands" title="Permanent link">¶</a></h4>
+<p>A human performs the task through an instrumented interface that records action-like motion. <span class="caps">UMI</span> is the canonical example. Mixed pools sit here when wearable or instrumented interaction is their distinguishing source.</p>
+<table>
+<thead>
+<tr>
+<th>Dataset</th>
+<th>Estimated hours</th>
+<th>Released</th>
+<th>Org</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://generalistai.com/blog/gen-1">Generalist <span class="caps">GEN</span>-1 corpus</a></td>
+<td>500,000+</td>
+<td>2026</td>
+<td>Generalist <span class="caps">AI</span></td>
+<td>wearable human data; thousands of robot hands shipped; device mix undisclosed</td>
+</tr>
+<tr>
+<td><a href="https://www.sunday.ai/blog/no-robot-data">Sunday <span class="caps">ACT</span>-1 corpus</a></td>
+<td>~50,000<sup id="fnref:sunday-hours"><a class="footnote-ref" href="#fn:sunday-hours">1</a></sup></td>
+<td>2025</td>
+<td>Sunday Robotics</td>
+<td>~10m glove episodes from 500+ homes; no robot data</td>
+</tr>
+<tr>
+<td><a href="https://huggingface.co/datasets/IPEC-COMMUNITY/FastUMI_100k_lerobot">FastUMI-100K</a></td>
+<td>600</td>
+<td>2026</td>
+<td>Shanghai <span class="caps">AI</span> Lab</td>
+<td>100k+ <span class="caps">UMI</span> trajectories; reported duration</td>
+</tr>
+<tr>
+<td><a href="https://umi-gripper.github.io/"><span class="caps">UMI</span></a></td>
+<td>&gt;19.4</td>
+<td>2024</td>
+<td>Stanford</td>
+<td>cup subset alone: 699,432 frames at 10 Hz; 1,447 of 2,543 demos</td>
+</tr>
+<tr>
+<td><a href="https://www.pi.website/download/human_to_robot.pdf"><span class="caps">PI</span> human-to-robot corpus</a></td>
+<td>14</td>
+<td>2025</td>
+<td>Physical Intelligence</td>
+<td>3h + 3h + 3h + 5h egocentric hand-trajectory data; robot mix hidden</td>
+</tr>
+<tr>
+<td><a href="https://dobb-e.com/#dataset">Dobb-E</a></td>
+<td>13</td>
+<td>2023</td>
+<td><span class="caps">NYU</span></td>
+<td>5,620 household demonstrations; reported duration</td>
+</tr>
+<tr>
+<td><a href="https://dex-umi.github.io/">DexUMI</a></td>
+<td>~7</td>
+<td>2025</td>
+<td>Stanford</td>
+<td>1,792 wearable hand/tactile demonstrations</td>
+</tr>
+<tr>
+<td><a href="https://dex-cap.github.io/">DexCap</a></td>
+<td>~3</td>
+<td>2024</td>
+<td>Stanford</td>
+<td>787-demo paper corpus; public release is only ~1.5h</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/2507.15493"><span class="caps">GR</span>-3 human adaptation data</a></td>
+<td>0.5</td>
+<td>2025</td>
+<td>ByteDance</td>
+<td>450 <span class="caps">PICO</span> hand trajectories; paper-reported duration</td>
+</tr>
+</tbody>
+</table>
+<h4 id="robot-body-with-human-brain-teleoperation">Robot Body With Human Brain: Teleoperation<a class="headerlink" href="#robot-body-with-human-brain-teleoperation" title="Permanent link">¶</a></h4>
+<p>This bucket is mostly human-controlled. <span class="caps">OXE</span>-based model mixtures and BridgeData also contain scripted trajectories.</p>
+<table>
+<thead>
+<tr>
+<th>Dataset</th>
+<th>Estimated hours</th>
+<th>Released</th>
+<th>Org</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://github.com/Robbyant/lingbot-vla">LingBot-<span class="caps">VLA</span> training corpus</a></td>
+<td>20,000</td>
+<td>2026</td>
+<td>Ant Group / Robbyant</td>
+<td>private real teleoperation from 9 dual-arm configurations</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/2410.24164"><span class="math">\(\pi_0\)</span> training mix</a></td>
+<td>&gt;10,000</td>
+<td>2024</td>
+<td>Physical Intelligence</td>
+<td>model mix; 7 configurations, 68 tasks, plus <span class="caps">OXE</span></td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/2509.11766"><span class="caps">WALL</span>-<span class="caps">OSS</span> training mix</a></td>
+<td>~9,000+<sup id="fnref:wall-hours"><a class="footnote-ref" href="#fn:wall-hours">3</a></sup></td>
+<td>2025</td>
+<td>X Square Robot</td>
+<td>robot-action share of a &gt;10,000h action-plus-<span class="caps">VQA</span> corpus</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/2310.08864">Open X-Embodiment release</a></td>
+<td>~4,200+</td>
+<td>2023</td>
+<td>34 labs</td>
+<td>1m+ pooled trajectories; <span class="caps">RT</span>-X uses an undisclosed 9-embodiment subset</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/2406.09246">OpenVLA training mix</a></td>
+<td>~4,000</td>
+<td>2024</td>
+<td>Stanford / <span class="caps">UC</span> Berkeley</td>
+<td>970k filtered <span class="caps">OXE</span> episodes; 15 seconds/trajectory</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/2405.12213">Octo training mix</a></td>
+<td>~3,300</td>
+<td>2024</td>
+<td><span class="caps">UC</span> Berkeley et al.</td>
+<td>800k <span class="caps">OXE</span> episodes from 25 datasets; 15 seconds/trajectory</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/2503.14734"><span class="caps">GR00T</span> N1 real-robot training mix</a></td>
+<td>3,289</td>
+<td>2025</td>
+<td><span class="caps">NVIDIA</span></td>
+<td>paper Table 7; 88h in-house plus AgiBot and <span class="caps">OXE</span> subsets</td>
+</tr>
+<tr>
+<td><a href="https://github.com/OpenDriveLab/AgiBot-World">AgiBot World</a></td>
+<td>2,976</td>
+<td>2025</td>
+<td>AgiBot / OpenDriveLab</td>
+<td>1.00m human-teleoperated trajectories</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/2509.00576">Galaxea G0 training mix</a></td>
+<td>~1,700</td>
+<td>2025</td>
+<td>Galaxea <span class="caps">AI</span></td>
+<td>1,000h <span class="caps">OXE</span> + 500h Galaxea + 200h in-house; model mix</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/2507.05331"><span class="caps">TRI</span> <span class="caps">LBM</span> real robot mix</a></td>
+<td>~1,618</td>
+<td>2025</td>
+<td>Toyota Research Institute</td>
+<td>468h in-house + ~1,150h <span class="caps">OXE</span>; excludes 32h <span class="caps">UMI</span> proxy and 45h sim</td>
+</tr>
+<tr>
+<td><a href="https://www.1x.tech/discover/1x-world-model">1X World Model corpus</a></td>
+<td>1,000+</td>
+<td>2024</td>
+<td>1X</td>
+<td>2024 post says thousands of <span class="caps">EVE</span> hours; more than 100h released publicly</td>
+</tr>
+<tr>
+<td><a href="https://log2r.github.io/RoboMIND2.0/">RoboMIND 2.0</a></td>
+<td>1,000</td>
+<td>2025</td>
+<td>Beijing Humanoid Center et al.</td>
+<td>310k+ real trajectories; reported duration</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/2506.01953">FiS-<span class="caps">VLA</span> training mix</a></td>
+<td>~900<sup id="fnref:fis-hours"><a class="footnote-ref" href="#fn:fis-hours">4</a></sup></td>
+<td>2025</td>
+<td><span class="caps">AI2</span> Robotics</td>
+<td>36m frames; estimated 92% real; overlaps <span class="caps">OXE</span> rows</td>
+</tr>
+<tr>
+<td><a href="https://allenai.org/blog/molmoact2">MolmoAct 2-Bimanual <span class="caps">YAM</span></a></td>
+<td>&gt;720</td>
+<td>2026</td>
+<td>Ai2</td>
+<td>new open 34.5k-demonstration bimanual collection</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/2509.15212">RynnVLA-001 robot-video component</a></td>
+<td>~680</td>
+<td>2025</td>
+<td>Alibaba <span class="caps">DAMO</span></td>
+<td>244k clips from <span class="caps">RT</span>-1, Bridge, <span class="caps">OXE</span>, and <span class="caps">DROID</span>; explicit reuse</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/2307.15818"><span class="caps">RT</span>-1 / <span class="caps">RT</span>-2 robot corpus</a></td>
+<td>~540</td>
+<td>2023</td>
+<td>Google DeepMind</td>
+<td>shared 130k-demo corpus; 87k-demo public <span class="caps">RT</span>-1 subset is ~351h</td>
+</tr>
+<tr>
+<td><a href="https://huggingface.co/datasets/OpenGalaxea/Galaxea-Open-World-Dataset">Galaxea Open-World Dataset</a></td>
+<td>500+</td>
+<td>2025</td>
+<td>Galaxea <span class="caps">AI</span></td>
+<td>new open real mobile-manipulation collection; uniform R1-Lite embodiment</td>
+</tr>
+<tr>
+<td><a href="https://www.figure.ai/news/helix">Helix training corpus</a></td>
+<td>500</td>
+<td>2025</td>
+<td>Figure</td>
+<td>private multi-robot teleoperation data</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/2504.16054"><span class="math">\(\pi_0.5\)</span> mobile training data</a></td>
+<td>400</td>
+<td>2025</td>
+<td>Physical Intelligence</td>
+<td>target mobile data in about 100 homes; broader mix undisclosed</td>
+</tr>
+<tr>
+<td><a href="https://www.1x.tech/discover/world-model-self-learning"><span class="caps">1XWM</span> inverse-dynamics corpus</a></td>
+<td>400</td>
+<td>2026</td>
+<td>1X</td>
+<td>unfiltered <span class="caps">NEO</span> robot data; relation to its 70h <span class="caps">WM</span> subset unknown</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/2410.06158"><span class="caps">GR</span>-2 bin-picking data</a></td>
+<td>~392</td>
+<td>2024</td>
+<td>ByteDance</td>
+<td>94k task-specific trajectories; overlap with its multi-task set unknown</td>
+</tr>
+<tr>
+<td><a href="https://droid-dataset.github.io/"><span class="caps">DROID</span></a></td>
+<td>350</td>
+<td>2024</td>
+<td>Stanford et al.</td>
+<td>76k successful trajectories; V-<span class="caps">JEPA</span> 2-<span class="caps">AC</span> reuses a &lt;62h subset</td>
+</tr>
+<tr>
+<td><a href="https://unigen-x.github.io/unifolm-vla.github.io/">UnifoLM-<span class="caps">VLA</span>-0 training mix</a></td>
+<td>340</td>
+<td>2026</td>
+<td>Unitree Robotics</td>
+<td>curated open-source real-robot mix; constituent list absent</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/2507.15493"><span class="caps">GR</span>-3 disclosed robot data</a></td>
+<td>286</td>
+<td>2025</td>
+<td>ByteDance</td>
+<td>69h pick/place + 101h bussing + 116h cloth manipulation</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/2501.09747"><span class="caps">FAST</span>+ tokenizer mix</a></td>
+<td>~278 sample-hours</td>
+<td>2025</td>
+<td>Physical Intelligence</td>
+<td>1m one-second chunks; unique physical hours undisclosed; overlaps <span class="math">\(\pi_0\)</span></td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/2412.13877">RoboMIND 1.0</a></td>
+<td>~256<sup id="fnref:robomind-hours"><a class="footnote-ref" href="#fn:robomind-hours">5</a></sup></td>
+<td>2025</td>
+<td>Beijing Humanoid Center et al.</td>
+<td>real-only estimate; 305.5h release also includes 30k sim trajectories</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/2605.02881">MolmoAct 2 <span class="caps">SO</span>-100/101 data</a></td>
+<td>183.6</td>
+<td>2026</td>
+<td>Ai2</td>
+<td>filtered mix of 1,222 LeRobot community datasets; overlap unknown</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/2410.06158"><span class="caps">GR</span>-2 multi-task robot data</a></td>
+<td>~167</td>
+<td>2024</td>
+<td>ByteDance</td>
+<td>40k trajectories across 105 tasks; separate setup from bin picking</td>
+</tr>
+<tr>
+<td><a href="https://huggingface.co/datasets/robbyant/gm100"><span class="caps">GM</span>-100 post-training dataset</a></td>
+<td>~163</td>
+<td>2026</td>
+<td>Ant Group / Robbyant</td>
+<td>39k open expert demonstrations across 100 tasks and 3 platforms</td>
+</tr>
+<tr>
+<td><a href="https://rail-berkeley.github.io/bridgedata/">BridgeData V2</a></td>
+<td>~127</td>
+<td>2023</td>
+<td><span class="caps">UC</span> Berkeley</td>
+<td>84% teleop / 16% scripted; 38 steps at 5 Hz</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/2506.01844">SmolVLA training mix</a></td>
+<td>~95</td>
+<td>2025</td>
+<td>Hugging Face et al.</td>
+<td>22.9k episodes from 481 public community datasets</td>
+</tr>
+<tr>
+<td><a href="https://www.1x.tech/discover/world-model-self-learning"><span class="caps">1XWM</span> embodiment fine-tuning data</a></td>
+<td>70</td>
+<td>2026</td>
+<td>1X</td>
+<td><span class="caps">NEO</span> robot data; relation to the 400h inverse-dynamics corpus unknown</td>
+</tr>
+<tr>
+<td><a href="https://rh20t.github.io/"><span class="caps">RH20T</span></a></td>
+<td>~54</td>
+<td>2023</td>
+<td><span class="caps">SJTU</span></td>
+<td><span class="caps">DROID</span> estimates 13k unique trajectories; <span class="caps">RH20T</span> says 110k streams</td>
+</tr>
+<tr>
+<td><a href="https://allenai.org/blog/molmoact">MolmoAct post-training dataset</a></td>
+<td>22</td>
+<td>2025</td>
+<td>Ai2</td>
+<td>new in-house open collection; about 10.6k robot episodes</td>
+</tr>
+<tr>
+<td><a href="https://www.rhoda.ai/research/direct-video-action">Rhoda <span class="caps">DVA</span> task data</a></td>
+<td>10-20/task</td>
+<td>2026</td>
+<td>Rhoda <span class="caps">AI</span></td>
+<td>private robot data per long-horizon task; collector provenance hidden</td>
+</tr>
+<tr>
+<td><a href="https://www.figure.ai/news/helix-logistics">Helix logistics data</a></td>
+<td>8</td>
+<td>2025</td>
+<td>Figure</td>
+<td>task-specific demonstrations; inclusion in the 500h Helix pool unknown</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/2401.02117">Static <span class="caps">ALOHA</span> co-training mix</a></td>
+<td>~3.4</td>
+<td>2024</td>
+<td>Stanford</td>
+<td>825 episodes from prior <span class="caps">ALOHA</span> datasets; <span class="caps">OXE</span> component</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/2401.02117">Mobile <span class="caps">ALOHA</span> task data</a></td>
+<td>~2.9</td>
+<td>2024</td>
+<td>Stanford</td>
+<td>290 demos with stated 22-75s durations; tasks disjoint from static mix</td>
+</tr>
+<tr>
+<td><a href="https://www.genesis.ai/blog/gene-26-5-advancing-robotic-manipulation-to-human-level"><span class="caps">GENE</span>-26.5 task-specific robot data</a></td>
+<td>&lt;1/task</td>
+<td>2026</td>
+<td>Genesis <span class="caps">AI</span></td>
+<td>novel tasks excluded from pretraining; fewer than 200 episodes/task</td>
+</tr>
+</tbody>
+</table>
+<h4 id="robot-body-with-robot-brain">Robot Body With Robot Brain<a class="headerlink" href="#robot-body-with-robot-brain" title="Permanent link">¶</a></h4>
+<p>This bucket includes hybrid collection where a learned policy acts until a human intervenes.</p>
+<table>
+<thead>
+<tr>
+<th>Dataset</th>
+<th>Estimated hours</th>
+<th>Released</th>
+<th>Org</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a href="https://www.dexterity.ai/blog/foresight">Dexterity Foresight</a></td>
+<td>~300,000<sup id="fnref:dexterity-hours"><a class="footnote-ref" href="#fn:dexterity-hours">6</a></sup></td>
+<td>2026</td>
+<td>Dexterity</td>
+<td>100m+ autonomous production actions; estimated from production throughput</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/2604.20246">Sereact Cortex 2.0</a></td>
+<td>&gt;27,000</td>
+<td>2026</td>
+<td>Sereact</td>
+<td>&gt;25k h deployment + ~400h teleop + ~2k h open-source; excludes synthetic</td>
+</tr>
+<tr>
+<td><a href="https://karolhausman.github.io/mt-opt/"><span class="caps">MT</span>-Opt</a></td>
+<td>9,600</td>
+<td>2021</td>
+<td>Google</td>
+<td>reported robot-hours; ~800k study episodes, 920k public</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/2306.11706">RoboCat full training mix</a></td>
+<td>&gt;4,000</td>
+<td>2023</td>
+<td>DeepMind</td>
+<td>human-demo hours plus policy data; ~470h self-generated slice; also sim</td>
+</tr>
+<tr>
+<td><a href="https://arxiv.org/abs/1806.10293"><span class="caps">QT</span>-Opt</a></td>
+<td>800</td>
+<td>2018</td>
+<td>Google</td>
+<td>580k grasps from scripted and learned policies</td>
+</tr>
+<tr>
+<td><a href="https://www.robonet.wiki/">RoboNet</a></td>
+<td>~420</td>
+<td>2019</td>
+<td><span class="caps">UC</span> Berkeley et al.</td>
+<td>15m frames at assumed 10 Hz; random scripted exploration</td>
+</tr>
+<tr>
+<td><a href="https://auto-rt.github.io/">AutoRT</a></td>
+<td>~320</td>
+<td>2024</td>
+<td>Google DeepMind</td>
+<td>77k episodes; mostly scripted, only 936 from <span class="caps">RT</span>-2</td>
+</tr>
+<tr>
+<td><a href="https://sites.google.com/view/bc-z/home"><span class="caps">BC</span>-Z</a></td>
+<td>125</td>
+<td>2022</td>
+<td>Google</td>
+<td>hybrid: 11.1k expert demos + 14.8k policy/intervention episodes</td>
+</tr>
+</tbody>
+</table>
+<div class="footnote">
+<hr/>
+<ol>
+<li id="fn:sunday-hours">
+<p>The founders’ <a href="https://podscripts.co/podcasts/no-priors-artificial-intelligence-technology-startups/sunday-robotics-scaling-the-home-robot-revolution-with-co-founders-tony-zhao-and-cheng-chi">interview</a> reports nearly 10m long trajectories; Sunday’s launch release says only “thousands of hours.” The 15-second fallback gives ~41,700 hours, rounded here to the 50,000-hour bucket. This is not a reported duration. <a class="footnote-backref" href="#fnref:sunday-hours" title="Jump back to footnote 1 in the text">↩</a></p>
+</li>
+<li id="fn:skild-hours">
+<p>Skild says “billions” of human-action videos. Taking 2b as the floor and the 10-second clip fallback gives ~5.6m video-equivalent hours; the actual clip count and model mix are undisclosed. <a class="footnote-backref" href="#fnref:skild-hours" title="Jump back to footnote 2 in the text">↩</a></p>
+</li>
+<li id="fn:wall-hours">
+<p><span class="caps">WALL</span>-<span class="caps">OSS</span> Figure 5 assigns 57.5% to self-collected robot actions and 33.1% to open robot actions. Applying that 90.6% share to the reported &gt;10,000h aggregate gives &gt;9,060 robot hours. <a class="footnote-backref" href="#fnref:wall-hours" title="Jump back to footnote 3 in the text">↩</a></p>
+</li>
+<li id="fn:fis-hours">
+<p>FiS-<span class="caps">VLA</span> reports 36m frames. Its sampling weights are ~7.5% ManiSkill simulation plus ~0.3% RoboMIND simulation; 92% real at the 10 Hz fallback gives ~920 hours, rounded to ~900. <a class="footnote-backref" href="#fnref:fis-hours" title="Jump back to footnote 4 in the text">↩</a></p>
+</li>
+<li id="fn:robomind-hours">
+<p>RoboMIND reports 305.5h total. Its 30,035 simulated Franka trajectories average 179 frames at 30 Hz, or ~50h; subtracting them leaves ~256 real hours. <a class="footnote-backref" href="#fnref:robomind-hours" title="Jump back to footnote 5 in the text">↩</a></p>
+</li>
+<li id="fn:dexterity-hours">
+<p>Dexterity reports 100m+ production actions, cites 300 actions/hour as a production example, and reports 400+ picks/hour for dual-arm packing. That implies ~250k-333k hours, rounded to the 300,000-hour bucket. <a class="footnote-backref" href="#fnref:dexterity-hours" title="Jump back to footnote 6 in the text">↩</a></p>
+</li>
+</ol>
+</div>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%@#$@#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%@#$@#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=default';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        // "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'auto' } }," +
+        "    jax: ['input/TeX','input/MathML','output/SVG']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['TeX', 'STIX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+
+</script>
+            </div>
+
+
+
+             
+ 
+            
+            
+            
+
+
+
+
+
+
+
+
+            <hr/>
+            <script src="https://utteranc.es/client.js"
+                    repo="jinfwhuang/jinfwhuang.github.io"
+                    issue-term="pathname"
+                    label="user-comments"
+                    theme="github-light"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+
+            <hr/>
+<section>
+    <h2>Related Posts</h2>
+<ul class="related-posts-list">
+<li><a href="/2024-08-01-vision-dataset" title="Open Source Vision Datasets">Open Source Vision Datasets</a></li>
+<li><a href="/2024-09-23-id-system" title="ID System">ID System</a></li>
+<li><a href="/2024-10-28-binary-storage-engine" title="Analytics for Binary Blobs - AI Database">Analytics for Binary Blobs <small>AI Database</small></a></li>
+<li><a href="/2024-11-02-video-models" title="Video Generation Models - Deep dive into two models and review the landscape">Video Generation Models <small>Deep dive into two models and review the landscape</small></a></li>
+<li><a href="/2026-06-03-data-centric-view-end-to-end-robot-learning" title="A Data-Centric View of End-to-End Robot Learning">A Data-Centric View of End-to-End Robot Learning</a></li>
+</ul>
+<hr />
+</section>
+            <aside>
+            <nav>
+            <ul class="articles-timeline">
+                <li class="previous-article">« <a href="/2025-01-07-quantum-discrete-log" title="Previous: From Zero to Cracking secp256k1 - A condense intro to Shor&#39;s">From Zero to Cracking secp256k1 <small class="subtitle">A condense intro to Shor's</small></a></li>
+                <li class="next-article"><a href="/2026-06-03-data-centric-view-end-to-end-robot-learning" title="Next: A Data-Centric View of End-to-End Robot Learning">A Data-Centric View of End-to-End Robot Learning</a> »</li>
+            </ul>
+            </nav>
+            </aside>
+        </div>
+        <section id="article-sidebar" class="span2">
+            <h4>Published</h4>
+            <time itemprop="dateCreated" datetime="2026-06-03T00:00:00-07:00">Wed 03 June 2026</time>
+            <!--             <h4>Category</h4>
+            <a class="category-link" href="/categories#misc-ref">misc</a>
+ -->
+            <h4>Tags</h4>
+            <ul class="list-of-tags tags-in-article">
+                <li><a href="/tags#ai-ref">ai
+                    <span class="superscript">10</span>
+</a></li>
+                <li><a href="/tags#robotics-ref">robotics
+                    <span class="superscript">2</span>
+</a></li>
+            </ul>
+<h4>Contact</h4>
+<div id="sidebar-social-link">
+    <a href="https://twitter.com/jinfwhuang" title="Twiiter" target="_blank" rel="nofollow noopener noreferrer">
+        <svg xmlns="http://www.w3.org/2000/svg" aria-label="Twitter" role="img" viewBox="0 0 512 512"><rect width="512" height="512" rx="15%" fill="#1da1f3"/><path fill="#fff" d="M437 152a72 72 0 0 1-40 12 72 72 0 0 0 32-40 72 72 0 0 1-45 17 72 72 0 0 0-122 65 200 200 0 0 1-145-74 72 72 0 0 0 22 94 72 72 0 0 1-32-7 72 72 0 0 0 56 69 72 72 0 0 1-32 1 72 72 0 0 0 67 50 200 200 0 0 1-105 29 200 200 0 0 0 309-179 200 200 0 0 0 35-37"/></svg>
+    </a>
+    <a href="https://www.linkedin.com/in/jinfwhuang" title="LinkedIn" target="_blank" rel="nofollow noopener noreferrer">
+        <svg xmlns="http://www.w3.org/2000/svg" aria-label="LinkedIn" role="img" viewBox="0 0 512 512" fill="#fff"><rect width="512" height="512" rx="15%" fill="#0077b5"/><circle cx="142" cy="138" r="37"/><path stroke="#fff" stroke-width="66" d="M244 194v198M142 194v198"/><path d="M276 282c0-20 13-40 36-40 24 0 33 18 33 45v105h66V279c0-61-32-89-76-89-34 0-51 19-59 32"/></svg>
+    </a>
+</div>
+            
+
+
+
+
+
+            
+
+
+
+
+
+        </section>
+</div>
+</article>
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe.
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides.
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo https://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>                    </div>
+                    <div class="span1"></div>
+                </div>
+            </div>
+        </div>
+<!--        <footer>
+
+    <div>
+        <span class="site-name"><span style="color:black;">Jin's Notes</span></span> - the hardest part is taking the first step
+    </div>
+
+
+
+    <div id="fpowered">
+        Powered by: <a href="http://getpelican.com/" title="Pelican Home Page" target="_blank" rel="nofollow noopener noreferrer">Pelican</a>
+        Theme: <a href="https://elegant.oncrashreboot.com/" title="Theme Elegant Home Page" target="_blank" rel="nofollow noopener noreferrer">Elegant</a>
+    </div>
+</footer>-->
+            <script src="//code.jquery.com/jquery.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+        <script src="/theme/js/elegant.prod.9e9d5ce754.js"></script>
+        <script>
+            function validateForm(query)
+            {
+                return (query.length > 0);
+            }
+        </script>
+
+
+
+
+    <script>
+    (function () {
+        if (window.location.hash.match(/^#comment-\d+$/)) {
+            $('#comment_thread').collapse('show');
+        }
+    })();
+    window.onhashchange=function(){
+        if (window.location.hash.match(/^#comment-\d+$/))
+            window.location.reload(true);
+    }
+    $('#comment_thread').on('shown', function () {
+        var link = document.getElementById('comment-accordion-toggle');
+        var old_innerHTML = link.innerHTML;
+        $(link).fadeOut(200, function() {
+            $(this).text('Click here to hide comments').fadeIn(200);
+        });
+        $('#comment_thread').on('hidden', function () {
+            $(link).fadeOut(200, function() {
+                $(this).text(old_innerHTML).fadeIn(200);
+            });
+        })
+    })
+</script>
+
+    </body>
+    <!-- Theme: Elegant built for Pelican
+        License : MIT -->
+
+</html>

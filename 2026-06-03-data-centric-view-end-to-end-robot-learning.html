@@ -1,0 +1,923 @@
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8">
+        <meta http-equiv="X-UA-Compatible" content="IE=edge">
+        <meta name="viewport" content="width=device-width, initial-scale=1.0">
+        <link rel="stylesheet" type="text/css" href="/theme/css/elegant.prod.9e9d5ce754.css" media="screen">
+        <link rel="stylesheet" type="text/css" href="/theme/css/custom.css" media="screen">
+
+        <link rel="dns-prefetch" href="//fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com/" crossorigin>
+
+        <meta name="author" content="jin" />
+
+        <meta name="description" content="This post takes a data-centric view of a modern end-to-end deep learning system that takes many kinds of inputs, e.g. images, text, and measurements, and controls a robot. The aim is to make concrete what robotics datasets look like, how these datasets are used to train a prediction system …
+" />
+        <meta name="twitter:creator" content="@jinfwhuang">
+        <meta property="og:type" content="article" />
+        <meta name="twitter:card" content="summary">
+
+<meta name="keywords" content="ai, robotics, misc, " />
+
+<meta property="og:title" content="A Data-Centric View of End-to-End Robot Learning "/>
+<meta property="og:url" content="/2026-06-03-data-centric-view-end-to-end-robot-learning" />
+<meta property="og:description" content="This post takes a data-centric view of a modern end-to-end deep learning system that takes many kinds of inputs, e.g. images, text, and measurements, and controls a robot. The aim is to make concrete what robotics datasets look like, how these datasets are used to train a prediction system …" />
+<meta property="og:site_name" content="Jin&#39;s Notes" />
+<meta property="og:article:author" content="jin" />
+<meta property="og:article:published_time" content="2026-06-03T00:00:00-07:00" />
+<meta name="twitter:title" content="A Data-Centric View of End-to-End Robot Learning ">
+<meta name="twitter:description" content="This post takes a data-centric view of a modern end-to-end deep learning system that takes many kinds of inputs, e.g. images, text, and measurements, and controls a robot. The aim is to make concrete what robotics datasets look like, how these datasets are used to train a prediction system …">
+<meta property="og:image" content="/images/android-chrome-192x192.png" />
+<meta name="twitter:image" content="/images/android-chrome-192x192.png" >
+
+        <title>A Data-Centric View of End-to-End Robot Learning  · Jin&#39;s Notes
+</title>
+        <link rel="shortcut icon" href="/theme/images/favicon.ico" type="image/x-icon" />
+        <link rel="icon" href="/theme/images/apple-touch-icon-152x152.png" type="image/png" />
+        <link rel="apple-touch-icon" href="/theme/images/apple-touch-icon.png"  type="image/png" />
+        <link rel="apple-touch-icon" sizes="57x57" href="/theme/images/apple-touch-icon-57x57.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="72x72" href="/theme/images/apple-touch-icon-72x72.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="76x76" href="/theme/images/apple-touch-icon-76x76.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="114x114" href="/theme/images/apple-touch-icon-114x114.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="120x120" href="/theme/images/apple-touch-icon-120x120.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="144x144" href="/theme/images/apple-touch-icon-144x144.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="152x152" href="/theme/images/apple-touch-icon-152x152.png" type="image/png" />
+        <link rel="apple-touch-icon" sizes="152x152" href="/theme/images/apple-touch-icon-180x180.png" type="image/png" />
+<script>
+    (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
+     (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
+     m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
+     })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
+    ga('create', 'UA-207279664-1', 'auto');
+    ga('send', 'pageview');
+</script>
+
+
+    </head>
+    <body>
+        <div id="content">
+            <div class="navbar navbar-static-top">
+                <div class="navbar-inner">
+                    <div class="container-fluid">
+                        <a class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse">
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                            <span class="icon-bar"></span>
+                        </a>
+                        <a class="brand" href="/"><span class=site-name><span style="color:black;">Jin's Notes</span></span></a>
+                        <div class="nav-collapse collapse">
+                            <ul class="nav pull-right top-menu">
+                                <li >
+                                    <a href=
+                                       "/"
+                                    >Home</a>
+                                </li>
+<!--                                <li ><a href="/categories">Categories</a></li>-->
+                                <li ><a href="/tags">Tags</a></li>
+                                <li ><a href="/archives">Archives</a></li>
+                                <li><form class="navbar-search" action="/search" onsubmit="return validateForm(this.elements['q'].value);"> <input type="text" class="search-query" placeholder="Search" name="q" id="tipue_search_input"></form></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="container-fluid">
+                <div class="row-fluid">
+                    <div class="span1"></div>
+                    <div class="span10">
+<article itemscope>
+<div class="row-fluid">
+    <header class="page-header span10 offset2">
+        <h1>
+            <a href="/2026-06-03-data-centric-view-end-to-end-robot-learning">
+                A Data-Centric View of End-to-End Robot Learning<br/>
+            </a>
+        </h1>
+    </header>
+</div>
+
+<div class="row-fluid">
+    <div class="span2 table-of-content">
+        <nav>
+        <h4>Contents</h4>
+        <div class="toc">
+<ul>
+<li><a href="#preliminaries">Preliminaries</a></li>
+<li><a href="#examples-of-input-and-output">Examples of Input and Output</a><ul>
+<li><a href="#input-examples">Input Examples</a></li>
+<li><a href="#output-examples">Output Examples</a></li>
+</ul>
+</li>
+<li><a href="#connecting-inputs-to-outputs">Connecting Inputs to Outputs</a><ul>
+<li><a href="#action-chunks">Action Chunks</a><ul>
+<li><a href="#the-flow-matching-loss">The Flow-Matching Loss</a></li>
+<li><a href="#concrete-calculation-of-the-loss">Concrete calculation of the loss</a></li>
+<li><a href="#inference">Inference</a></li>
+</ul>
+</li>
+<li><a href="#language-responses">Language Responses</a></li>
+<li><a href="#success-probability">Success Probability</a></li>
+<li><a href="#depth-images">Depth Images</a></li>
+</ul>
+</li>
+<li><a href="#data-centric-learning">Data-Centric Learning</a></li>
+</ul>
+</div>
+        </nav>
+    </div>
+    <div class="span8 article-content">
+            
+            <div class="article-body numbered-sections">
+                
+<p>This post takes a data-centric view of a modern end-to-end deep learning system that takes many kinds of inputs, e.g. images, text, and measurements, and controls a robot.</p>
+<p>The aim is to make concrete what robotics datasets look like, how these datasets are used to train a prediction system, and how the trained model is used for robotics control. I will use concrete examples to show what calculations are performed during training and inference. This avoids heavy notation and abstract language.</p>
+<p>I want to make it clear that teaching robots how to do things is centered around data. If we want a robot to learn a behavior, we need datasets that roughly correspond to that behavior. Different datasets covering very different behaviors can work together to train a single end-to-end system. The system can learn internal representations that combine information from the different inputs.</p>
+<h4 id="preliminaries">Preliminaries<a class="headerlink" href="#preliminaries" title="Permanent link">¶</a></h4>
+<p>One could skip this part and go directly to the “Examples of Input and Output” section.</p>
+<p>I am going to keep things super simple here. I largely follow the notation in <a href='#qwenvla2026' id='ref-qwenvla2026-1'>
+    WLG+26
+</a> but with significant simplifications. I use a single prediction model <span class="math">\(p_{\theta}\)</span> to represent the entire end-to-end system. The prediction model is</p>
+<div class="math">$$
+p_{\theta}(x_t) = y_t.
+$$</div>
+<p><span class="math">\(\theta\)</span> represents all the trainable parameters. I use <span class="math">\(x\)</span> and <span class="math">\(y\)</span> as umbrella terms for all possible inputs and outputs. I abuse notation and use <span class="math">\(p_{\theta}\)</span> for both the full model and any individual prediction head. <span class="math">\(x_t\)</span> could contain history prior to time <span class="math">\(t\)</span>, so <span class="math">\(x_t\)</span> is really <span class="math">\(x_{\le t}\)</span>. The specific output should be clear from context.</p>
+<p>The output <span class="math">\(y\)</span> could be anything that we want the robot to predict and control. In most <span class="caps">VLA</span> discussions, people focus on actions and how well the robot performs tasks. From a modeling perspective, <span class="math">\(p_{\theta}\)</span> could contain many prediction heads for action chunks, language responses, object detections, collisions, success probability, and so on. Each prediction head needs matching targets and a training objective that updates its parameters.</p>
+<p>The input <span class="math">\(x\)</span> could be anything that we could feed into the robot to help with predictions. It could include images, video, point clouds, audio, and language instructions. It could also include the robot’s joint positions, end-effector pose, gripper state, force readings, and contact sensors. For navigation, it might include maps, location, heading, goals, and waypoints. In terms of time horizon, we don’t have to stick to a Markovian view. We can include any history of previous observations and actions. Any information that we think could help the model make better predictions, we could stick into the input. The art and science lie in picking the appropriate set of inputs that fits the resource constraints at inference time and helps optimize <span class="math">\(p_{\theta}\)</span> for its final use.</p>
+<figure>
+<img src="/images/2026-06-03/vla-data-flow.png" style="display: block; margin-left: auto; margin-right: auto;" width="100%"/>
+<figcaption align="center">
+One end-to-end model with many inputs and prediction modules
+</figcaption>
+</figure>
+<h4 id="examples-of-input-and-output">Examples of Input and Output<a class="headerlink" href="#examples-of-input-and-output" title="Permanent link">¶</a></h4>
+<p>Notations, diagrams, and any general model architectures could sound rather abstract, making things unnecessaryily complicated. I am going to construct some real numerical examples here to make it easier to understand.</p>
+<h5 id="input-examples">Input Examples<a class="headerlink" href="#input-examples" title="Permanent link">¶</a></h5>
+<p>Some inputs, such as images and text, look the same as they do in image or video models. Other inputs are specific to a robot platform. The following is a simplified example of an input could look like. The fields and robot-state values are based on <a href="https://huggingface.co/datasets/lerobot/droid_100"><code>lerobot/droid_100</code></a>, a LeRobot conversion of <span class="caps">DROID</span> <a href='#khazatsky2024droid' id='ref-khazatsky2024droid-1'>
+    KPN+24
+</a>. This example is only partial, one could include all sorts of other information xxx; need to revise this sentence.</p>
+<div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">"images"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"exterior_image_1_left"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">  </span><span class="c1">// shape: [180, 320, 3]</span>
+<span class="w">      </span><span class="p">[[</span><span class="mi">12</span><span class="p">,</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span><span class="w"> </span><span class="mi">31</span><span class="p">],</span><span class="w"> </span><span class="p">[</span><span class="mi">15</span><span class="p">,</span><span class="w"> </span><span class="mi">28</span><span class="p">,</span><span class="w"> </span><span class="mi">35</span><span class="p">],</span><span class="w"> </span><span class="err">...</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="mi">80</span><span class="p">,</span><span class="w"> </span><span class="mi">72</span><span class="p">,</span><span class="w"> </span><span class="mi">61</span><span class="p">]],</span>
+<span class="w">      </span><span class="err">...</span><span class="p">,</span>
+<span class="w">      </span><span class="p">[[</span><span class="mi">10</span><span class="p">,</span><span class="w"> </span><span class="mi">22</span><span class="p">,</span><span class="w"> </span><span class="mi">29</span><span class="p">],</span><span class="w"> </span><span class="p">[</span><span class="mi">13</span><span class="p">,</span><span class="w"> </span><span class="mi">25</span><span class="p">,</span><span class="w"> </span><span class="mi">32</span><span class="p">],</span><span class="w"> </span><span class="err">...</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="mi">75</span><span class="p">,</span><span class="w"> </span><span class="mi">68</span><span class="p">,</span><span class="w"> </span><span class="mi">57</span><span class="p">]]</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">"exterior_image_2_left"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">  </span><span class="c1">// shape: [180, 320, 3]</span>
+<span class="w">      </span><span class="p">[[</span><span class="mi">41</span><span class="p">,</span><span class="w"> </span><span class="mi">38</span><span class="p">,</span><span class="w"> </span><span class="mi">32</span><span class="p">],</span><span class="w"> </span><span class="p">[</span><span class="mi">45</span><span class="p">,</span><span class="w"> </span><span class="mi">42</span><span class="p">,</span><span class="w"> </span><span class="mi">36</span><span class="p">],</span><span class="w"> </span><span class="err">...</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="mi">101</span><span class="p">,</span><span class="w"> </span><span class="mi">94</span><span class="p">,</span><span class="w"> </span><span class="mi">82</span><span class="p">]],</span>
+<span class="w">      </span><span class="err">...</span><span class="p">,</span>
+<span class="w">      </span><span class="p">[[</span><span class="mi">39</span><span class="p">,</span><span class="w"> </span><span class="mi">36</span><span class="p">,</span><span class="w"> </span><span class="mi">30</span><span class="p">],</span><span class="w"> </span><span class="p">[</span><span class="mi">43</span><span class="p">,</span><span class="w"> </span><span class="mi">40</span><span class="p">,</span><span class="w"> </span><span class="mi">34</span><span class="p">],</span><span class="w"> </span><span class="err">...</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="mi">97</span><span class="p">,</span><span class="w"> </span><span class="mi">90</span><span class="p">,</span><span class="w"> </span><span class="mi">79</span><span class="p">]]</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">"wrist_image_left"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">  </span><span class="c1">// shape: [180, 320, 3]</span>
+<span class="w">      </span><span class="p">[[</span><span class="mi">78</span><span class="p">,</span><span class="w"> </span><span class="mi">64</span><span class="p">,</span><span class="w"> </span><span class="mi">51</span><span class="p">],</span><span class="w"> </span><span class="p">[</span><span class="mi">81</span><span class="p">,</span><span class="w"> </span><span class="mi">67</span><span class="p">,</span><span class="w"> </span><span class="mi">54</span><span class="p">],</span><span class="w"> </span><span class="err">...</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="mi">136</span><span class="p">,</span><span class="w"> </span><span class="mi">121</span><span class="p">,</span><span class="w"> </span><span class="mi">104</span><span class="p">]],</span>
+<span class="w">      </span><span class="err">...</span><span class="p">,</span>
+<span class="w">      </span><span class="p">[[</span><span class="mi">75</span><span class="p">,</span><span class="w"> </span><span class="mi">61</span><span class="p">,</span><span class="w"> </span><span class="mi">48</span><span class="p">],</span><span class="w"> </span><span class="p">[</span><span class="mi">79</span><span class="p">,</span><span class="w"> </span><span class="mi">65</span><span class="p">,</span><span class="w"> </span><span class="mi">52</span><span class="p">],</span><span class="w"> </span><span class="err">...</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="mi">131</span><span class="p">,</span><span class="w"> </span><span class="mi">117</span><span class="p">,</span><span class="w"> </span><span class="mi">100</span><span class="p">]]</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">"robot_state"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"wrist_pose"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">      </span><span class="nt">"position_m"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"x"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.63437</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"y"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.14786</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"z"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.23334</span>
+<span class="w">      </span><span class="p">},</span>
+<span class="w">      </span><span class="nt">"orientation_rad"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">        </span><span class="nt">"roll"</span><span class="p">:</span><span class="w"> </span><span class="mf">3.07179</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"pitch"</span><span class="p">:</span><span class="w"> </span><span class="mf">-0.06804</span><span class="p">,</span>
+<span class="w">        </span><span class="nt">"yaw"</span><span class="p">:</span><span class="w"> </span><span class="mf">-0.06482</span>
+<span class="w">      </span><span class="p">}</span>
+<span class="w">    </span><span class="p">},</span>
+<span class="w">    </span><span class="nt">"gripper_position"</span><span class="p">:</span><span class="w"> </span><span class="mf">0.80617</span>
+<span class="w">  </span><span class="p">},</span>
+<span class="w">  </span><span class="nt">"language"</span><span class="p">:</span><span class="w"> </span><span class="s2">"Move the pan to the right."</span>
+<span class="p">}</span>
+</pre></div>
+<p><strong>Camera images.</strong> The three left-eye <span class="caps">RGB</span> camera streams have <code>180 x 320</code> resolution. Each pixel contains a red, green, and blue value from 0 to 255. The <code>...</code> entries stand for the pixels and rows omitted from each <code>180 x 320 x 3</code> array. One image contains <code>180 x 320 x 3 = 172,800</code> values. The three cameras contain 518,400 values at each timestep.</p>
+<p><strong>Robot state.</strong> The position locates the wrist attachment point relative to the robot’s fixed base. It is about <code>(63 cm, 15 cm, 23 cm)</code> in xyz coordinates. The orientation is in radians. For the gripper position, <code>0</code> is open and values near <code>1</code> are closed. These seven values are not a full description of every possible robot state. They are just one concrete example.</p>
+<p><strong>Language.</strong> Language could be a robot instruction, navigation instruction, or general question. These examples are taken from <span class="caps">DROID</span>, LLaVA-Instruct-150K, and <span class="caps">VLN</span>-<span class="caps">CE</span> <a href='#khazatsky2024droid' id='ref-khazatsky2024droid-2'>
+    KPN+24
+</a>, <a href='#liu2023visualinstruction' id='ref-liu2023visualinstruction-1'>
+    LLWL23
+</a>, <a href='#krantz2020beyondnavgraph' id='ref-krantz2020beyondnavgraph-1'>
+    KWM+20
+</a>.</p>
+<div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">"language_inputs"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span>
+<span class="w">    </span><span class="s2">"Move the pan to the right."</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"What interesting item might be part of the man's outfit?"</span><span class="p">,</span>
+<span class="w">    </span><span class="s2">"Go around the right side of the center unit and stop by the right side doorway with the dining table and mirror in it."</span>
+<span class="w">  </span><span class="p">]</span>
+<span class="p">}</span>
+</pre></div>
+<h5 id="output-examples">Output Examples<a class="headerlink" href="#output-examples" title="Permanent link">¶</a></h5>
+<p>I constructed some example targets from open-source datasets <a href='#khazatsky2024droid' id='ref-khazatsky2024droid-3'>
+    KPN+24
+</a>, <a href='#krantz2020beyondnavgraph' id='ref-krantz2020beyondnavgraph-2'>
+    KWM+20
+</a>, <a href='#liu2023visualinstruction' id='ref-liu2023visualinstruction-2'>
+    LLWL23
+</a>, <a href='#agibotworld2025' id='ref-agibotworld2025-1'>
+    AgiBotWContributorsBC+25
+</a>.</p>
+<div class="highlight"><pre><span></span><span class="p">{</span>
+<span class="w">  </span><span class="nt">"output_examples"</span><span class="p">:</span><span class="w"> </span><span class="p">{</span>
+<span class="w">    </span><span class="nt">"action_chunk"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">  </span><span class="c1">// shape: [16, 7]</span>
+<span class="w">      </span><span class="p">[</span><span class="mf">-0.32752</span><span class="p">,</span><span class="w"> </span><span class="mf">-0.17010</span><span class="p">,</span><span class="w"> </span><span class="mf">0.23136</span><span class="p">,</span><span class="w"> </span><span class="mf">-0.04102</span><span class="p">,</span><span class="w"> </span><span class="mf">-0.67765</span><span class="p">,</span><span class="w"> </span><span class="mf">0.19326</span><span class="p">,</span><span class="w"> </span><span class="mf">0.04846</span><span class="p">],</span>
+<span class="w">      </span><span class="err">...</span><span class="p">,</span>
+<span class="w">      </span><span class="p">[</span><span class="mf">-0.28437</span><span class="p">,</span><span class="w"> </span><span class="mf">0.00985</span><span class="p">,</span><span class="w"> </span><span class="mf">0.10344</span><span class="p">,</span><span class="w"> </span><span class="mf">-0.03588</span><span class="p">,</span><span class="w"> </span><span class="mf">-0.26922</span><span class="p">,</span><span class="w"> </span><span class="mf">0.06342</span><span class="p">,</span><span class="w"> </span><span class="mf">0.04846</span><span class="p">]</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">"reference_path_m"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">  </span><span class="c1">// shape: [5, 3]</span>
+<span class="w">      </span><span class="p">[</span><span class="mf">-16.26720</span><span class="p">,</span><span class="w"> </span><span class="mf">0.15184</span><span class="p">,</span><span class="w"> </span><span class="mf">0.72078</span><span class="p">],</span>
+<span class="w">      </span><span class="p">[</span><span class="mf">-16.28410</span><span class="p">,</span><span class="w"> </span><span class="mf">0.15184</span><span class="p">,</span><span class="w"> </span><span class="mf">2.41237</span><span class="p">],</span>
+<span class="w">      </span><span class="p">[</span><span class="mf">-16.15450</span><span class="p">,</span><span class="w"> </span><span class="mf">0.15184</span><span class="p">,</span><span class="w"> </span><span class="mf">4.13771</span><span class="p">],</span>
+<span class="w">      </span><span class="p">[</span><span class="mf">-13.90720</span><span class="p">,</span><span class="w"> </span><span class="mf">0.15184</span><span class="p">,</span><span class="w"> </span><span class="mf">4.22821</span><span class="p">],</span>
+<span class="w">      </span><span class="p">[</span><span class="mf">-12.33740</span><span class="p">,</span><span class="w"> </span><span class="mf">0.15184</span><span class="p">,</span><span class="w"> </span><span class="mf">4.21370</span><span class="p">]</span>
+<span class="w">    </span><span class="p">],</span>
+<span class="w">    </span><span class="nt">"language_response"</span><span class="p">:</span><span class="w"> </span><span class="s2">"The man in the image is wearing a unique and interesting purple hoodie featuring the Seven Dwarfs from Disney. ..."</span><span class="p">,</span>
+<span class="w">    </span><span class="nt">"depth_image"</span><span class="p">:</span><span class="w"> </span><span class="p">[</span><span class="w">  </span><span class="c1">// shape: [480, 640, 1]</span>
+<span class="w">      </span><span class="p">[[</span><span class="mf">1.20</span><span class="p">],</span><span class="w"> </span><span class="p">[</span><span class="mf">0.85</span><span class="p">],</span><span class="w"> </span><span class="err">...</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="mf">2.10</span><span class="p">]],</span>
+<span class="w">      </span><span class="err">...</span><span class="p">,</span>
+<span class="w">      </span><span class="p">[[</span><span class="mf">0.74</span><span class="p">],</span><span class="w"> </span><span class="p">[</span><span class="mf">1.08</span><span class="p">],</span><span class="w"> </span><span class="err">...</span><span class="p">,</span><span class="w"> </span><span class="p">[</span><span class="mf">1.63</span><span class="p">]]</span>
+<span class="w">    </span><span class="p">]</span>
+<span class="w">  </span><span class="p">}</span>
+<span class="p">}</span>
+</pre></div>
+<p><strong>Action chunk.</strong> This target is constructed from 16 consecutive <span class="caps">DROID</span> frames. Each row contains <code>[dx, dy, dz, droll, dpitch, dyaw, gripper command]</code>.</p>
+<p><strong>Reference path.</strong> This target comes from one <span class="caps">VLN</span>-<span class="caps">CE</span> training episode. It contains five three-dimensional positions along the path in meters.</p>
+<p><strong>Language response.</strong> This target comes from LLaVA-Instruct-150K. It is the response to a question about an image.</p>
+<p><strong>Depth image.</strong> This target comes from the sampled AgiBot World LeRobot port. It has one depth value for each of its <code>480 x 640</code> pixels. The values shown above illustrate the array structure.</p>
+<p>We have options on how to represent some of these outputs. An action could be an absolute hand pose instead of a delta, or it could be low-level motor commands. Navigation could use relative waypoints such as <code>[dx, dy, dtheta]</code>. It could also be a dense occupancy or cost map. The choice of representation depends on data consistency and how the outputs are used by the controller during inference.</p>
+<h4 id="connecting-inputs-to-outputs">Connecting Inputs to Outputs<a class="headerlink" href="#connecting-inputs-to-outputs" title="Permanent link">¶</a></h4>
+<p>Each input modality first goes through an encoder or projection. Images, robot state, and language all start in different formats. Their encoders turn them into sequences of vectors that the model can process together.</p>
+<p>For images, <span class="math">\(\pi_0\)</span> uses the PaliGemma image encoder <a href='#black2024pi0' id='ref-black2024pi0-1'>
+    BBD+24
+</a>. After resizing to <code>224 x 224</code>, one image becomes 256 visual tokens in PaliGemma’s 2,048-wide representation. <span class="caps">GR</span>-3 represents the robot state as one state token <a href='#cheang2025gr3' id='ref-cheang2025gr3-1'>
+    CCC+25
+</a>. Qwen-<span class="caps">VLA</span> uses the Qwen3.5 tokenizer from its backbone for language <a href='#qwenvla2026' id='ref-qwenvla2026-2'>
+    WLG+26
+</a>. These published models do not use one shared token width or one literal concatenation scheme. For the simplified example below, assume that modality-specific projections map all tokens to the same hidden width <span class="math">\(D\)</span> before concatenation.</p>
+<div class="highlight"><pre><span></span># Camera images
+one image:    uint8[180, 320, 3]     -&gt; float[256, D]
+three images: 3 x float[256, D]      -&gt; float[768, D]
+
+# Robot state
+float[7]                             -&gt; float[1, D]
+
+# Language instruction
+"Move the pan to the right."         -&gt; float[L, D]
+</pre></div>
+<p>As a simplified mental model, we say that the encoded inputs are concatenated into one variable-length sequence. The sequence then passes through many transformations inside a deep neural network that combines information across modalities. Different prediction modules use these representations to output different targets.</p>
+<p>Each prediction head produces its own loss. We add the losses together, usually with different weights, and run gradient descent through the prediction heads and the shared model backbone. Not every training sample contains the targets needed to calculate every loss. This allows data from specific domains, e.g. action, language, and depth, to contribute to training the same model.</p>
+<p>The following subsections make this concrete for action chunks, language responses, success labels, and depth images.</p>
+<h5 id="action-chunks">Action Chunks<a class="headerlink" href="#action-chunks" title="Permanent link">¶</a></h5>
+<h6 id="the-flow-matching-loss">The Flow-Matching Loss<a class="headerlink" href="#the-flow-matching-loss" title="Permanent link">¶</a></h6>
+<p>Let’s take a look at an example of flow-matching loss on supervised action prediction. Take a batch of observation and action-chunk pairs <span class="math">\(\mathcal{D} = \{(x_t^{(i)}, a_t^{(i)})\}_{i=1}^{B}\)</span>.</p>
+<p>For this concrete calculation, I sample an interpolation step <span class="math">\(\tau \sim \mathcal{U}(0,1)\)</span> and noise <span class="math">\(\epsilon \sim \mathcal{N}(0, \mathbf{I})\)</span>, then form an interpolated action chunk on the straight line between noise and the ground-truth chunk. <span class="math">\(\pi_0\)</span> itself samples <span class="math">\(\tau\)</span> from a shifted beta distribution <a href='#black2024pi0' id='ref-black2024pi0-2'>
+    BBD+24
+</a>.</p>
+<div class="math">$$
+a_t^{\tau} = (1-\tau)\,\epsilon + \tau\, a_t
+$$</div>
+<p>At <span class="math">\(\tau = 0\)</span> this is pure noise and at <span class="math">\(\tau = 1\)</span> it is the clean action. The network <span class="math">\(p_{\theta}\)</span> predicts the time-dependent velocity that moves <span class="math">\(a_t^{\tau}\)</span> toward the clean action, and we regress it against the ground-truth velocity, <span class="math">\(u_t = a_t - \epsilon\)</span>.</p>
+<div class="math">$$
+\mathscr{L}_{\theta} = \mathbb{E}_{(x_t,a_t) \sim \mathcal{D},\tau,\epsilon}  \; \lVert p_{\theta}(x_t, a_t^{\tau}, \tau) - u_t \rVert_2^2
+$$</div>
+<p>I am abusing notation here: <span class="math">\(p_{\theta}(x_t, a_t^{\tau}, \tau)\)</span> denotes the velocity field prediction used to interpolate actions. This is the function that is often written as <span class="math">\(v_{\theta}\)</span>. The target <span class="math">\(a_t - \epsilon\)</span> is the velocity along the straight path from noise to the ground-truth action. During training, the expectation is approximated by averaging over sampled <span class="math">\(\tau\)</span>, sampled <span class="math">\(\epsilon\)</span>, and the data batch. The magical part is that the conditional flow matching has the same parameter gradient as marginal flow matching <a href='#lipman2023flowmatchinggenerativemodeling' id='ref-lipman2023flowmatchinggenerativemodeling-1'>
+    LCBH+23
+</a>. My previous <a href="/2023-10-17-gen-models#diffusion-via-continuous-normalizing-flows-cnfs">post</a> explained why that was the case. At the population optimum, integrating the learned vector field transports the noise distribution along the chosen probability path toward the conditional action distribution. </p>
+<h6 id="concrete-calculation-of-the-loss">Concrete calculation of the loss<a class="headerlink" href="#concrete-calculation-of-the-loss" title="Permanent link">¶</a></h6>
+<p>The math behind the flow matching objective looks complicated, but the calculation is simple. Here <span class="math">\(a_t\)</span> is the entire action chunk with shape <code>[16, 7]</code>. 16 consecutive action steps, with 7 values to represent the robot state. We sample one <span class="math">\(\tau = 0.25\)</span> and a noise matrix <span class="math">\(\epsilon\)</span> with the same shape. We only show the first row of the calculation below to keep it readable.</p>
+<div class="highlight"><pre><span></span>a_t = [
+  [-0.32752, -0.17010, 0.23136, -0.04102, -0.67765, 0.19326, 0.04846],
+  ...
+]
+epsilon = [
+  [0.20000, -0.40000, 0.10000, 0.30000, -0.20000, 0.50000, -0.10000],
+  ...
+]
+a_t^tau     = 0.75 * epsilon + 0.25 * a_t
+  first row = [0.06812, -0.34253, 0.13284, 0.21474, -0.31941, 0.42331, -0.06289]
+
+u_t = a_t - epsilon
+  first row = [-0.52752, 0.22990, 0.13136, -0.34102, -0.47765, -0.30674, 0.14846]
+</pre></div>
+<p>The network uses <span class="math">\(x_t\)</span>, <span class="math">\(a_t^{\tau}\)</span>, and <span class="math">\(\tau\)</span> to predict a <code>[16, 7]</code> velocity matrix. The squared L2 loss sums the errors over all 112 values. We do this for every example in the batch and average the per-example losses.</p>
+<h6 id="inference">Inference<a class="headerlink" href="#inference" title="Permanent link">¶</a></h6>
+<p>Start from random noise, <span class="math">\(a_t^0 \sim \mathcal{N}(0, \mathbf{I})\)</span>, and integrate the learned velocity field from <span class="math">\(\tau = 0\)</span> to <span class="math">\(\tau = 1\)</span> with forward Euler steps. With 10 integration steps the step size is <span class="math">\(\delta = 0.1\)</span>. We evaluate the field at <span class="math">\(\tau = \{0, 0.1, \ldots, 0.9\}\)</span> and produce states through <span class="math">\(\tau = 1\)</span>:</p>
+<div class="math">$$
+a_{t}^{\tau + \delta} = a_t^{\tau} + \delta\, p_{\theta}(x_t, a_t^{\tau}, \tau)
+$$</div>
+<p>For one concrete first step, suppose the first row of the random chunk and the network output are</p>
+<div class="highlight"><pre><span></span>a_t^0 first row   = [ 0.20000, -0.40000, 0.10000,  0.30000, -0.20000, 0.50000, -0.10000]
+p_theta at tau=0  = [-0.52752,  0.22990, 0.13136, -0.34102, -0.47765, -0.30674, 0.14846]
+
+a_t^0.1 = a_t^0 + 0.1 * p_theta
+first row = [0.14725, -0.37701, 0.11314, 0.26590, -0.24777, 0.46933, -0.08515]
+</pre></div>
+<p>We do the same calculation for all 16 rows, then repeat it 10 times iteratively. After the 10th step, <span class="math">\(a_t^1\)</span> is the generated action chunk.</p>
+<h5 id="language-responses">Language Responses<a class="headerlink" href="#language-responses" title="Permanent link">¶</a></h5>
+<p>Language is simpler. Here <span class="math">\(p_{\theta}\)</span> predicts the probability of each possible next token. We train it with cross-entropy loss. For example, a partial response is <code>The man in ...</code>. We calculate the loss in the following way.</p>
+<div class="highlight"><pre><span></span>target tokens                 = [The, man, in]
+p_theta(target token)         = [0.70, 0.50, 0.80]
+
+loss = (-log(0.70) - log(0.50) - log(0.80)) / 3
+     = (0.357 + 0.693 + 0.223) / 3
+     = 0.424
+</pre></div>
+<p><span class="math">\(p_{\theta}\)</span> outputs the probabilities, while the target tokens come from the dataset. During inference, we sample one token from <span class="math">\(p_{\theta}\)</span>, append it to the response, and repeat until we encounter the stop token.</p>
+<h5 id="success-probability">Success Probability<a class="headerlink" href="#success-probability" title="Permanent link">¶</a></h5>
+<p>In the LeRobot <span class="caps">DROID</span> sample, <code>next.reward = 1</code> only on the final frame of a successful episode <a href='#khazatsky2024droid' id='ref-khazatsky2024droid-4'>
+    KPN+24
+</a>. Nonterminal frames and failed terminal frames both contain <code>0</code>. To train an episode-success head, we could use terminal rows or propagate the terminal outcome across the episode. The head outputs one probability, and we train it with binary cross-entropy.</p>
+<p>If we want to predict the quality of an action chunk, we need to define a measurable outcome. For example, success could mean executing the full chunk without a collision, safety violation, or human intervention. During data collection, we save the observation, the proposed action chunk, and what happened after executing it.</p>
+<div class="highlight"><pre><span></span>success:            true
+collision:          false
+human_intervention: false
+</pre></div>
+<h5 id="depth-images">Depth Images<a class="headerlink" href="#depth-images" title="Permanent link">¶</a></h5>
+<p>Here <span class="math">\(p_{\theta}\)</span> outputs one depth value for each pixel. We train it with a simple mean squared error. Here is the calculation for three example pixels.</p>
+<div class="highlight"><pre><span></span>target depth  = [1.20, 0.85, 2.10]
+p_theta(x_t)  = [1.10, 0.90, 1.90]
+
+loss = ((1.10 - 1.20)^2 + (0.90 - 0.85)^2 + (1.90 - 2.10)^2) / 3
+     = (0.0100 + 0.0025 + 0.0400) / 3
+     = 0.0175
+</pre></div>
+<p>A full-image <span class="caps">MSE</span> does the same calculation over all pixels and then averages across the batch. During inference, one forward pass directly produces the depth image. However, depth prediction can serve as an auxiliary training objective that encourages the shared model to represent scene geometry. We can discard the depth head after training if the robot does not need a depth map during inference. The prediction can still be useful for debugging and visualization.</p>
+<h4 id="data-centric-learning">Data-Centric Learning<a class="headerlink" href="#data-centric-learning" title="Permanent link">¶</a></h4>
+<p>The idea of auxiliary heads adds flexibility to training <span class="math">\(p_{\theta}\)</span>. A prediction module is attached somewhere to a shared backbone. Its loss is added to <span class="math">\(\mathcal{L}_{\text{total}}\)</span>, and its gradients update the same backbone used by the other prediction modules. Auxiliary heads can be discarded during inference when their outputs are not needed. This idea appears in multi-task learning, learned navigation, and multimodal representation learning <a href='#caruana1997multitask' id='ref-caruana1997multitask-1'>
+    Car97
+</a>, <a href='#mirowski2017learning' id='ref-mirowski2017learning-1'>
+    MPV+17
+</a>, <a href='#bachmann2022multimae' id='ref-bachmann2022multimae-1'>
+    BMAZ22
+</a>. <span class="caps">GR</span>-3 and Qwen-<span class="caps">VLA</span> combine language next-token loss with action flow-matching loss while their action decoders condition on a vision-language backbone <a href='#cheang2025gr3' id='ref-cheang2025gr3-2'>
+    CCC+25
+</a>, <a href='#qwenvla2026' id='ref-qwenvla2026-3'>
+    WLG+26
+</a>. Additional datasets can contribute when they provide compatible targets for shared representations and the joint training avoids negative transfer. This includes datasets without robot actions, e.g. general vision-language data, human egocentric video, spatial-grounding data, autonomous-driving <span class="caps">VQA</span>, and segmentation datasets. Synthetic data can also fit this paradigm when it supplies a target for one of the objectives. Distillation can be another term in the total loss <a href='#hinton2015distilling' id='ref-hinton2015distilling-1'>
+    HVD15
+</a>. Instead of taking the target from the dataset, a fixed teacher model produces probabilities, logits, or hidden features that we force <span class="math">\(p_{\theta}\)</span> to match.</p>
+<p>This is the fun part of modern end-to-end systems. It is centered on learning from data. Data can cover different modalities, perception capabilities, and behaviors we want the robot to learn. Modality-specific encoders, shared representations, and different prediction heads allow one end-to-end system to combine them. What the robot ultimately learns depends on the data, architecture, training process, and prediction objectives.</p>
+<script type="text/javascript">if (!document.getElementById('mathjaxscript_pelican_#%&#64;#$&#64;#')) {
+    var align = "center",
+        indent = "0em",
+        linebreak = "false";
+
+    if (false) {
+        align = (screen.width < 768) ? "left" : align;
+        indent = (screen.width < 768) ? "0em" : indent;
+        linebreak = (screen.width < 768) ? 'true' : linebreak;
+    }
+
+    var mathjaxscript = document.createElement('script');
+    mathjaxscript.id = 'mathjaxscript_pelican_#%&#64;#$&#64;#';
+    mathjaxscript.type = 'text/javascript';
+    mathjaxscript.src = 'https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.1/MathJax.js?config=default';
+
+    var configscript = document.createElement('script');
+    configscript.type = 'text/x-mathjax-config';
+    configscript[(window.opera ? "innerHTML" : "text")] =
+        "MathJax.Hub.Config({" +
+        // "    config: ['MMLorHTML.js']," +
+        "    TeX: { extensions: ['AMSmath.js','AMSsymbols.js','noErrors.js','noUndefined.js'], equationNumbers: { autoNumber: 'auto' } }," +
+        "    jax: ['input/TeX','input/MathML','output/SVG']," +
+        "    extensions: ['tex2jax.js','mml2jax.js','MathMenu.js','MathZoom.js']," +
+        "    displayAlign: '"+ align +"'," +
+        "    displayIndent: '"+ indent +"'," +
+        "    showMathMenu: true," +
+        "    messageStyle: 'normal'," +
+        "    tex2jax: { " +
+        "        inlineMath: [ ['\\\\(','\\\\)'] ], " +
+        "        displayMath: [ ['$$','$$'] ]," +
+        "        processEscapes: true," +
+        "        preview: 'TeX'," +
+        "    }, " +
+        "    'HTML-CSS': { " +
+        "        availableFonts: ['TeX', 'STIX']," +
+        "        preferredFont: 'STIX'," +
+        "        styles: { '.MathJax_Display, .MathJax .mo, .MathJax .mi, .MathJax .mn': {color: 'inherit ! important'} }," +
+        "        linebreaks: { automatic: "+ linebreak +", width: '90% container' }," +
+        "    }, " +
+        "}); " +
+        "if ('default' !== 'default') {" +
+            "MathJax.Hub.Register.StartupHook('HTML-CSS Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax['HTML-CSS'].FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+            "MathJax.Hub.Register.StartupHook('SVG Jax Ready',function () {" +
+                "var VARIANT = MathJax.OutputJax.SVG.FONTDATA.VARIANT;" +
+                "VARIANT['normal'].fonts.unshift('MathJax_default');" +
+                "VARIANT['bold'].fonts.unshift('MathJax_default-bold');" +
+                "VARIANT['italic'].fonts.unshift('MathJax_default-italic');" +
+                "VARIANT['-tex-mathit'].fonts.unshift('MathJax_default-italic');" +
+            "});" +
+        "}";
+
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(configscript);
+    (document.body || document.getElementsByTagName('head')[0]).appendChild(mathjaxscript);
+}
+
+</script>
+            </div>
+
+
+            <div id="citations">
+    <hr>
+    <h3>Citations</h3>
+    <ol class="references">
+            <li id="qwenvla2026">
+                <span class="reference-text">Wang, Qiuyue, Li, Mingsheng, Guan, Jian, and others.
+Qwen-vla: unifying vision-language-action modeling across tasks, environments, and robot embodiments.
+2026.
+URL: <a href="https://arxiv.org/abs/2605.30280">https://arxiv.org/abs/2605.30280</a>, <a href="https://arxiv.org/abs/2605.30280">arXiv:2605.30280</a>.</span>
+                    <a class="cite-backref" href="#ref-qwenvla2026-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+                    <a class="cite-backref" href="#ref-qwenvla2026-2"
+                       title="Jump back to reference 2">
+                        <sup>
+                            <i>
+                                <b>
+                                    2
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+                    <a class="cite-backref" href="#ref-qwenvla2026-3"
+                       title="Jump back to reference 3">
+                        <sup>
+                            <i>
+                                <b>
+                                    3
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="khazatsky2024droid">
+                <span class="reference-text">Khazatsky, Alexander, Pertsch, Karl, Nair, Suraj, and others.
+Droid: a large-scale in-the-wild robot manipulation dataset.
+2024.
+URL: <a href="https://arxiv.org/abs/2403.12945">https://arxiv.org/abs/2403.12945</a>, <a href="https://arxiv.org/abs/2403.12945">arXiv:2403.12945</a>.</span>
+                    <a class="cite-backref" href="#ref-khazatsky2024droid-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+                    <a class="cite-backref" href="#ref-khazatsky2024droid-2"
+                       title="Jump back to reference 2">
+                        <sup>
+                            <i>
+                                <b>
+                                    2
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+                    <a class="cite-backref" href="#ref-khazatsky2024droid-3"
+                       title="Jump back to reference 3">
+                        <sup>
+                            <i>
+                                <b>
+                                    3
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+                    <a class="cite-backref" href="#ref-khazatsky2024droid-4"
+                       title="Jump back to reference 4">
+                        <sup>
+                            <i>
+                                <b>
+                                    4
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="liu2023visualinstruction">
+                <span class="reference-text">Liu, Haotian, Li, Chunyuan, Wu, Qingyang, and Lee, Yong&nbsp;Jae.
+Visual instruction tuning.
+In <em>Advances in Neural Information Processing Systems</em>. 2023.
+URL: <a href="https://arxiv.org/abs/2304.08485">https://arxiv.org/abs/2304.08485</a>, <a href="https://arxiv.org/abs/2304.08485">arXiv:2304.08485</a>.</span>
+                    <a class="cite-backref" href="#ref-liu2023visualinstruction-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+                    <a class="cite-backref" href="#ref-liu2023visualinstruction-2"
+                       title="Jump back to reference 2">
+                        <sup>
+                            <i>
+                                <b>
+                                    2
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="krantz2020beyondnavgraph">
+                <span class="reference-text">Krantz, Jacob, Wijmans, Erik, Majumdar, Arjun, Batra, Dhruv, and Lee, Stefan.
+Beyond the nav-graph: vision-and-language navigation in continuous environments.
+2020.
+URL: <a href="https://arxiv.org/abs/2004.02857">https://arxiv.org/abs/2004.02857</a>, <a href="https://arxiv.org/abs/2004.02857">arXiv:2004.02857</a>.</span>
+                    <a class="cite-backref" href="#ref-krantz2020beyondnavgraph-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+                    <a class="cite-backref" href="#ref-krantz2020beyondnavgraph-2"
+                       title="Jump back to reference 2">
+                        <sup>
+                            <i>
+                                <b>
+                                    2
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="agibotworld2025">
+                <span class="reference-text"><span class="bibtex-protected">AgiBot World Contributors</span>, Bu, Qingwen, Cai, Jisong, and others.
+Agibot world colosseo: a large-scale manipulation platform for scalable and intelligent embodied systems.
+2025.
+URL: <a href="https://arxiv.org/abs/2503.06669">https://arxiv.org/abs/2503.06669</a>, <a href="https://arxiv.org/abs/2503.06669">arXiv:2503.06669</a>.</span>
+                    <a class="cite-backref" href="#ref-agibotworld2025-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="black2024pi0">
+                <span class="reference-text">Black, Kevin, Brown, Noah, Driess, Danny, and others.
+<span class="bibtex-protected">$\pi _0$</span>: a vision-language-action flow model for general robot control.
+2024.
+URL: <a href="https://arxiv.org/abs/2410.24164">https://arxiv.org/abs/2410.24164</a>, <a href="https://arxiv.org/abs/2410.24164">arXiv:2410.24164</a>.</span>
+                    <a class="cite-backref" href="#ref-black2024pi0-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+                    <a class="cite-backref" href="#ref-black2024pi0-2"
+                       title="Jump back to reference 2">
+                        <sup>
+                            <i>
+                                <b>
+                                    2
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="cheang2025gr3">
+                <span class="reference-text">Cheang, Chilam, Chen, Sijin, Cui, Zhongren, and others.
+Gr-3 technical report.
+2025.
+URL: <a href="https://arxiv.org/abs/2507.15493">https://arxiv.org/abs/2507.15493</a>, <a href="https://arxiv.org/abs/2507.15493">arXiv:2507.15493</a>.</span>
+                    <a class="cite-backref" href="#ref-cheang2025gr3-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+                    <a class="cite-backref" href="#ref-cheang2025gr3-2"
+                       title="Jump back to reference 2">
+                        <sup>
+                            <i>
+                                <b>
+                                    2
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="lipman2023flowmatchinggenerativemodeling">
+                <span class="reference-text">Lipman, Yaron, Chen, Ricky T.&nbsp;Q., Ben-Hamu, Heli, Nickel, Maximilian, and Le, Matt.
+Flow matching for generative modeling.
+2023.
+URL: <a href="https://arxiv.org/abs/2210.02747">https://arxiv.org/abs/2210.02747</a>, <a href="https://arxiv.org/abs/2210.02747">arXiv:2210.02747</a>.</span>
+                    <a class="cite-backref" href="#ref-lipman2023flowmatchinggenerativemodeling-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="caruana1997multitask">
+                <span class="reference-text">Caruana, Rich.
+Multitask learning.
+<em>Machine Learning</em>, 28(1):41–75, 1997.
+<a href="https://doi.org/10.1023/A:1007379606734">doi:10.1023/A:1007379606734</a>.</span>
+                    <a class="cite-backref" href="#ref-caruana1997multitask-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="mirowski2017learning">
+                <span class="reference-text">Mirowski, Piotr, Pascanu, Razvan, Viola, Fabio, and others.
+Learning to navigate in complex environments.
+In <em>International Conference on Learning Representations</em>. 2017.
+URL: <a href="https://openreview.net/forum?id=SJMGPrcle">https://openreview.net/forum?id=SJMGPrcle</a>.</span>
+                    <a class="cite-backref" href="#ref-mirowski2017learning-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="bachmann2022multimae">
+                <span class="reference-text">Bachmann, Roman, Mizrahi, David, Atanov, Andrei, and Zamir, Amir.
+<span class="bibtex-protected">MultiMAE</span>: multi-modal multi-task masked autoencoders.
+In <em>Computer Vision – ECCV 2022</em>, 348–367. 2022.
+<a href="https://doi.org/10.1007/978-3-031-19836-6_20">doi:10.1007/978-3-031-19836-6_20</a>.</span>
+                    <a class="cite-backref" href="#ref-bachmann2022multimae-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+            <li id="hinton2015distilling">
+                <span class="reference-text">Hinton, Geoffrey, Vinyals, Oriol, and Dean, Jeff.
+Distilling the knowledge in a neural network.
+2015.
+URL: <a href="https://arxiv.org/abs/1503.02531">https://arxiv.org/abs/1503.02531</a>, <a href="https://arxiv.org/abs/1503.02531">arXiv:1503.02531</a>.</span>
+                    <a class="cite-backref" href="#ref-hinton2015distilling-1"
+                       title="Jump back to reference 1">
+                        <sup>
+                            <i>
+                                <b>
+                                    1
+                                </b>
+                            </i>
+                        </sup>
+                    </a>
+            </li>
+    </ol>
+</div>
+
+             
+ 
+            
+            
+            
+
+
+
+
+
+
+
+
+            <hr/>
+            <script src="https://utteranc.es/client.js"
+                    repo="jinfwhuang/jinfwhuang.github.io"
+                    issue-term="pathname"
+                    label="user-comments"
+                    theme="github-light"
+                    crossorigin="anonymous"
+                    async>
+            </script>
+
+            <hr/>
+<section>
+    <h2>Related Posts</h2>
+<ul class="related-posts-list">
+<li><a href="/2024-08-01-vision-dataset" title="Open Source Vision Datasets">Open Source Vision Datasets</a></li>
+<li><a href="/2024-09-23-id-system" title="ID System">ID System</a></li>
+<li><a href="/2024-10-28-binary-storage-engine" title="Analytics for Binary Blobs - AI Database">Analytics for Binary Blobs <small>AI Database</small></a></li>
+<li><a href="/2024-11-02-video-models" title="Video Generation Models - Deep dive into two models and review the landscape">Video Generation Models <small>Deep dive into two models and review the landscape</small></a></li>
+<li><a href="/2026-06-03-robotics-datasets" title="Robotics Datasets">Robotics Datasets</a></li>
+</ul>
+<hr />
+</section>
+            <aside>
+            <nav>
+            <ul class="articles-timeline">
+                <li class="previous-article">« <a href="/2026-06-03-robotics-datasets" title="Previous: Robotics Datasets">Robotics Datasets</a></li>
+            </ul>
+            </nav>
+            </aside>
+        </div>
+        <section id="article-sidebar" class="span2">
+            <h4>Published</h4>
+            <time itemprop="dateCreated" datetime="2026-06-03T00:00:00-07:00">Wed 03 June 2026</time>
+            <!--             <h4>Category</h4>
+            <a class="category-link" href="/categories#misc-ref">misc</a>
+ -->
+            <h4>Tags</h4>
+            <ul class="list-of-tags tags-in-article">
+                <li><a href="/tags#ai-ref">ai
+                    <span class="superscript">10</span>
+</a></li>
+                <li><a href="/tags#robotics-ref">robotics
+                    <span class="superscript">2</span>
+</a></li>
+            </ul>
+<h4>Contact</h4>
+<div id="sidebar-social-link">
+    <a href="https://twitter.com/jinfwhuang" title="Twiiter" target="_blank" rel="nofollow noopener noreferrer">
+        <svg xmlns="http://www.w3.org/2000/svg" aria-label="Twitter" role="img" viewBox="0 0 512 512"><rect width="512" height="512" rx="15%" fill="#1da1f3"/><path fill="#fff" d="M437 152a72 72 0 0 1-40 12 72 72 0 0 0 32-40 72 72 0 0 1-45 17 72 72 0 0 0-122 65 200 200 0 0 1-145-74 72 72 0 0 0 22 94 72 72 0 0 1-32-7 72 72 0 0 0 56 69 72 72 0 0 1-32 1 72 72 0 0 0 67 50 200 200 0 0 1-105 29 200 200 0 0 0 309-179 200 200 0 0 0 35-37"/></svg>
+    </a>
+    <a href="https://www.linkedin.com/in/jinfwhuang" title="LinkedIn" target="_blank" rel="nofollow noopener noreferrer">
+        <svg xmlns="http://www.w3.org/2000/svg" aria-label="LinkedIn" role="img" viewBox="0 0 512 512" fill="#fff"><rect width="512" height="512" rx="15%" fill="#0077b5"/><circle cx="142" cy="138" r="37"/><path stroke="#fff" stroke-width="66" d="M244 194v198M142 194v198"/><path d="M276 282c0-20 13-40 36-40 24 0 33 18 33 45v105h66V279c0-61-32-89-76-89-34 0-51 19-59 32"/></svg>
+    </a>
+</div>
+            
+
+
+
+
+
+            
+
+
+
+
+
+        </section>
+</div>
+</article>
+<!-- Root element of PhotoSwipe. Must have class pswp. -->
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    <!-- Background of PhotoSwipe.
+         It's a separate element as animating opacity is faster than rgba(). -->
+    <div class="pswp__bg"></div>
+
+    <!-- Slides wrapper with overflow:hidden. -->
+    <div class="pswp__scroll-wrap">
+
+        <!-- Container that holds slides.
+            PhotoSwipe keeps only 3 of them in the DOM to save memory.
+            Don't modify these 3 pswp__item elements, data is added later on. -->
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        <!-- Default (PhotoSwipeUI_Default) interface on top of sliding area. Can be changed. -->
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                <!--  Controls are self-explanatory. Order can be changed. -->
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                <!-- Preloader demo https://codepen.io/dimsemenov/pen/yyBWoR -->
+                <!-- element will get class pswp__preloader--active when preloader is running -->
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                      <div class="pswp__preloader__cut">
+                        <div class="pswp__preloader__donut"></div>
+                      </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div>                    </div>
+                    <div class="span1"></div>
+                </div>
+            </div>
+        </div>
+<!--        <footer>
+
+    <div>
+        <span class="site-name"><span style="color:black;">Jin's Notes</span></span> - the hardest part is taking the first step
+    </div>
+
+
+
+    <div id="fpowered">
+        Powered by: <a href="http://getpelican.com/" title="Pelican Home Page" target="_blank" rel="nofollow noopener noreferrer">Pelican</a>
+        Theme: <a href="https://elegant.oncrashreboot.com/" title="Theme Elegant Home Page" target="_blank" rel="nofollow noopener noreferrer">Elegant</a>
+    </div>
+</footer>-->
+            <script src="//code.jquery.com/jquery.min.js"></script>
+        <script src="//netdna.bootstrapcdn.com/twitter-bootstrap/2.3.2/js/bootstrap.min.js"></script>
+        <script src="/theme/js/elegant.prod.9e9d5ce754.js"></script>
+        <script>
+            function validateForm(query)
+            {
+                return (query.length > 0);
+            }
+        </script>
+
+
+
+
+    <script>
+    (function () {
+        if (window.location.hash.match(/^#comment-\d+$/)) {
+            $('#comment_thread').collapse('show');
+        }
+    })();
+    window.onhashchange=function(){
+        if (window.location.hash.match(/^#comment-\d+$/))
+            window.location.reload(true);
+    }
+    $('#comment_thread').on('shown', function () {
+        var link = document.getElementById('comment-accordion-toggle');
+        var old_innerHTML = link.innerHTML;
+        $(link).fadeOut(200, function() {
+            $(this).text('Click here to hide comments').fadeIn(200);
+        });
+        $('#comment_thread').on('hidden', function () {
+            $(link).fadeOut(200, function() {
+                $(this).text(old_innerHTML).fadeIn(200);
+            });
+        })
+    })
+</script>
+
+    </body>
+    <!-- Theme: Elegant built for Pelican
+        License : MIT -->
+
+</html>
